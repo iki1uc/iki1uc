@@ -4,7 +4,7 @@
   const ORIGINAL_KEY = 'Gegenteil_von_Muell';
   const TARGETS = [
     { id: 'iki', containerId: 'cubeWrap_iki' },
-    { id: 'one', containerId: 'cubeWrap_1' },
+    { id: '1', containerId: 'cubeWrap_1' },
     { id: 'uc',  containerId: 'cubeWrap_uc' }
   ];
 
