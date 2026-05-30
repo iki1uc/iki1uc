@@ -23,4 +23,3 @@ window.SEEU_BUILD_FACES = function(projectId){
 
   return faces;
 };
-
