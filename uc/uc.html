@@ -1,1 +1,163 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>uc – Clone C</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <style>
+    :root{--bg:#000;--accent:#7dd3fc;--muted:#9ca3af;--text:#fff}
+    html,body{height:100%;margin:0}
+    body{
+      display:flex;align-items:center;justify-content:center;
+      background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;
+      padding:2rem;text-align:center;
+    }
+    .wrap{max-width:900px;width:100%}
+    .title{font-size:40px;margin-bottom:18px}
+    .story{font-size:20px;line-height:1.45;max-width:820px;margin:0 auto;min-height:160px}
+    .reveal{opacity:0;transform:translateY(6px);transition:opacity .28s ease,transform .28s ease}
+    .reveal.visible{opacity:1;transform:none}
+    .controls{margin-top:28px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    button{background:#0b1220;color:var(--accent);border:1px solid #1f2937;padding:10px 18px;font-size:16px;cursor:pointer}
+    a{color:var(--accent);text-decoration:none;font-size:15px}
+    .meta{margin-top:14px;color:var(--muted);font-size:13px}
+    .small{font-size:16px;color:var(--muted)}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="title">Clone uc – Fortsetzung</div>
+
+    <div id="story" class="story reveal"></div>
+
+    <div class="controls">
+      <button id="regen">KlicK – neue Variante</button>
+      <button id="regenSlow">KlicK mit Pause</button>
+      <a href="../1/1.html">← 1</a>
+      <a href="../iki/iki.html">iki →</a>
+    </div>
+
+    <div class="meta small" id="meta"></div>
+  </div>
+
+  <script>
+    // --- Clone-ID ---
+    const pageId = 'uc';
+
+    // --- Pool für Clone uc ---
+    const pool = {
+      rolePI:[
+        "PI sieht Dinge, die andere übersehen.",
+        "PI steht zwischen zwei Generationen.",
+        "PI erkennt die feinen Linien im Chaos."
+      ],
+      roleGauner:[
+        "Der Gauner kennt jede Abkürzung.",
+        "Der Gauner kommt immer seitlich rein.",
+        "Der Gauner spielt ein Spiel, das niemand versteht."
+      ],
+      places:[
+        "auf dem Bauernhof, zwischen Werkzeug und Stille",
+        "in der Werkstatt, wo Dinge wieder heil werden",
+        "in der Küche, wo Wärme und Chaos wohnen"
+      ],
+      events:[
+        "sie hören denselben Satz zur selben Zeit",
+        "sie stehen plötzlich im selben Licht",
+        "sie greifen nach demselben Gegenstand"
+      ],
+      moods:[
+        "und beide spüren Ruhe.",
+        "und keiner weiß, warum es falsch wirkt.",
+        "und ein Schatten bleibt zurück."
+      ],
+      trichter:[
+        "Vielleicht war die Lektion nur ein Vorwand.",
+        "Manchmal ist die Begegnung wichtiger als der Grund.",
+        "Wenn es bleibt, hat es Gewicht."
+      ],
+      weight:1
+    };
+
+    // --- Pool registrieren ---
+    try {
+      localStorage.setItem('cube_pool_' + pageId, JSON.stringify(pool));
+      localStorage.setItem('cube_pool_last', pageId + '|' + Date.now());
+    } catch(e){}
+
+    // --- Helpers ---
+    function r(a){ return a[Math.floor(Math.random()*a.length)] }
+    function shuffle(a){ return a.slice().sort(()=>Math.random()-0.5) }
+
+    // --- History ---
+    const HIST_KEY = 'cube_history_v1';
+    function loadHistory(){ try{ return JSON.parse(localStorage.getItem(HIST_KEY)||'[]') }catch(e){ return [] } }
+    function saveHistory(h){ localStorage.setItem(HIST_KEY, JSON.stringify(h)) }
+    function addToHistory(h){ const H=loadHistory(); H.push(h); if(H.length>500) H.splice(0,H.length-500); saveHistory(H) }
+    function seenBefore(h){ return loadHistory().includes(h) }
+
+    // --- Kombi bauen ---
+    function buildCombo(maxAttempts=40){
+      for(let attempt=0; attempt<maxAttempts; attempt++){
+        const schiene = Math.random()>0.5 ? 'A' : 'B';
+        const order = shuffle(['iki','1','uc']).join(' → ');
+        const combo = {
+          schiene, order,
+          pi: r(pool.rolePI),
+          gauner: r(pool.roleGauner),
+          ort: r(pool.places),
+          ereignis: r(pool.events),
+          stimmung: r(pool.moods),
+          trichter: r(pool.trichter)
+        };
+        const hash = btoa(JSON.stringify(combo));
+        if(!seenBefore(hash)){ addToHistory(hash); return combo; }
+      }
+      localStorage.removeItem(HIST_KEY);
+      return buildCombo(10);
+    }
+
+    // --- Render ---
+    const storyEl = document.getElementById('story');
+    const metaEl = document.getElementById('meta');
+
+    function render(c){
+      storyEl.innerHTML =
+        '<div class="small"><b>Reihenfolge</b>: '+c.order+'</div><br>'+
+        '<div>'+c.pi+'</div><br>'+
+        '<div>'+c.gauner+'</div><br>'+
+        '<div class="small">'+c.ort+', '+c.ereignis+' '+c.stimmung+'</div><br>'+
+        '<div style="margin-top:6px"><b>'+c.trichter+'</b></div>';
+
+      metaEl.textContent = 'Schiene '+c.schiene+' • erzeugt '+new Date().toLocaleTimeString();
+
+      storyEl.classList.remove('visible');
+      void storyEl.offsetWidth;
+      storyEl.classList.add('visible');
+    }
+
+    // --- Generate ---
+    function generate(withPause=true){
+      const combo = buildCombo();
+      storyEl.classList.remove('visible');
+      if(withPause){
+        storyEl.innerHTML = '<div class="small" style="opacity:.6">...entspannen</div>';
+        setTimeout(()=> render(combo), 750);
+      } else {
+        render(combo);
+      }
+    }
+
+    // --- Buttons ---
+    document.getElementById('regen').addEventListener('click', ()=> generate(false));
+    document.getElementById('regenSlow').addEventListener('click', ()=> generate(true));
+
+    // --- Initial ---
+    generate(true);
+  </script>
+
+</body>
+</html>
 
