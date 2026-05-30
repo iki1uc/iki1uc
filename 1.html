@@ -1,48 +1,43 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>1</title>
-<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <title>one – Würfelinstanz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      background: #0a0a0a;
+      color: #e6e6e6;
+      font-family: system-ui, sans-serif;
+      line-height: 1.5;
+    }
+    h1 {
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+    }
+    .note {
+      font-size: 13px;
+      opacity: 0.75;
+      margin-bottom: 24px;
+    }
+  </style>
 </head>
+
 <body>
 
-<header class="header">
-  <div class="symbol">𓂀</div>
-  <nav class="nav">
-    <button class="btn" id="btnZacK">◀ ZacK</button>
-    <button class="btn" id="btn4ALL">◎ 4ALL</button>
-    <button class="btn" id="btnKlicK">▶ KlicK</button>
-  </nav>
-</header>
+  <h1>one – Elegante Würfelinstanz</h1>
+  <div class="note">
+    Diese Seite erzeugt automatisch drei saubere, deterministische Klone (iki, one, uc).
+  </div>
 
-<div class="controls">
-  <button class="btn" id="loadChapter">Kapitel laden</button>
-  <button class="btn" id="toBeCont">to be continued…</button>
-</div>
+  <script src="remap.js"></script>
+  <script src="cube_sim.js"></script>
+  <script src="clone_cubes_auto.js"></script>
 
-<main id="content">
-  <p>Lade Kapitel‑Inhalt…</p>
-</main>
-
-<div class="tbc" id="tbcMsg">to be continued…</div>
-
-<!-- großer Würfel -->
-<div id="cubeWrap"><div id="cube" class="cube"></div></div>
-
-<script src="remap.js"></script>
-<script src="cube_sim.js"></script>
-<script>
-  document.getElementById('loadChapter').addEventListener('click', ()=> {
-    // force load chunks for 'one' (1.html uses base 'one' in remap)
-    loadChunkedContent?.('one','content', SEEU.getConfig().chunks || 8);
-  });
-  document.getElementById('toBeCont').addEventListener('click', ()=> {
-    // visual only: no click action required per your spec
-    const t = document.getElementById('tbcMsg');
-    t.style.opacity = (t.style.opacity === '1') ? '0.6' : '1';
-  });
-</script>
 </body>
 </html>
