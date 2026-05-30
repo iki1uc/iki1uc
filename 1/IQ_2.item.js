@@ -22,4 +22,3 @@ export const IQ_2_Item = {
         });
     }
 };
-
