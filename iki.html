@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Instanz</title>
+  <title>iki</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
@@ -28,7 +28,7 @@
 
 <body>
 
-  <h1>Instanz</h1>
+  <h1>iki</h1>
 
   <div id="cubeWrap" class="wrap">Cube wird geladen…</div>
 
@@ -36,13 +36,12 @@
   <script src="cube_sim.js"></script>
 
   <script>
-    // Einzelinstanz starten
     if (typeof SEEU_CREATE_CUBE === "function") {
       SEEU_CREATE_CUBE({
-        projectId: "NAME",
+        projectId: "iki",
         seed: 12345,
         containerId: "cubeWrap",
-        chunksBase: "NAME",
+        chunksBase: "iki",
         version: "v1"
       });
     } else {
