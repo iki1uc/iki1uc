@@ -5,37 +5,44 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>1</title>
 <link rel="stylesheet" href="styles.css">
-<style>
-  body{font-family:Inter,Arial,sans-serif;margin:28px;text-align:center}
-  .symbol{font-size:56px;opacity:.8;margin-bottom:12px}
-  #content{max-width:980px;margin:18px auto;text-align:left}
-  .tbc{margin-top:18px;color:#666}
-</style>
 </head>
 <body>
 
-<div class="symbol">𓂀</div>
+<header class="header">
+  <div class="symbol">𓂀</div>
+  <nav class="nav">
+    <button class="btn" id="btnZacK">◀ ZacK</button>
+    <button class="btn" id="btn4ALL">◎ 4ALL</button>
+    <button class="btn" id="btnKlicK">▶ KlicK</button>
+  </nav>
+</header>
 
-<div class="nav">
-  <button class="btn" id="btnZacK">◀ ZacK</button>
-  <button class="btn" id="btn4ALL">◎ 4ALL</button>
-  <button class="btn" id="btnKlicK">▶ KlicK</button>
+<div class="controls">
+  <button class="btn" id="loadChapter">Kapitel laden</button>
+  <button class="btn" id="toBeCont">to be continued…</button>
 </div>
 
-<div id="content">
+<main id="content">
   <p>Lade Kapitel‑Inhalt…</p>
-</div>
+</main>
 
 <div class="tbc" id="tbcMsg">to be continued…</div>
 
 <!-- großer Würfel -->
-<div id="cubeWrap" style="margin-top:22px"></div>
+<div id="cubeWrap"><div id="cube" class="cube"></div></div>
 
 <script src="remap.js"></script>
 <script src="cube_sim.js"></script>
 <script>
-  // Beispiel: setze StorySlope aus Metadaten
-  // window.SEEU.setStorySlope(0.3);
+  document.getElementById('loadChapter').addEventListener('click', ()=> {
+    // force load chunks for 'one' (1.html uses base 'one' in remap)
+    loadChunkedContent?.('one','content', SEEU.getConfig().chunks || 8);
+  });
+  document.getElementById('toBeCont').addEventListener('click', ()=> {
+    // visual only: no click action required per your spec
+    const t = document.getElementById('tbcMsg');
+    t.style.opacity = (t.style.opacity === '1') ? '0.6' : '1';
+  });
 </script>
 </body>
 </html>
