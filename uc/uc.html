@@ -5,6 +5,9 @@
   <title>uc – Clone C</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
 
+  <!-- Advanced‑Cube Style -->
+  <link rel="stylesheet" href="IQ_3.css">
+
   <style>
     :root{--bg:#000;--accent:#7dd3fc;--muted:#9ca3af;--text:#fff}
     html,body{height:100%;margin:0}
@@ -42,6 +45,16 @@
     <div class="meta small" id="meta"></div>
   </div>
 
+  <!-- ⭐ Engine zuerst -->
+  <script src="../anchor_engine.js"></script>
+
+  <!-- ⭐ Advanced‑Cube Item -->
+  <script type="module" src="IQ_3.item.js"></script>
+
+  <!-- ⭐ uc‑Station‑Bewusstsein -->
+  <script src="uc.js"></script>
+
+  <!-- ⭐ Clone‑Generator -->
   <script>
     // --- Clone-ID ---
     const pageId = 'uc';
@@ -81,24 +94,20 @@
       weight:1
     };
 
-    // --- Pool registrieren ---
     try {
       localStorage.setItem('cube_pool_' + pageId, JSON.stringify(pool));
       localStorage.setItem('cube_pool_last', pageId + '|' + Date.now());
     } catch(e){}
 
-    // --- Helpers ---
     function r(a){ return a[Math.floor(Math.random()*a.length)] }
     function shuffle(a){ return a.slice().sort(()=>Math.random()-0.5) }
 
-    // --- History ---
     const HIST_KEY = 'cube_history_v1';
     function loadHistory(){ try{ return JSON.parse(localStorage.getItem(HIST_KEY)||'[]') }catch(e){ return [] } }
     function saveHistory(h){ localStorage.setItem(HIST_KEY, JSON.stringify(h)) }
     function addToHistory(h){ const H=loadHistory(); H.push(h); if(H.length>500) H.splice(0,H.length-500); saveHistory(H) }
     function seenBefore(h){ return loadHistory().includes(h) }
 
-    // --- Kombi bauen ---
     function buildCombo(maxAttempts=40){
       for(let attempt=0; attempt<maxAttempts; attempt++){
         const schiene = Math.random()>0.5 ? 'A' : 'B';
@@ -119,7 +128,6 @@
       return buildCombo(10);
     }
 
-    // --- Render ---
     const storyEl = document.getElementById('story');
     const metaEl = document.getElementById('meta');
 
@@ -138,7 +146,6 @@
       storyEl.classList.add('visible');
     }
 
-    // --- Generate ---
     function generate(withPause=true){
       const combo = buildCombo();
       storyEl.classList.remove('visible');
@@ -150,14 +157,11 @@
       }
     }
 
-    // --- Buttons ---
     document.getElementById('regen').addEventListener('click', ()=> generate(false));
     document.getElementById('regenSlow').addEventListener('click', ()=> generate(true));
 
-    // --- Initial ---
     generate(true);
   </script>
 
 </body>
 </html>
-
