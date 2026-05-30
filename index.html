@@ -21,7 +21,7 @@
     }
     .note {
       font-size: 13px;
-      opacity: 0.75;
+      opacity: .75;
       margin-bottom: 24px;
     }
     a {
@@ -57,9 +57,16 @@
   <div id="cubeWrap_1" class="wrap">one wird geladen…</div>
   <div id="cubeWrap_uc" class="wrap">uc wird geladen…</div>
 
-  <!-- System lädt hier die Basis -->
+  <!-- Basis -->
   <script src="remap.js"></script>
   <script src="cube_sim.js"></script>
+
+  <!-- NEUE ENGINE (muss VOR dem Cloner geladen werden) -->
+  <script src="cube_faces.js"></script>
+  <script src="cube_loader.js"></script>
+  <script src="seeu_engine.js"></script>
+
+  <!-- Cloner (muss als LETZTES kommen) -->
   <script src="clone_cubes_auto.js"></script>
 
 </body>
