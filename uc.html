@@ -32,9 +32,14 @@
 
   <div id="cubeWrap" class="wrap">Cube wird geladen…</div>
 
+  <!-- Engine zuerst laden -->
+  <script src="anchor_engine.js"></script>
+
+  <!-- Cube-System -->
   <script src="remap.js"></script>
   <script src="cube_sim.js"></script>
 
+  <!-- Start -->
   <script>
     if (typeof SEEU_CREATE_CUBE === "function") {
       SEEU_CREATE_CUBE({
@@ -47,6 +52,9 @@
     } else {
       console.error("Cube konnte nicht gestartet werden.");
     }
+
+    // Station-Bewusstsein aktivieren
+    console.log(STATION_PRUEFUNG("uc", "PI"));
   </script>
 
 </body>
