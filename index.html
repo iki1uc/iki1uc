@@ -47,10 +47,22 @@
   <a href="1.html">→ one Instanz</a>
   <a href="uc.html">→ uc Instanz</a>
 
+  <!-- Container für den Cube -->
+  <div id="cube-container"></div>
+
   <!-- System lädt hier die Basis -->
   <script src="remap.js"></script>
   <script src="cube_sim.js"></script>
   <script src="clone_cubes_auto.js"></script>
+
+  <!-- Startsignal -->
+  <script>
+    if (typeof startCube === "function") {
+      startCube();
+    } else {
+      console.error("startCube() nicht gefunden – Cube konnte nicht gestartet werden.");
+    }
+  </script>
 
 </body>
 </html>
