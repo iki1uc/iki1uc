@@ -1,21 +1,10 @@
 // --- seeu_engine.js ---
-// Minimale funktionierende Cube-Engine für dein System
-
 window.SEEU = window.SEEU || {};
-
-// Projekt-Registry
 window.SEEU_PROJECTS = window.SEEU_PROJECTS || {};
 window.SEEU_CLONES = window.SEEU_CLONES || {};
 
-// Hauptfunktion: Cube erzeugen
 window.SEEU_CREATE_CUBE = function(opts){
-  const {
-    projectId,
-    seed,
-    containerId,
-    chunksBase,
-    version
-  } = opts;
+  const { projectId, seed, containerId, chunksBase, version } = opts;
 
   const container = document.getElementById(containerId);
   if(!container){
@@ -23,20 +12,16 @@ window.SEEU_CREATE_CUBE = function(opts){
     return null;
   }
 
-  // Cube-Element erzeugen
   const cube = document.createElement("div");
   cube.className = "cube state-online";
   cube.style.transform = "rotateX(0deg) rotateY(0deg)";
 
-  // Faces erzeugen
   const faces = window.SEEU_BUILD_FACES(projectId);
   faces.forEach(f => cube.appendChild(f));
 
-  // In Container setzen
   container.innerHTML = "";
   container.appendChild(cube);
 
-  // Instanz-Objekt
   const inst = {
     id: projectId,
     seed,
@@ -57,7 +42,6 @@ window.SEEU_CREATE_CUBE = function(opts){
     }
   };
 
-  // Globale API verbinden
   window.SEEU.applyImpulse = (x,y)=> inst.applyImpulse(x,y);
   window.SEEU.setCubeState = (s)=> inst.setState(s);
 
