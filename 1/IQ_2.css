@@ -1,1 +1,16 @@
+/* IQ_2.css */
+/* Maxi‑Cube: große Darstellung */
+
+.IQ_2 {
+    width: 120px;
+    height: 120px;
+    background: #2u2u2u;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.25);
+    transition: 0.3s ease;
+}
+
+.IQ_2:hover {
+    transform: scale(1.05);
+}
 
