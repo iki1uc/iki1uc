@@ -1,1 +1,51 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>iki</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Mini‑Cube Style -->
+  <link rel="stylesheet" href="IQ_1.css">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      background: #0a0a0a;
+      color: #e6e6e6;
+      font-family: system-ui, sans-serif;
+    }
+    h1 {
+      font-size: 20px;
+      margin-bottom: 12px;
+    }
+    .wrap {
+      margin-top: 16px;
+      padding: 12px;
+      border: 1px dashed rgba(255,255,255,0.2);
+      border-radius: 6px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>iki</h1>
+
+  <div id="cubeWrap" class="wrap">
+    Mini‑Cube wird geladen…
+  </div>
+
+  <!-- Engine zuerst laden -->
+  <script src="../anchor_engine.js"></script>
+
+  <!-- Mini‑Cube Item -->
+  <script type="module" src="IQ_1.item.js"></script>
+
+  <!-- Instanz‑Logik -->
+  <script src="iki.js"></script>
+
+</body>
+</html>
 
