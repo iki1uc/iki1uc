@@ -28,6 +28,37 @@
 
 <body>
 
+  <!-- MOL_MASKEN (direkt nach <body>) -->
+  <div id="maskWelt" style="
+    position:fixed; bottom:20px; left:20px;
+    background:rgba(0,0,0,0.45); padding:10px 14px;
+    border-radius:10px; font-family:monospace; color:#fff; z-index:99999;">
+    <div>Instanz: <span id="maskInstanz">1</span></div>
+    <div>Ebene: <span id="maskEbene">PI</span></div>
+    <div>Epoche: <span id="maskEpoche">jetzt</span></div>
+  </div>
+
+  <!-- MOL_SCANNER (unter MOL_MASKEN) -->
+  <div id="maskScanner" style="
+    position:fixed; top:20px; left:50%; transform:translateX(-50%);
+    background:rgba(0,0,0,0.45); padding:10px 14px;
+    border-radius:10px; font-family:monospace; color:#fff;
+    display:flex; gap:14px; z-index:99999;">
+    <span id="scanZack" style="cursor:pointer">◀ ZacK</span>
+    <span id="scanME" style="cursor:pointer">◎ ME</span>
+    <span id="scanKlick" style="cursor:pointer">▶ KlicK</span>
+  </div>
+
+  <!-- MOL_EPOCHEN (rechts oben) -->
+  <div id="epochenHUD" style="
+    position:fixed; top:20px; right:20px;
+    background:rgba(0,0,0,0.45); padding:10px 14px;
+    border-radius:10px; font-family:monospace; color:#fff; z-index:99999;">
+    <div>future: <span id="epX">0</span></div>
+    <div>jetzt: <span id="epY">0</span></div>
+    <div>vergangen: <span id="epZ">0</span></div>
+  </div>
+
   <div class="wrap">
     <div class="title">Clone 1 – Fortsetzung</div>
 
@@ -43,7 +74,7 @@
     <div class="meta small" id="meta"></div>
   </div>
 
-  <!-- ⭐ NAVI-HUD -->
+  <!-- ⭐ NAVI-HUD (bleibt) -->
   <div id="NAVI" style="
     position:fixed;
     bottom:20px;
@@ -66,13 +97,13 @@
   <!-- ⭐ Clone‑1 Bewusstsein -->
   <script src="1.js"></script>
 
-  <!-- ⭐ NAVI -->
+  <!-- ⭐ NAVI (falls du externe NAVI.js nutzt, bleibt; MOL_NAVI unten ist fallback) -->
   <script src="NAVI.js"></script>
 
   <!-- ⭐ Maxi‑Cube Item -->
   <script type="module" src="IQ_2.item.js"></script>
 
-  <!-- ⭐ Story‑Generator -->
+  <!-- ⭐ Story‑Generator (dein Script, unverändert) -->
   <script>
     const pageId = '1';
 
@@ -186,10 +217,10 @@
 
     generate(true);
 
-    console.log(STATION_PRUEFUNG("1", "PI"));
+    console.log(typeof STATION_PRUEFUNG === "function" ? STATION_PRUEFUNG("1", "PI") : "STATION_PRUEFUNG not found");
   </script>
 
-  <!-- ⭐ halt() EINBAUEN -->
+  <!-- ⭐ halt() EINBAUEN (ganz unten) -->
   <script>
     function halt(eventName = "clone1_event") {
       const lastEvent = {
@@ -203,8 +234,83 @@
         NAVI.onEvent(lastEvent);
       }
 
+      if (window.BigCube && typeof BigCube.onEvent === "function") {
+        BigCube.onEvent(lastEvent);
+      }
+
       return lastEvent;
     }
+  </script>
+
+  <!-- MOL_NAVI (fallback / core) -->
+  <script id="MOL_NAVI">
+  window.NAVI = window.NAVI || {
+    onEvent(e){
+      console.log("NAVI:", e);
+      let danger = 1;
+      let epoch = "jetzt";
+
+      if(e.type === "war") danger = 9;
+      if(e.type === "heart") danger = 0;
+      if(e.type === "future") epoch = "future";
+      if(e.type === "past") epoch = "vergangen";
+      if(e.anchor) {
+        if(e.anchor === "PI") epoch = "jetzt";
+        if(e.anchor === "Q2") epoch = "future";
+        if(e.anchor === "Q0") epoch = "vergangen";
+      }
+
+      const nd = document.getElementById("naviDanger");
+      const ne = document.getElementById("naviEpoch");
+      const ns = document.getElementById("naviStatus");
+      if(nd) nd.textContent = "Gefahr: " + danger;
+      if(ne) ne.textContent = "Epoche: " + epoch;
+      if(ns) ns.textContent =
+        danger >= 7 ? "⚠ Gefahr" :
+        danger <= 1 ? "🌿 Wohlbefinden" :
+        "… neutral";
+
+      if(window.BigCube && typeof BigCube.onEvent === "function") {
+        BigCube.onEvent(e);
+      }
+    }
+  };
+  </script>
+
+  <!-- MOL_BIGCUBE -->
+  <script id="MOL_BIGCUBE">
+  window.BigCube = window.BigCube || {
+    onEvent(e){
+      console.log("BigCube reagiert:", e);
+      const cube = document.querySelector(".cube") || document.getElementById("cubeWrap_test") || document.querySelector(".IQ_2");
+      if(!cube) return;
+      cube.style.transition = "transform .18s ease";
+      cube.style.transform = "scale(1.05)";
+      setTimeout(()=> { cube.style.transform = ""; }, 300);
+    }
+  };
+  </script>
+
+  <!-- MOL_SCANNER_LOGIK -->
+  <script id="MOL_SCANNER_LOGIK">
+  const AXIS = { x:0, y:0, z:0 };
+  function updateEpochen(){
+    const ex = document.getElementById("epX");
+    const ey = document.getElementById("epY");
+    const ez = document.getElementById("epZ");
+    if(ex) ex.textContent = AXIS.x;
+    if(ey) ey.textContent = AXIS.y;
+    if(ez) ez.textContent = AXIS.z;
+  }
+  document.getElementById("scanZack")?.addEventListener("click", ()=> {
+    AXIS.z++; updateEpochen(); NAVI.onEvent({ type:"past", anchor: "PI", time: Date.now() });
+  });
+  document.getElementById("scanME")?.addEventListener("click", ()=> {
+    AXIS.y++; updateEpochen(); NAVI.onEvent({ type:"now", anchor: "PI", time: Date.now() });
+  });
+  document.getElementById("scanKlick")?.addEventListener("click", ()=> {
+    AXIS.x++; updateEpochen(); NAVI.onEvent({ type:"future", anchor: "PI", time: Date.now() });
+  });
   </script>
 
 </body>
