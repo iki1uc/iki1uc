@@ -1,33 +1,40 @@
-<section>
-  <h2>物語</h2>
-  <!-- Erased / 僕だけがいない街 への静かな敬意。 -->
-  <p>
-    彼女には、時間が「少しだけ」巻き戻る瞬間がある。  
-    それは奇跡ではなく、罰のような贈り物だった。  
-    目の前で起きるはずだった小さな悲劇を、もう一度やり直すために。  
-  </p>
-  <p>
-    誰にも気づかれないまま、彼女だけが同じ瞬間を二度生きる。  
-    失われるはずだった笑顔を守るために、  
-    彼女は、自分の時間だけを少しずつ削っていく。
-  </p>
-</section>
-<section>
-  <h2>時間システム（SHIFT）</h2>
-  <!-- 機能は静かに働き、誰かの未来を守る。 -->
-  <p>
-    SHIFT は、数秒だけ時間を巻き戻す「微小リバース」を発動する。  
-    これは予知ではなく、因果の揺らぎを利用した再試行だ。  
-  </p>
-  <p>
-    発動条件は一つ。  
-    <strong>「危険が確定する直前」</strong>。  
-    その瞬間、彼女の世界だけが静かに反転し、  
-    彼女は同じ数秒を二度生きることになる。
-  </p>
-  <p>
-    その代償として、彼女の体内時計は少しずつ削られていく。  
-    それでも彼女は動く。  
-    誰かの小さな未来を守るために。
-  </p>
-</section>
+/*  
+  調停コア – verhandlung-core.js  
+  -----------------------------------------
+  日本の静けさ。  
+  Une touche française, seulement si utile.  
+  Le reste reste simple, humble, efficace.
+*/
+
+// 6 Formen – 基本形
+const Formen = {
+  QI:    "QI",
+  ORBIT: "ORBIT",
+  OP:    "OP",
+  EVO:   "EVO",
+  NC:    "NC",
+  CO:    "CO"
+};
+
+// 分子生成 – Naissance d’un molécule
+function MolekuelGeburt(A, B, C) {
+
+  // 初期状態 – état initial
+  const M = {
+    items: [A, B, C],
+    marker: ["MOL"],
+    state: Formen.QI
+  };
+
+  // 静かな流れ – le flux tranquille
+  M.state = Formen.ORBIT;
+  M.state = Formen.OP;
+  M.state = Formen.EVO;
+  M.state = Formen.NC;
+  M.state = Formen.CO;
+
+  return M;
+}
+
+// 公開 – Export
+window.MolekuelGeburt = MolekuelGeburt;
