@@ -43,11 +43,44 @@ function nextAnchor() {
   return activeAnchor;
 }
 
+// --- Halt / Aufgabe / Bestätigung ---
+let lastEvent = null;
+
+function halt(eventName = "unbenannt") {
+  lastEvent = {
+    clone: CLONE_ID,
+    anchor: activeAnchor,
+    event: eventName,
+    time: Date.now()
+  };
+
+  console.log("⏸ HALT – Ereignis fixiert:", lastEvent);
+
+  // Zeit-Impuls an BigCube senden (falls vorhanden)
+  if (window.BigCube && typeof BigCube.onEvent === "function") {
+    BigCube.onEvent(lastEvent);
+  }
+
+  return lastEvent;
+}
+
+function bestaetigen() {
+  if (!lastEvent) {
+    console.warn("Keine Ereignisse zum Bestätigen.");
+    return null;
+  }
+
+  console.log("✔ BESTÄTIGT – Ereignis akzeptiert:", lastEvent);
+  return lastEvent;
+}
+
 // --- Export für 1.html ---
 window.Clone1 = {
   checkStation,
   applyKoop,
-  nextAnchor
+  nextAnchor,
+  halt,
+  bestaetigen
 };
 
 console.log("Clone‑1 Bewusstsein aktiv.");
