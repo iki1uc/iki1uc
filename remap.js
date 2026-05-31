@@ -6,8 +6,19 @@ function renderItems(items, container){
 
     const mini = document.createElement('div');
     mini.className = 'mini-cube';
-    mini.textContent = ['◻','◼','◇','◎'][Math.floor(rand()*4)];
-    mini.style.background = `rgba(${50+Math.floor(rand()*200)},${50+Math.floor(rand()*200)},${50+Math.floor(rand()*200)},0.12)`;
+
+    // SHINE – japanische Ruhe + französische Eleganz
+    const symbols = ['◻','◼','◇','◎'];
+    mini.textContent = symbols[Math.floor(rand()*symbols.length)];
+
+    // sanfter SHINE-Farbverlauf
+    mini.style.background = `
+      linear-gradient(
+        135deg,
+        rgba(${80+Math.floor(rand()*120)},${80+Math.floor(rand()*120)},${80+Math.floor(rand()*120)},0.18),
+        rgba(255,255,255,0.05)
+      )
+    `;
 
     const txt = document.createElement('div');
     txt.textContent = it.text || `Fragment ${idx+1}`;
@@ -16,7 +27,7 @@ function renderItems(items, container){
     row.appendChild(txt);
     container.appendChild(row);
 
-    // occasional impulse from mini cube
+    // gelegentlicher Impuls – SEEU bleibt aktiv
     if(rand() < 0.06) SEEU.applyImpulse?.((rand()-0.5)*0.06,(rand()-0.5)*0.05);
   });
 }
