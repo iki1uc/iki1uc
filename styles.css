@@ -1,28 +1,25 @@
-:root{
-  --bg:#fff; --fg:#111; --muted:#666; --accent:#111;
+#cube81 {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 4px;
+  max-width: 360px;
+  margin: 20px auto;
 }
-body{font-family:Inter,system-ui,Arial,sans-serif;margin:28px;color:var(--fg);background:var(--bg)}
-.header{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.symbol{font-size:48px;opacity:.85}
-.nav{display:flex;gap:12px}
-.btn{padding:8px 14px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer}
-.controls{margin:14px 0;display:flex;gap:10px;justify-content:center}
-#content{max-width:980px;margin:18px auto;text-align:left}
-.item{padding:10px;border-bottom:1px solid #eee;display:flex;gap:12px;align-items:center}
-.mini-cube{width:40px;height:40px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex:0 0 40px}
-.mini-cube.small{width:28px;height:28px;font-size:12px;border-radius:5px}
-.highlight{ background: linear-gradient(90deg, rgba(255,240,200,0.95), rgba(255,255,255,0.0)); transition: background .6s ease; }
 
-/* großer Würfel Wrapper (cube_sim.js erzeugt #cube) */
-#cubeWrap{width:140px;height:140px;margin:18px auto;perspective:900px}
-.cube{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .6s}
-.cube .face{position:absolute;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:20px;background:rgba(255,255,255,0.04);border:1px solid rgba(0,0,0,0.06)}
-.cube.state-online{box-shadow:0 0 18px rgba(0,200,120,0.18)}
-.cube.state-busy{box-shadow:0 0 18px rgba(220,120,0,0.18)}
-.cube.state-offline{opacity:.45}
+.cube81-cell {
+  width: 36px;
+  height: 36px;
+  background: rgba(0,0,0,0.05);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--muted);
+  transition: background .3s ease;
+}
 
-/* responsive */
-@media (max-width:640px){
-  .symbol{font-size:36px}
-  .mini-cube{width:32px;height:32px}
+.cube81-cell.active {
+  background: rgba(0,0,0,0.15);
+  color: var(--fg);
 }
