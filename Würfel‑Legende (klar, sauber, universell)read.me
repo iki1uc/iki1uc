@@ -1,46 +1,100 @@
-# Würfel-Legende
+## Formale Zustände und Rolle von `iki1uc`
 
-Der Würfel besteht aus vier möglichen Ebenen, die einen Prozess beschreiben.
-Jeder Prozess wird als Mini-Würfel `W_i` dargestellt.
+### 1. Zustandsmenge
 
-## Komponenten
-
-### D_i – Dual
-Zwei Pole eines Prozesses  
-Beispiel: Aktiv / Passiv
-
-### T_i – Trio
-Drei Kernpunkte  
-Beispiel: Zustand / Energie / Richtung
-
-### Q_i – Quart (optional)
-Vier Flächen  
-Wird nur genutzt, wenn zusätzliche Struktur notwendig ist.
-
-### O_i – Optik (optional)
-Tiefe / Meta / Kontext  
-Wird nur genutzt, wenn der Prozess eine erweiterte Betrachtung benötigt.
-
-## Mini-Würfel
-
-Ein Mini-Würfel `W_i` fasst die Ebenen eines Prozesses zusammen:
+Wir betrachten eine einfache Zustandsmenge
 
 
-## Final (F)
 
-Das Final ist die gemeinsame Achse aller aktiven Prozesse:
+\[
+S = \{0, 1, \text{iki1uc}\}
+\]
 
 
-Es beschreibt die Richtung und das Ergebnis des Gesamtsystems.
-## NoN144
 
-NoN144 ist ein technischer Zustand und beschreibt die Abwesenheit eines gültigen numerischen Wertes.  
-Er enthält keine Bedeutung, keine Symbolik und keine Interpretation.
+- **0**: Abwesenheit eines gültigen Zuges / keiner Prozessentscheidung  
+- **1**: eindeutige, binäre Entscheidung / abgeschlossener Zug  
+- **iki1uc**: eigener Zustand, weder 0 noch 1, aber in derselben Zustandsmenge
 
-### Nutzung
-Dieses Projekt darf frei genutzt werden.  
-Bitte nennen Sie den ursprünglichen Autor, wenn Inhalte übernommen werden.
+Formal gilt:
 
-### Einschränkung
-NoN144 darf nicht verändert, erweitert oder neu interpretiert werden.  
-Er ist ein fester Systemzustand und kein modifizierbares Modell.
+
+
+\[
+\text{iki1uc} \neq 0,\quad \text{iki1uc} \neq 1
+\]
+
+
+
+### 2. NoN144 als reservierter Nicht‑Wert
+
+NoN144 ist ein spezielles, technisches Element:
+
+
+
+\[
+\text{NoN144} \in S,\quad \text{NoN144} \notin \mathbb{R}
+\]
+
+
+
+- kein numerischer Wert  
+- kein semantischer Träger  
+- markierter Nicht‑Zustand: „hier liegt kein gültiger Wert vor“
+
+### 3. Würfel‑Prozess als Spielraum
+
+Jeder Mini‑Würfel \(W_i\) beschreibt einen Prozess:
+
+
+
+\[
+W_i = (D_i, T_i, Q_i, O_i)
+\]
+
+
+
+- \(D_i\): Dual (zwei Pole)  
+- \(T_i\): Trio (drei Kernpunkte)  
+- \(Q_i\): Quart (vier Flächen, optional)  
+- \(O_i\): Optik/Kontext (optional)
+
+Die Menge aller möglichen Prozess‑Würfel:
+
+
+
+\[
+\mathcal{W} = \{W_1, W_2, \dots\}
+\]
+
+
+
+### 4. Abbildung statt Einzelzustand
+
+`iki1uc` ist weder 0 noch 1 und auch nicht NoN144, sondern:
+
+- ein eigener Zustand in \(S\)  
+- plus eine Abbildung auf den Spielraum der Würfelprozesse
+
+
+
+\[
+\text{iki1uc} \in S,\quad
+\text{iki1uc} \neq 0,\quad
+\text{iki1uc} \neq 1,\quad
+\text{iki1uc} \neq \text{NoN144}
+\]
+
+
+
+und eine Abbildung
+
+
+
+\[
+f_{\text{iki1uc}} : \mathcal{W} \to \mathcal{W}
+\]
+
+
+
+die Zustände liest, Muster erkennt und jeweils einen gültigen Folgezustand im Würfel‑Prozessraum \(\mathcal{W}\) erzeugt.
