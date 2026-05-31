@@ -1,3 +1,10 @@
+/*  
+  SHIFT – Sinn & Seele Layer  
+  -----------------------------------------
+  日本の静けさ。  
+  Une touche française pour la clarté.
+*/
+
 function shiftSinn(data) {
   return {
     essenz: data.out,
@@ -8,34 +15,16 @@ function shiftSinn(data) {
   };
 }
 
-function shiftCore(input) {
-  const schiene = shiftGetSchiene();
-  const eich = EICH();
-
-  const frame = {
-    cube: CUBE_ID,
-    role: ROLE,
-    in: input,
-    state: STATE,
-    schiene,
-    eich,
-    out: `SHIFT(${input})`
-  };
-
-  frame.sinn = shiftSinn(frame);
-
-  return frame;
-}
+// Seele – berührt nichts Sichtbares
 function SHIFT_SEELE(frame) {
-  // Die Seele berührt nichts Sichtbares.
-  // Sie interpretiert nur.
   return {
     moment: frame.eich.iso,
     richtung: frame.schiene.next,
     bedeutung: frame.out,
     zustand: frame.state
-    frame.sinn = shiftSinn(frame);
-frame.seele = SHIFT_SEELE(frame);
+  };
+}
+
 function shiftCore(input) {
   const schiene = shiftGetSchiene();
   const eich = EICH();
@@ -50,11 +39,9 @@ function shiftCore(input) {
     out: `SHIFT(${input})`
   };
 
+  // Sinn + Seele aktivieren
   frame.sinn = shiftSinn(frame);
-  frame.seele = SHIFT_SEELE(frame);   // ⭐ SEELE AKTIVIERT
+  frame.seele = SHIFT_SEELE(frame);
 
   return frame;
-}
-
-  };
 }
