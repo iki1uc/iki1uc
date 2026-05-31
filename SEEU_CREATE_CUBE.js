@@ -1,10 +1,13 @@
-// --- seeu_engine.js / SEEU_CREATE_CUBE.js ---
-// Minimale funktionierende Cube-Engine
+// --- SEEU_CREATE_CUBE.js ---
+// Minimale, stabile Cube-Engine (angepasst für AUTO-Molekül)
 
 window.SEEU = window.SEEU || {};
 window.SEEU_PROJECTS = window.SEEU_PROJECTS || {};
-window.SEEU_CLONES = window.SEEU_CLONES || {};
+window.SEEU_CLONES = window.SEEU_CLONES || [];
 
+// ---------------------------------------------------------
+// CUBE ERZEUGEN
+// ---------------------------------------------------------
 window.SEEU_CREATE_CUBE = function(opts){
   const {
     projectId,
@@ -45,7 +48,8 @@ window.SEEU_CREATE_CUBE = function(opts){
     applyImpulse(ix, iy){
       this.rotX += iy * 40;
       this.rotY += ix * 40;
-      cube.style.transform = `rotateX(${this.rotX}deg) rotateY(${this.rotY}deg)`;
+      cube.style.transform =
+        `rotateX(${this.rotX}deg) rotateY(${this.rotY}deg)`;
     },
 
     setState(state){
@@ -54,11 +58,13 @@ window.SEEU_CREATE_CUBE = function(opts){
     }
   };
 
-  // Globale API verbinden
-  window.SEEU.applyImpulse = (x,y)=> inst.applyImpulse(x,y);
-  window.SEEU.setCubeState = (s)=> inst.setState(s);
+  // ---------------------------------------------------------
+  // NEU: CLONE REGISTRIEREN (für AUTO-Molekül)
+  // ---------------------------------------------------------
+  if(window.SEEU_REGISTER_CLONE){
+    window.SEEU_REGISTER_CLONE(inst);
+  }
 
   console.log("Cube erzeugt:", projectId);
   return inst;
 };
-
