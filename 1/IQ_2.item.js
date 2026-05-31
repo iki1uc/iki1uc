@@ -1,6 +1,18 @@
 // IQ_2.item.js
 // Maxi‑Item: große Darstellung, jetzt Engine‑fähig
 
+// sendEvent helper
+function sendEvent(type){
+  if(window.NAVI && typeof NAVI.onEvent === "function"){
+    NAVI.onEvent({
+      source: "IQ_2",
+      anchor: IQ_2_Item.anchor,
+      type,
+      time: Date.now()
+    });
+  }
+}
+
 export const IQ_2_Item = {
     id: "IQ_2",
     label: "Maxi‑Cube",
@@ -31,6 +43,9 @@ export const IQ_2_Item = {
     attachEvents() {
         document.addEventListener("click", () => {
             console.log("IQ_2 → Interaktion erkannt");
+
+            // NAVI informieren
+            sendEvent("cube_interaction");
 
             // Wenn Engine existiert → Domino‑Schritt
             if (typeof STATION_PRUEFUNG === "function") {
