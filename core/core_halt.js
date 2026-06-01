@@ -1,21 +1,26 @@
-// ⭐ Zentrales halt() – für alle Seiten
-window.halt = function halt(eventName = "event", extra = {}) {
-  const lastEvent = {
-    clone: extra.clone || (window.PAGE_ID || "?"),
-    anchor: extra.anchor || (window.PAGE_ANCHOR || "PI"),
-    event: eventName,
-    time: Date.now(),
-    ...extra
+function halt(eventName="core_event"){
+  const e = {
+    event:eventName,
+    time:Date.now()
   };
 
-  if (window.NAVI && typeof NAVI.onEvent === "function") {
-    NAVI.onEvent(lastEvent);
+  // Puls
+  const p = document.getElementById("corePulse");
+  if(p){
+    p.style.transform = "scale(1.15)";
+    setTimeout(()=> p.style.transform = "scale(1)", 120);
+
+    p.textContent =
+      eventName.includes("future") ? "|" :
+      eventName.includes("past")   ? "." :
+      eventName.includes("war")    ? "*" :
+      "";
   }
 
-  if (window.BigCube && typeof BigCube.onEvent === "function") {
-    BigCube.onEvent(lastEvent);
+  // NAVI
+  if(window.NAVI && typeof NAVI.onEvent==="function"){
+    NAVI.onEvent(e);
   }
 
-  return lastEvent;
-};
-
+  return e;
+}
