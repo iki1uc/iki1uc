@@ -12,6 +12,9 @@
     import "./global/maerchen.js";
     import "./global/maerchen_render.js";
     import { ALL4ALL } from "./global/all4all.js";
+    import "./global/error_monitor.js";
+    import "./global/error_display.js";
+    import "./global/edge_injection_detector.js";
 
     window.addEventListener("load", () => {
       ALL4ALL.on();
@@ -39,6 +42,17 @@
 
 <body>
 
+  <div id="systemErrorBox" style="
+    display:none;
+    background:#330;
+    color:#ff0;
+    padding:10px;
+    margin:10px auto;
+    max-width:900px;
+    font-family:monospace;
+    border:1px solid #660;
+  "></div>
+
   <!-- CORE HUD -->
   <div id="coreHUD"></div>
   <script>
@@ -62,10 +76,8 @@
     <div class="meta small" id="meta"></div>
   </div>
 
-  <!-- ENGINE -->
   <script src="anchor_engine.js"></script>
 
-  <!-- PAGE SCRIPT -->
   <script>
     document.getElementById("regen").addEventListener("click", ()=>{
       halt("root_click_fast");
@@ -80,7 +92,6 @@
     }
   </script>
 
-  <!-- CORE LOGIK -->
   <script src="core/core_halt.js"></script>
   <script src="core/core_navi.js"></script>
   <script src="core/core_bigcube.js"></script>
