@@ -86,4 +86,79 @@
     <button id="regenSlow">KlicK mit Pause</button>
     <a href="../uc/uc.html">← Vergangenheit</a>
     <a href="../1/1.html">Jetzt</a>
-    <a href="../index.html">Ereignishorizont
+    <a href="../index.html">Ereignishorizont →</a>
+  </div>
+
+  <div class="small" id="meta"></div>
+</div>
+
+<div id="systemErrorBox" style="
+  display:none;
+  background:#330;
+  color:#ff0;
+  padding:10px;
+  margin:10px auto;
+  max-width:900px;
+  font-family:monospace;
+  border:1px solid #660;
+"></div>
+
+<!-- 128 ANKER -->
+<script type="module">
+import { GLOBAL_ALL4ALL } from "../global/all4all.js";
+import { createAnker } from "../global/anker.js";
+
+const grid = document.getElementById("anker-grid");
+const info = document.getElementById("info");
+
+const alleAnker = [];
+
+for(let i = 1; i <= 128; i++){
+    const a = createAnker("anker_" + i);
+    alleAnker.push(a);
+
+    const box = document.createElement("div");
+    box.className = "anker-box";
+    box.textContent = i;
+    box.dataset.id = a.id;
+    grid.appendChild(box);
+
+    a.leuchten = function(state){
+        this.leuchtet = state;
+        box.classList.toggle("on", !!state);
+    };
+}
+
+GLOBAL_ALL4ALL.init(alleAnker);
+
+window.onload = () => {
+    info.textContent = "System gestartet – ALL4ALL aktiv";
+};
+</script>
+
+<!-- STORY ENGINE -->
+<script src="../anchor_engine.js"></script>
+<script type="module" src="IQ_1.item.js"></script>
+
+<script>
+  document.getElementById("regen").addEventListener("click", ()=>{
+    halt("iki_click_fast");
+  });
+
+  document.getElementById("regenSlow").addEventListener("click", ()=>{
+    halt("iki_click_slow");
+  });
+
+  if(typeof STATION_PRUEFUNG==="function"){
+    STATION_PRUEFUNG("iki","PI");
+  }
+</script>
+
+<script src="../core/core_halt.js"></script>
+<script src="../core/core_navi.js"></script>
+script src="../core/core_bigcube.js"></script>
+<script src="../core/core_scanner.js"></script>
+<script src="../core/core_station.js"></script>
+
+</body>
+</html>
