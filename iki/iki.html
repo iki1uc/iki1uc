@@ -2,123 +2,158 @@
 <html lang="de">
 <head>
   <meta charset="utf-8">
-  <title>iki – Zukunft</title>
+  <title>iki – Zukunft + ALL4ALL</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
+
   <link rel="stylesheet" href="../core/core_hud.css">
+
   <style>
     body{
       margin:0;padding:2rem;
       background:#000;color:#fff;
       font-family:system-ui,sans-serif;
-      display:flex;align-items:center;justify-content:center;
       text-align:center;
     }
-    .wrap{max-width:900px;width:100%}
+
+    /* STORY-BEREICH */
+    .wrap{max-width:900px;margin:0 auto;margin-top:40px}
     .title{font-size:40px;margin-bottom:18px}
     .story{font-size:20px;line-height:1.45;min-height:160px}
     .controls{margin-top:28px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
     button{background:#0b1220;color:#7dd3fc;border:1px solid #1f2937;padding:10px 18px;font-size:16px;cursor:pointer}
     a{color:#7dd3fc;text-decoration:none;font-size:15px}
-    .meta{margin-top:14px;color:#9ca3af;font-size:13px}
     .small{font-size:16px;color:#9ca3af}
+
+    /* 128 ANKER */
+    #anker-grid {
+        display: grid;
+        grid-template-columns: repeat(16, 22px);
+        gap: 3px;
+        margin: 0 auto;
+        margin-top: 20px;
+        width: fit-content;
+    }
+    .anker-box {
+        width: 22px;
+        height: 22px;
+        font-size: 11px;
+        text-align: center;
+        line-height: 22px;
+        background:#222;
+        color:#888;
+        border-radius:3px;
+    }
+    .anker-box.on {
+        background:#0f0;
+        color:#000;
+        font-weight:bold;
+    }
+    #info {
+        margin-top:10px;
+        font-family: monospace;
+        color:#0ff;
+        font-size:14px;
+    }
   </style>
 </head>
+
 <body>
 
-  <div id="coreHUD"></div>
-  <script>
-    fetch("../core/core_hud.html")
-      .then(r=>r.text())
-      .then(h=>{ document.getElementById("coreHUD").innerHTML = h; });
-  </script>
+<!-- 128 ANKER -->
+<h3>GLOBAL ALL4ALL – 128 ANKER</h3>
+<div id="info">System lädt…</div>
+<div id="anker-grid"></div>
 
-  <div class="wrap">
-    <div class="title">iki – was kommen könnte</div>
-    <div id="story" class="story"></div>
-    <div class="controls">
-      <button id="regen">KlicK – neue Variante</button>
-      <button id="regenSlow">KlicK mit Pause</button>
-      <a href="../uc/index.html">← Vergangenheit</a>
-      <a href="../1/index.html">Jetzt</a>
-      <a href="../index.html">Ereignishorizont →</a>
-    </div>
-    <div class="meta small" id="meta"></div>
+<!-- STORY-BEREICH -->
+<div class="wrap">
+  <div class="title">iki – was kommen könnte</div>
+  <div id="story" class="story"></div>
+
+  <div class="controls">
+    <button id="regen">KlicK – neue Variante</button>
+    <button id="regenSlow">KlicK mit Pause</button>
+    <a href="../uc/index.html">← Vergangenheit</a>
+    <a href="../1/index.html">Jetzt</a>
+    <a href="../index.html">Ereignishorizont →</a>
   </div>
 
-  <script src="../anchor_engine.js"></script>
-  <script type="module" src="IQ_1.item.js"></script>
+  <div class="small" id="meta"></div>
+</div>
 
-  <script type="module">
-    const pageId = "iki";
+<!-- MODULE -->
+<script type="module">
+import { GLOBAL_ALL4ALL } from "../global/all4all.js";
+import { createAnker } from "../global/anker.js";
 
-    const pool = {
-      vision:[
-        "Es gibt Wege, die nur entstehen, wenn du sie gehst.",
-        "Manche Möglichkeiten warten, andere laufen dir davon.",
-        "Nicht jede Zukunft ist freundlich, aber jede ist ehrlich."
-      ],
-      ort:[
-        "am Rand einer Entscheidung, die du vor dir herschiebst",
-        "in einem Zimmer, das es noch nicht gibt",
-        "in einer Stadt, die du nur vom Hören kennst"
-      ],
-      stimmung:[
-        "und du spürst, dass etwas in Bewegung ist.",
-        "und du weißt, dass Stillstand keine Option ist.",
-        "und du merkst, dass Angst und Neugier sich mischen."
-      ],
-      trichter:[
-        "Zukunft ist das, was du nicht mehr aufschiebst.",
-        "Wenn du nicht wählst, wählt die Zeit für dich.",
-        "Manche Türen gehen nur einmal auf."
-      ]
+/* 128 ANKER VISUALISIERUNG */
+const grid = document.getElementById("anker-grid");
+const info = document.getElementById("info");
+
+const alleAnker = [];
+
+for(let i = 1; i <= 128; i++){
+    const a = createAnker("anker_" + i);
+    alleAnker.push(a);
+
+    const box = document.createElement("div");
+    box.className = "anker-box";
+    box.textContent = i;
+    box.dataset.id = a.id;
+    grid.appendChild(box);
+
+    a.leuchten = function(state){
+        this.leuchtet = state;
+        box.classList.toggle("on", !!state);
     };
+}
 
-    function r(a){ return a[Math.floor(Math.random()*a.length)] }
+// GLOBAL ALL4ALL INITIALISIEREN
+GLOBAL_ALL4ALL.init(alleAnker);
 
-    const storyEl = document.getElementById("story");
-    const metaEl  = document.getElementById("meta");
+/* START-TRIGGER */
+window.onload = () => {
+    info.textContent = "System gestartet – ALL4ALL aktiv (Ordner: /global • Item: modus_global • Technik: ALL4ALL)";
+    GLOBAL_ALL4ALL.on();
+};
+</script>
 
-    function buildCombo(){
-      return {
-        vision: r(pool.vision),
-        ort: r(pool.ort),
-        stimmung: r(pool.stimmung),
-        trichter: r(pool.trichter)
-      };
-    }
+<!-- STORY ENGINE -->
+<script src="../anchor_engine.js"></script>
+<script type="module" src="IQ_1.item.js"></script>
 
-    function render(c){
-      storyEl.innerHTML =
-        '<div>'+c.vision+'</div><br>'+
-        '<div class="small">'+c.ort+' '+c.stimmung+'</div><br>'+
-        '<div style="margin-top:6px"><b>'+c.trichter+'</b></div>';
-      metaEl.textContent = 'iki • '+new Date().toLocaleTimeString();
-    }
+<script type="module">
+  const pool = {
+    vision:[
+      "Es gibt Wege, die nur entstehen, wenn du sie gehst.",
+      "Manche Möglichkeiten warten, andere laufen dir davon.",
+      "Nicht jede Zukunft ist freundlich, aber jede ist ehrlich."
+    ],
+    ort:[
+      "am Rand einer Entscheidung, die du vor dir herschiebst",
+      "in einem Zimmer, das es noch nicht gibt",
+      "in einer Stadt, die du nur vom Hören kennst"
+    ],
+    stimmung:[
+      "und du spürst, dass etwas in Bewegung ist.",
+      "und du weißt, dass Stillstand keine Option ist.",
+      "und du merkst, dass Angst und Neugier sich mischen."
+    ],
+    trichter:[
+      "Zukunft ist das, was du nicht mehr aufschiebst.",
+      "Wenn du nicht wählst, wählt die Zeit für dich.",
+      "Manche Türen gehen nur einmal auf."
+    ]
+  };
 
-    function generate(withPause=true){
-      const combo = buildCombo();
-      halt("iki_story");
-      if(withPause){
-        storyEl.innerHTML = '<div class="small" style="opacity:.6">…Zukunft sortiert sich</div>';
-        setTimeout(()=>render(combo),750);
-      } else {
-        render(combo);
-      }
-    }
+  function r(a){ return a[Math.floor(Math.random()*a.length)] }
 
-    document.getElementById("regen").addEventListener("click", ()=>{ halt("iki_click_fast"); generate(false); });
-    document.getElementById("regenSlow").addEventListener("click", ()=>{ halt("iki_click_slow"); generate(true); });
+  const storyEl = document.getElementById("story");
+  const metaEl  = document.getElementById("meta");
 
-    generate(true);
-    if(typeof STATION_PRUEFUNG==="function"){ STATION_PRUEFUNG("iki","PI"); }
-  </script>
-
-  <script src="../core/core_halt.js"></script>
-  <script src="../core/core_navi.js"></script>
-  <script src="../core/core_bigcube.js"></script>
-  <script src="../core/core_scanner.js"></script>
-  <script src="../core/core_station.js"></script>
-
-</body>
-</html>
+  function buildCombo(){
+    return {
+      vision: r(pool.vision),
+      ort: r(pool.ort),
+      stimmung: r(pool.stimmung),
+      trichter: r(pool.trichter)
+    };
