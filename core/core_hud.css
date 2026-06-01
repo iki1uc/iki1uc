@@ -1,1 +1,7 @@
+#coreHUD_wrap {
+  pointer-events: none;
+}
+#coreHUD_wrap * {
+  pointer-events: auto;
+}
 
