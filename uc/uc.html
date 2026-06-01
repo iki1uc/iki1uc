@@ -12,6 +12,9 @@
     import "../global/maerchen.js";
     import "../global/maerchen_render.js";
     import { ALL4ALL } from "../global/all4all.js";
+    import "../global/error_monitor.js";
+    import "../global/error_display.js";
+    import "../global/edge_injection_detector.js";
 
     window.addEventListener("load", () => {
       ALL4ALL.on();
@@ -38,6 +41,17 @@
 </head>
 
 <body>
+
+  <div id="systemErrorBox" style="
+    display:none;
+    background:#330;
+    color:#ff0;
+    padding:10px;
+    margin:10px auto;
+    max-width:900px;
+    font-family:monospace;
+    border:1px solid #660;
+  "></div>
 
   <div id="coreHUD"></div>
   <script>
