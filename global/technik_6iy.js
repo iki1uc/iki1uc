@@ -1,3 +1,4 @@
+// /global/technik_6iy.js
 import { EVENTS } from "./events.js";
 import { TECHMAP } from "./techmap.js";
 
@@ -23,17 +24,15 @@ export const TECH_6IY = {
             "impuls_H"
         ];
 
-        // zufällige Möglichkeit
-        const pick = outputs[Math.floor(Math.random()*outputs.length)];
+        const index = Math.floor(Math.random()*8);
 
-        // an TECHMAP weiterleiten
-        TECHMAP.registerOutput("6iy", pick);
+        // TECHMAP informieren
+        TECHMAP.registerOutput("6iy", index);
 
-        // an Über‑Anker weiterleiten
+        // Über‑Anker weiterleiten
         EVENTS.trigger("ueber_anker_signal", {
             tech: "6iy",
-            output: pick
+            index
         });
     }
 };
-
