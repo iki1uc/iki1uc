@@ -6,9 +6,16 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="stylesheet" href="core/core_hud.css">
 
-  <!-- EVENTS MUSS HIER HIN -->
+  <!-- GLOBAL SYSTEM -->
   <script type="module">
     import { EVENTS } from "./global/events.js";
+    import "./global/maerchen.js";
+    import "./global/maerchen_render.js";
+    import { ALL4ALL } from "./global/all4all.js";
+
+    window.addEventListener("load", () => {
+      ALL4ALL.on();
+    });
   </script>
 
   <style>
@@ -59,70 +66,18 @@
   <script src="anchor_engine.js"></script>
 
   <!-- PAGE SCRIPT -->
-  <script type="module">
-    const pageId = "root";
+  <script>
+    document.getElementById("regen").addEventListener("click", ()=>{
+      halt("root_click_fast");
+    });
 
-    const pool = {
-      core:[
-        "Es gibt Momente, die den Rest des Lebens einfärben.",
-        "Manche Sekunden sind schwerer als ganze Jahre.",
-        "Ein Ereignis kann eine ganze Biografie knicken oder gerade ziehen."
-      ],
-      ort:[
-        "am Rand einer Straße, die du nie wieder betreten willst",
-        "in einem Zimmer, das in deinem Kopf weiter existiert",
-        "zwischen zwei Sätzen, die nie zurückgenommen wurden"
-      ],
-      stimmung:[
-        "und seitdem ist nichts mehr ganz neutral.",
-        "und du weißt, dass es nie wieder so wird wie davor.",
-        "und du trägst es, ob du willst oder nicht."
-      ],
-      trichter:[
-        "Was du nie vergisst, formt, was du nie wieder zulässt.",
-        "Manche Grenzen entstehen in einem einzigen Augenblick.",
-        "Nicht jedes Ereignis ist fair – aber jedes hinterlässt eine Richtung."
-      ]
-    };
+    document.getElementById("regenSlow").addEventListener("click", ()=>{
+      halt("root_click_slow");
+    });
 
-    function r(a){ return a[Math.floor(Math.random()*a.length)] }
-
-    const storyEl = document.getElementById("story");
-    const metaEl  = document.getElementById("meta");
-
-    function buildCombo(){
-      return {
-        kern: r(pool.core),
-        ort: r(pool.ort),
-        stimmung: r(pool.stimmung),
-        trichter: r(pool.trichter)
-      };
+    if(typeof STATION_PRUEFUNG==="function"){
+      STATION_PRUEFUNG("root","PI");
     }
-
-    function render(c){
-      storyEl.innerHTML =
-        '<div>'+c.kern+'</div><br>'+
-        '<div class="small">'+c.ort+' '+c.stimmung+'</div><br>'+
-        '<div style="margin-top:6px"><b>'+c.trichter+'</b></div>';
-      metaEl.textContent = 'root • '+new Date().toLocaleTimeString();
-    }
-
-    function generate(withPause=true){
-      const combo = buildCombo();
-      halt("root_story");
-      if(withPause){
-        storyEl.innerHTML = '<div class="small" style="opacity:.6">…Ereignis sortiert sich</div>';
-        setTimeout(()=>render(combo),750);
-      } else {
-        render(combo);
-      }
-    }
-
-    document.getElementById("regen").addEventListener("click", ()=>{ halt("root_click_fast"); generate(false); });
-    document.getElementById("regenSlow").addEventListener("click", ()=>{ halt("root_click_slow"); generate(true); });
-
-    generate(true);
-    if(typeof STATION_PRUEFUNG==="function"){ STATION_PRUEFUNG("root","PI"); }
   </script>
 
   <!-- CORE LOGIK -->
