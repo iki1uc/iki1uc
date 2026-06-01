@@ -5,6 +5,12 @@
   <title>1 – Jetzt</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="stylesheet" href="../core/core_hud.css">
+
+  <!-- EVENTS MUSS HIER HIN -->
+  <script type="module">
+    import { EVENTS } from "../global/events.js";
+  </script>
+
   <style>
     body{
       margin:0;padding:2rem;
@@ -13,91 +19,3 @@
       display:flex;align-items:center;justify-content:center;
       text-align:center;
     }
-    .wrap{max-width:900px;width:100%}
-    .title{font-size:40px;margin-bottom:18px}
-    .story{font-size:20px;line-height:1.45;min-height:160px}
-    .controls{margin-top:28px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-    button{background:#0b1220;color:#7dd3fc;border:1px solid #1f2937;padding:10px 18px;font-size:16px;cursor:pointer}
-    a{color:#7dd3fc;text-decoration:none;font-size:15px}
-    .meta{margin-top:14px;color:#9ca3af;font-size:13px}
-    .small{font-size:16px;color:#9ca3af}
-  </style>
-</head>
-<body>
-
-  <div id="coreHUD"></div>
-  <script>
-    fetch("../core/core_hud.html")
-      .then(r=>r.text())
-      .then(h=>{ document.getElementById("coreHUD").innerHTML = h; });
-  </script>
-
-  <div class="wrap">
-    <div class="title">Clone 1 – Jetzt</div>
-    <div id="story" class="story"></div>
-    <div class="controls">
-      <button id="regen">KlicK – neue Variante</button>
-      <button id="regenSlow">KlicK mit Pause</button>
-      <a href="../uc/index.html">← Vergangenheit</a>
-      <a href="../iki/index.html">Zukunft</a>
-      <a href="../index.html">Ereignishorizont →</a>
-    </div>
-    <div class="meta small" id="meta"></div>
-  </div>
-
-  <script src="../anchor_engine.js"></script>
-  <script type="module" src="IQ_2.item.js"></script>
-
-  <script>
-    const pageId = '1';
-
-    const pool = {
-      rolePI:[
-        "PI erkennt Muster, die andere übersehen.",
-        "PI trägt die Erinnerung an eine Nacht.",
-        "PI ist hier, weil es sein muss."
-      ],
-      roleGauner:[
-        "Der Gauner nimmt den Seiteneingang.",
-        "Der Gauner lächelt, als wäre es nur ein Spiel.",
-        "Der Gauner tut so, als wäre alles Zufall."
-      ],
-      places:[
-        "im Viertel, wo alles zu früh kommt",
-        "am Rand der Stadt, wo die Lichter flackern",
-        "in der Gasse, die niemand kennt"
-      ],
-      events:[
-        "sie begegnen sich zufällig",
-        "ein Brief fällt aus der Wand",
-        "sie hören denselben Satz zur selben Zeit"
-      ],
-      moods:[
-        "und es fühlt sich richtig an.",
-        "und ein Schatten bleibt zurück.",
-        "und beide spüren eine unerwartete Ruhe."
-      ],
-      trichter:[
-        "Wenn es bleibt, hat es Gewicht.",
-        "Wenn es nicht bleibt, war es nicht wichtig.",
-        "Manchmal ist die Begegnung wichtiger als der Grund."
-      ]
-    };
-
-    try {
-      localStorage.setItem('cube_pool_' + pageId, JSON.stringify(pool));
-      localStorage.setItem('cube_pool_last', pageId + '|' + Date.now());
-    } catch(e){}
-
-    function r(a){ return a[Math.floor(Math.random()*a.length)] }
-    function shuffle(a){ return a.slice().sort(()=>Math.random()-0.5) }
-
-    const HIST_KEY = 'cube_history_v1';
-    function loadHistory(){ try{ return JSON.parse(localStorage.getItem(HIST_KEY)||'[]') }catch(e){ return [] } }
-    function saveHistory(h){ localStorage.setItem(HIST_KEY, JSON.stringify(h)) }
-    function addToHistory(h){ const H=loadHistory(); H.push(h); if(H.length>500) H.splice(0,H.length-500); saveHistory(H) }
-    function seenBefore(h){ return loadHistory().includes(h) }
-
-    function buildCombo(maxAttempts=40){
-      for(let attempt=0; attempt<maxAttempts; attempt++){
-        const schiene = Math.random
