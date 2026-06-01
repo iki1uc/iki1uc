@@ -5,7 +5,7 @@ EVENTS.on("system_error", err => {
     if(!box) return;
 
     box.innerHTML = `
-        <div class="err">
+        <div style="padding:10px;background:#330;color:#ff0;border:1px solid #660;">
             <b>⚠ SYSTEMFEHLER</b><br>
             <span>${err.type}</span><br>
             <small>${err.detail}</small>
@@ -13,4 +13,3 @@ EVENTS.on("system_error", err => {
     `;
     box.style.display = "block";
 });
-
