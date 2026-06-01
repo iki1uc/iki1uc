@@ -5,6 +5,12 @@
   <title>Ereignishorizont – root</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="stylesheet" href="core/core_hud.css">
+
+  <!-- EVENTS MUSS HIER HIN -->
+  <script type="module">
+    import { EVENTS } from "./global/events.js";
+  </script>
+
   <style>
     body{
       margin:0;padding:2rem;
@@ -23,6 +29,7 @@
     .small{font-size:16px;color:#9ca3af}
   </style>
 </head>
+
 <body>
 
   <!-- CORE HUD -->
@@ -36,6 +43,7 @@
   <div class="wrap">
     <div class="title">Ereignishorizont – Dinge, die man nie vergisst</div>
     <div id="story" class="story"></div>
+
     <div class="controls">
       <button id="regen">KlicK – neue Variante</button>
       <button id="regenSlow">KlicK mit Pause</button>
@@ -43,13 +51,14 @@
       <a href="1/1.html">Jetzt</a>
       <a href="iki/iki.html">Zukunft →</a>
     </div>
+
     <div class="meta small" id="meta"></div>
   </div>
 
   <!-- ENGINE -->
   <script src="anchor_engine.js"></script>
 
-  <!-- PAGE SCRIPT (root) -->
+  <!-- PAGE SCRIPT -->
   <script type="module">
     const pageId = "root";
 
