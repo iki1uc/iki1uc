@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>3×X – Übersetzer</title>
+<title>3×X – MEGA‑ANKER</title>
 <style>
 body{background:#000;color:#0f0;font-family:monospace;}
 pre{background:#111;padding:12px;white-space:pre-wrap;}
@@ -11,13 +11,13 @@ button{padding:6px 12px;background:#111;border:1px solid #333;color:#0f0;}
 </head>
 <body>
 
-<h1>3×X – Übersetzer</h1>
-<button onclick="translate()">ÜBERSETZEN</button>
+<h1>3×X – MEGA‑ANKER</h1>
+<button onclick="mega()">ÜBERSETZEN</button>
 
 <pre id="out"></pre>
 
 <script>
-function translate(){
+function mega(){
   const raw = localStorage.getItem("AXIS");
   if(!raw){
     out.textContent = "Keine AXIS-Daten gefunden.";
@@ -27,11 +27,14 @@ function translate(){
   const A = JSON.parse(raw);
 
   const epoch = A.x + A.y + A.z;
-  const direction = A.x > A.z ? "forward" :
-                    A.z > A.x ? "backward" : "neutral";
 
-  const height = A.y > 0 ? "up" :
-                 A.y < 0 ? "down" : "level";
+  const direction =
+    A.x > A.z ? "forward" :
+    A.z > A.x ? "backward" : "neutral";
+
+  const height =
+    A.y > 0 ? "up" :
+    A.y < 0 ? "down" : "level";
 
   const cylinder =
     A.x >= A.y && A.x >= A.z ? "X‑Zylinder" :
@@ -39,7 +42,8 @@ function translate(){
                                "Z‑Zylinder";
 
   out.textContent =
-`=== 3×X MATRIX ===
+`=== 3×X – MEGA‑ANKER ===
+
 Achsen:
   X = ${A.x}
   Y = ${A.y}
@@ -56,10 +60,12 @@ Höhe:
 
 Zylinder:
   ${cylinder}
+
+Operator:
+  ${direction}/${height}/${cylinder}
 `;
 }
 </script>
 
 </body>
 </html>
-
