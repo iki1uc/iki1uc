@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<!--
+TOOLOMAT v1.0
+Erfinder: Ridvan
+Marke: wieimmer iki1uc
+EICH: 14er Kreisgruppe ak = (cosθk, sinθk)
+GEN-Verify: Nick(t), F = Σ εk ak
+Beschreibung: Rein strukturelle Messmaschine (DOM/UI/Scripts)
+Keine Datenerfassung. Keine Telemetrie. Keine Identität.
+Bei Nutzung gilt: EICH + GEN + MARKE dürfen nicht entfernt werden.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<title>TOOLOMAT UI</title>
+<style>
+body{background:#000;color:#0f0;font-family:monospace;}
+input{width:70%;background:#111;color:#0f0;border:1px solid #333;}
+iframe{width:100%;height:260px;border:1px solid #333;margin-top:8px;}
+pre{background:#111;padding:8px;white-space:pre-wrap;}
+</style>
+</head>
+<body>
+<h1>TOOLOMAT UI – Button-Test</h1>
+
+URL: <input id="u"><button onclick="load()">LADEN</button>
+<iframe id="f"></iframe>
+
+<button onclick="test()">TEST</button>
+
+<pre id="out"></pre>
+
+<script>
+function load(){f.src=u.value.trim();}
+function test(){
+ let o="";
+ try{
+  const d=f.contentDocument;
+  const btn=[...d.querySelectorAll("button")];
+  o+=`Buttons: ${btn.length}\n`;
+  btn.forEach((b,i)=>{
+    const before=d.body.innerHTML.length;
+    b.click();
+    const after=d.body.innerHTML.length;
+    o+=`[${i}] "${b.textContent.trim()}" → DOMΔ: ${after-before}\n`;
+  });
+ }catch(e){o="Kein Zugriff (CORS).";}
+ out.textContent=o;
+}
+</script>
+
+</body>
+
+<!--
+TOOLOMAT © wieimmer iki1uc
+ASCII-Geometrie → Messmaschine → HTML-Scan
+X³→X²→X→1  |  14er Kreisgruppe ak  |  Nick(t)  |  F=Σ εk ak
+3A: e1,e2,e3  |  Cube C(i,j,m)∈48
+Reine Struktur. Keine Person. Keine Muster.
+Bei Nutzung gilt: EICH + GEN + MARKE dürfen nicht entfernt werden.
+-->
+</html>
