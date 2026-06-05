@@ -17,7 +17,6 @@
         "desc": "Drei Möglichkeiten, die alle richtig sein können."
       }
     ],
-
     "language": [
       {
         "id": "lang_de",
@@ -35,7 +34,6 @@
         "style": "clear, simple, neutral"
       }
     ],
-
     "perspective": [
       {
         "id": "persp_1",
@@ -53,21 +51,5 @@
         "type": "meaning"
       }
     ]
-  },
-
-  "x4": {
-    "slots": [
-      "Inhalt",
-      "Sprache",
-      "Perspektive",
-      "Meta"
-    ]
-  },
-
-  "meta": {
-    "free_choice": true,
-    "combinations": "9 Module → frei kombinierbar → 729 mögliche Kombinationen",
-    "philosophy": "Unmögliches minimieren. Mögliches maximieren."
   }
 }
-
