@@ -1,1 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SEEu‑error</title>
+
+<style>
+body{background:#000;color:#0f0;font-family:monospace;}
+pre{background:#111;padding:12px;white-space:pre-wrap;}
+</style>
+</head>
+
+<body>
+
+<h1>SEEu‑error</h1>
+<pre id="out">Warte auf Fehler…</pre>
+
+<!-- Deine globalen Fehler-Dateien -->
+<script src="../global/error_monitor.js"></script>
+<script src="../global/error_display.js"></script>
+
+<script>
+// SEEu: Fehleranzeige ohne Risiko
+window.SEEU_ERROR_HANDLER = function(err){
+  const msg = String(err.message || err);
+
+  // Normale Anzeige
+  let text = "=== SEEu‑error ===\n\n";
+  text += "Fehler:\n  " + msg + "\n";
+
+  // Wenn der Fehler wie 3×X aussieht → dann interpretieren
+  if(/3x\d|TIME-3x|AXIS|borgProtocol/.test(msg)){
+    text += "\nHinweis:\n  Fehler enthält 3×X‑Struktur.\n";
+    text += "  → Kann später mit SEEÜ‑Technik abgebildet werden.\n";
+  }
+
+  out.textContent = text;
+};
+</script>
+
+</body>
+</html>
 
