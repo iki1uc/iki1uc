@@ -1,55 +1,19 @@
 {
   "modules": {
     "content": [
-      {
-        "id": "content_1",
-        "title": "Ein Gedanke fällt",
-        "desc": "Ein Moment, in dem etwas klar wird."
-      },
-      {
-        "id": "content_2",
-        "title": "Der leise Modus",
-        "desc": "Wenn alles ruhig wird und man hört, was wichtig ist."
-      },
-      {
-        "id": "content_3",
-        "title": "Drei Wege im Licht",
-        "desc": "Drei Möglichkeiten, die alle richtig sein können."
-      }
+      { "id": "c1", "title": "Gedanke fällt" },
+      { "id": "c2", "title": "Modus wechselt" },
+      { "id": "c3", "title": "Drei Wege" }
     ],
     "language": [
-      {
-        "id": "lang_de",
-        "label": "Deutsch",
-        "style": "leicht, modern, real"
-      },
-      {
-        "id": "lang_tr",
-        "label": "Türkçe",
-        "style": "sıcak, akışkan, duygulu"
-      },
-      {
-        "id": "lang_en",
-        "label": "English",
-        "style": "clear, simple, neutral"
-      }
+      { "id": "de", "label": "Deutsch" },
+      { "id": "tr", "label": "Türkçe" },
+      { "id": "en", "label": "English" }
     ],
     "perspective": [
-      {
-        "id": "persp_1",
-        "label": "Was passiert?",
-        "type": "action"
-      },
-      {
-        "id": "persp_2",
-        "label": "Wie fühlt es sich an?",
-        "type": "emotion"
-      },
-      {
-        "id": "persp_3",
-        "label": "Was bedeutet es?",
-        "type": "meaning"
-      }
+      { "id": "p1", "label": "Was passiert?" },
+      { "id": "p2", "label": "Wie fühlt es sich an?" },
+      { "id": "p3", "label": "Was bedeutet es?" }
     ]
   }
 }
