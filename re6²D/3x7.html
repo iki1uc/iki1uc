@@ -1,0 +1,50 @@
+function borgProtocol(r){
+  const result = { status:"OK", action:"", message:"" };
+
+  // 1) Flow neutralisieren
+  if(r.flow){
+    result.status = "INFO";
+    result.action = "NEUTRALIZE_FLOW";
+    result.message = "Flow erkannt, UPG‑X neutralisiert.";
+    return result;
+  }
+
+  // 2) Achsen optional
+  if(!r.axis1 || !r.axis2){
+    result.status = "OK";
+    result.action = "AXIS_FREE";
+    result.message = "Achsenfrei akzeptiert.";
+    return result;
+  }
+
+  // 3) HOST‑Regel: 3×7 ist IMMER erlaubt
+  if(r.grid === "3x7"){
+    result.status = "OK";
+    result.action = "HOST_OK";
+    result.message = "3×7 Host erkannt und akzeptiert.";
+    return result;
+  }
+
+  // 4) MOVE‑Regel: nur 3×4 → 3×3–3×1
+  if(r.move){
+    const allowed = ["3x4","3x3","3x2","3x1"];
+
+    if(!allowed.includes(r.grid)){
+      result.status = "BLOCKED";
+      result.action = "INVALID_SUBGRID";
+      result.message = "Move blockiert: Nur 3×4 → 3×3–3×1 erlaubt.";
+      return result;
+    }
+
+    result.status = "OK";
+    result.action = "MOVE_ACCEPTED";
+    result.message = "Move gültig im 3×4 → 3×3–3×1‑Modus.";
+    return result;
+  }
+
+  // 5) Default
+  result.status = "OK";
+  result.action = "NO_OP";
+  result.message = "Kein Move, kein Konflikt.";
+  return result;
+}
