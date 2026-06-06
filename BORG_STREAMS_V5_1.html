@@ -1,1 +1,132 @@
+{
+  "BORG_STREAMS_V5_1": [
+    {
+      "name": "BORG_CONTROL",
+      "source": "borgProtocol(r)",
+      "axis": "control",
+      "kind": "js-fn",
+      "params": {
+        "flow": "optional",
+        "axis1": "optional",
+        "axis2": "optional",
+        "grid": ["3x7", "3x4", "3x3", "3x2", "3x1"],
+        "move": "optional"
+      },
+      "rules": [
+        "if flow → NEUTRALIZE_FLOW",
+        "if !axis1 || !axis2 → AXIS_FREE",
+        "if grid == 3x7 → HOST_OK",
+        "if move && grid ∉ {3x4,3x3,3x2,3x1} → INVALID_SUBGRID",
+        "else → NO_OP"
+      ]
+    },
+    {
+      "name": "AXXX_COMPETENCE",
+      "source": "AXXX MEGA-ANKER",
+      "axis": "x",
+      "kind": "grid-3x4",
+      "competence": {
+        "core": ["01","02","03","04"],
+        "tech": "TECH-AXXX-NEW",
+        "eich": "EICH-AXXX-NEW",
+        "gen": "GEN-AXXX-NEW"
+      },
+      "protocol": {
+        "grid_3x4": [
+          ["01","02","03","04"],
+          ["05","06","07","08"],
+          ["09","01","03","04"]
+        ],
+        "operators": {
+          "01": "AN",
+          "02": "SC",
+          "03": "NV",
+          "04": "ST",
+          "05": "SG",
+          "06": "HX",
+          "07": "MX",
+          "08": "IQ",
+          "09": "AL"
+        }
+      },
+      "orbit": { "gold": true, "slot": "3x4-ready" },
+      "zoom": [4,16,64,128],
+      "legacy": {
+        "id": { "tech": "T-0016", "eich": "E-0002", "gen": "G-0002" },
+        "axes": { "main":12, "eich":1, "gen":1, "total":14 },
+        "rollback": { "EICH_old": "E-0001", "GEN_old": "G-0001" }
+      }
+    },
+    {
+      "name": "P_3xX_RASTER",
+      "source": "P-3xX MEGA-ANKER",
+      "axis": "structure",
+      "kind": "grid-3x6",
+      "grid": {
+        "rows": 3,
+        "cols": 6,
+        "valid_subgrids": [
+          { "name": "3x1", "cols": 1 },
+          { "name": "3x2", "cols": 2 },
+          { "name": "3x3", "cols": 3 },
+          { "name": "3x4", "cols": 4 },
+          { "name": "3x5", "cols": 5 },
+          { "name": "3x6", "cols": 6 }
+        ]
+      },
+      "slots": "prime/dev full table (2..61)",
+      "soll_logic": {
+        "rule": "subgrid must be valid for requested X",
+        "fallback": "truncate to X",
+        "priority": "soll-overrides-ist"
+      }
+    },
+    {
+      "name": "TIME_3x5_ZONES",
+      "source": "TIME-3x5 MEGA-ANKER",
+      "axis": "zones",
+      "kind": "3x5-grid",
+      "zones": {
+        "past": "slots mit weight",
+        "present": "slots mit weight",
+        "future": "slots mit weight"
+      }
+    },
+    {
+      "name": "TIME_3x10_DT",
+      "source": "TIME-3x10 MEGA-ANKER",
+      "axis": "time",
+      "kind": "1x10 per zone",
+      "zones": {
+        "past": "dt 10..28",
+        "present": "dt 1..10",
+        "future": "dt 5..14"
+      }
+    },
+    {
+      "name": "PI_3x9_DEV",
+      "source": "PI-3x9 MEGA-ANKER",
+      "axis": "math",
+      "kind": "3x9-grid",
+      "slots": "k, pi_dev sequence (partial, continues …)"
+    },
+    {
+      "name": "AX_3x12_ROTATION",
+      "source": "AX-3x12 MEGA-ANKER",
+      "axis": "motion",
+      "kind": "rotation",
+      "submasks": {
+        "3x4": { "cols": 4, "inherit": "rotation" },
+        "3x3": { "cols": 3, "inherit": "rotation" },
+        "3x2": { "cols": 2, "inherit": "rotation" },
+        "3x1": { "cols": 1, "inherit": "rotation" }
+      },
+      "rotation": {
+        "block_A": { "$ref": "3x4" },
+        "block_B": { "$ref": "3x4", "mode": "invert" },
+        "block_C": { "$ref": "3x4", "mode": "rotate" }
+      }
+    }
+  ]
+}
 
