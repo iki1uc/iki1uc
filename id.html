@@ -8,11 +8,26 @@
 
   <script type="module">
     import { generator } from "/br/generator.js";
+    import { borgVerify } from "/br/borg_verify.js";
+    import { borgAutoScan } from "/br/borg_autoscan.js";
 
     window.onload = async () => {
+
+      // 1) Molekül + Aufstellung erzeugen
       const data = await generator();
+
+      // 2) HTML‑Material scannen
+      const htmlScan = borgAutoScan();
+
+      // 3) BORG‑Verify
+      const verify = await borgVerify(data, htmlScan);
+
+      // 4) Ausgabe
       document.getElementById("out").textContent =
-        JSON.stringify(data.aufstellung, null, 2);
+        JSON.stringify({
+          aufstellung: data.aufstellung,
+          verify
+        }, null, 2);
     };
   </script>
 </head>
