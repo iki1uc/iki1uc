@@ -1,63 +1,35 @@
 <!DOCTYPE html>
-<html lang="de">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>iki1uc – Axis UI</title>
-  <style>
-    body { margin:0; background:#000; color:#eee; font-family:system-ui; }
-    #root { width:100vw; height:100vh; display:flex; flex-direction:column; }
-    #axis-bar { display:flex; gap:8px; padding:8px; border-bottom:1px solid #333; }
-    .axis-slot { flex:1; padding:4px 8px; border:1px solid #444; font-size:12px; }
-    #viewport { flex:1; position:relative; overflow:hidden; }
-    #controls { display:flex; gap:8px; padding:8px; border-top:1px solid #333; }
-    .btn { padding:6px 12px; border:1px solid #555; background:#111; cursor:pointer; }
-  </style>
+<meta charset="UTF-8">
+<title>iki1uc – ROOT</title>
+<style>
+  body {
+    background:#000;
+    color:#00eaff;
+    font-family:monospace;
+    text-align:center;
+    padding-top:40px;
+  }
+  a {
+    color:#00eaff;
+    font-size:20px;
+    display:block;
+    margin:10px;
+  }
+</style>
 </head>
+
 <body>
-  <div id="root">
-    <div id="axis-bar">
-      <div class="axis-slot" data-axis="ENG">ENG / 9 axes</div>
-      <div class="axis-slot" data-axis="TR">TR / 9 axes</div>
-      <div class="axis-slot" data-axis="DE">DE / 9 axes</div>
-    </div>
 
-    <div id="viewport">
-      <!-- hier: drehlicher Raum, immer vom eigenen 0-Punkt -->
-    </div>
+<h1>iki1uc – ROOT</h1>
 
-    <div id="controls">
-      <button class="btn" data-push="A">A</button>
-      <button class="btn" data-push="B">B</button>
-      <button class="btn" data-push="C">C</button>
-    </div>
-  </div>
+<p>System geladen – Navigation aktiv</p>
 
-  <script>
-    const zeroPoint = { x: 0, y: 0, z: 0 }; // eigener 0-Punkt
+<a href="./iki/iki.html">IKI</a>
+<a href="./uc/uc.html">UC</a>
+<a href="./one/one.html">ONE</a>
+<a href="./seeu/index.html">SEEÜ</a>
 
-    const state = {
-      activeAxis: null,
-      rotation: { x: 0, y: 0, z: 0 },
-      virtualAddresses: {
-        ENG: 'eng://axis/0',
-        TR:  'tr://axis/0',
-        DE:  'de://axis/0'
-      }
-    };
-
-    document.querySelectorAll('.axis-slot').forEach(slot => {
-      slot.addEventListener('click', () => {
-        state.activeAxis = slot.dataset.axis;
-        // hier: UI auf Achse umschalten, virtuelle Adresse anzeigen
-      });
-    });
-
-    document.querySelectorAll('.btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const push = btn.dataset.push;
-        // hier: Rotation / Bewegung auslösen – immer relativ zum zeroPoint
-      });
-    });
-  </script>
 </body>
 </html>
