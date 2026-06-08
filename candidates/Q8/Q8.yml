@@ -1,1 +1,8 @@
+respo: "Q8"
+id_op: "Q8"
+base: 8
+
+line: "L(n)=3n"
+instance: "I(n)=base+3n"
+axis: "A(n)=floor(n/3)+1"
 
