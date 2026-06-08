@@ -1,1 +1,8 @@
+respo: "SAFE"
+id_op: "SAFE"
+base: 12
+
+line: "L(n)=3n"
+instance: "I(n)=base+3n"
+axis: "A(n)=floor(n/3)+1"
 
