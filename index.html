@@ -2,24 +2,22 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>iki1uc Engine</title>
+  <title>INDEX – 81(1)</title>
+
+  <script src="/js/js-yaml.min.js"></script>
+
+  <script type="module">
+    import { generator } from "/br/generator.js";
+
+    window.onload = async () => {
+      const data = await generator();
+      document.getElementById("out").textContent =
+        JSON.stringify(data.aufstellung, null, 2);
+    };
+  </script>
 </head>
+
 <body>
-  <h1>iki1uc – Engine</h1>
-
-  <p>Empfängerstatus: <strong>aktiv</strong></p>
-
-  <!-- Empfänger-Tag -->
-  <div id="receiver-status" data-receiver="iki1uc"></div>
-
-  <!-- Output-Zone -->
-  <h2>Messdaten</h2>
-  <div id="iki1uc-output">Lade Messdaten…</div>
-
-  <!-- YML Parser -->
-  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
-
-  <!-- iki1uc Engine -->
-  <script src="iki1uc.js"></script>
+  <pre id="out"></pre>
 </body>
 </html>
