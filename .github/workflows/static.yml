@@ -1,4 +1,4 @@
-name: iki1uc-Sensorik
+name: respo-${{ github.repository }}
 
 on:
   workflow_run:
@@ -6,11 +6,12 @@ on:
     types: [completed]
 
 jobs:
-  sensorik:
+  modul_ok:
     runs-on: ubuntu-latest
-    steps:
-      - name: iki1uc empfängt Kern-ID
-        run: echo "iki1uc: Kern-ID empfangen"
 
-      - name: iki1uc OK + VERIFY
-        run: echo "iki1uc: OK – VERIFY – Dienst aktiv"
+    steps:
+      - name: respo empfängt OP Kern-ID
+        run: echo "respo: OP Kern-ID empfangen – Modul = ${{ github.repository }}"
+
+      - name: respo OK + VERIFY
+        run: echo "respo: OK – VERIFY – Dienst aktiv – Modul = ${{ github.repository }}"
