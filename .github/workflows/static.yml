@@ -1,6 +1,13 @@
-geometry:
-  quadrat:
-    points: [R1, R2, R3, R4]
-    triangles:
-      - [R1, R2, R3]
-      - [R1, R3, R4]
+name: iki1uc-Sensorik
+
+on:
+  workflow_run:
+    workflows: ["OP-Kern"]
+    types: [completed]
+
+jobs:
+  sensorik:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sensorik liefert Rohdaten an OP
+        run: echo "iki1uc → OP: Sensorik-Daten übertragen"
