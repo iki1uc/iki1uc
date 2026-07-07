@@ -1,1 +1,59 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>RESPO – Rotation Axis</title>
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      font-family: monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .axis {
+      display: flex;
+      gap: 30px;
+      transform: rotateZ(0deg);
+      animation: spin 6s infinite linear;
+    }
+
+    .mod {
+      padding: 10px 20px;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 6px;
+      font-size: 18px;
+      text-align: center;
+    }
+
+    @keyframes spin {
+      from { transform: rotateZ(0deg); }
+      to   { transform: rotateZ(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="axis" id="respoAxis">
+    <div class="mod">SYS</div>
+    <div class="mod">TEM</div>
+    <div class="mod">IKI</div>
+    <div class="mod">BIR</div>
+    <div class="mod">N0</div>
+    <div class="mod">NS</div>
+    <div class="mod">NC</div>
+    <div class="mod">NC.sub</div>
+    <div class="mod">ART.link</div>
+    <div class="mod">Ghost-Scan</div>
+    <div class="mod">TriAxiom</div>
+    <div class="mod">BOERSE</div>
+  </div>
+
+  <script src="respo.js"></script>
+</body>
+</html>
 
