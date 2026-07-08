@@ -1,1 +1,5 @@
+CACHE_WARMUP({
+    SOURCE: ROM,
+    SHADOW: CACHE
+});
 
