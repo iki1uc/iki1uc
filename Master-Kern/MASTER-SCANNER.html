@@ -1,1 +1,60 @@
+<html>
+<head>
+<title>MASTER-SCANNER-698869 (((WIEIMMER)))</title>
+</head>
+
+<body>
+
+<section id="scanner">
+
+  <master-core>698869</master-core>
+
+  <station>{{STATION}}</station>
+  <code>{{CODE}}</code>
+  <task>{{TASK}}</task>
+
+  <pipeline>
+    P4 → P0 → P1 → P2 → Pe
+  </pipeline>
+
+  <input>
+    value = {{INPUT}}
+  </input>
+
+  <execute>
+
+    step_P4 = start({{INPUT}})
+
+    if {{STATION}} == IKI:
+        step_P0 = wake(step_P4)
+        step_P1 = melt(step_P0)
+        step_P2 = merge(step_P1)
+        result  = Φ(step_P2)
+
+    if {{STATION}} == BIR:
+        step_P1 = melt(step_P4)
+        step_P2 = merge(step_P1)
+        result  = φ(step_P2)
+
+    if {{STATION}} == UC:
+        step_P2 = merge(step_P4)
+        result  = φ²(step_P2)
+
+    if {{STATION}} == MA³:
+        result  = φ∞(step_P4)
+
+  </execute>
+
+  <output>
+    {{RESULT}}
+  </output>
+
+  <return>
+    SEEu.md ← {{RESULT}}
+  </return>
+
+</section>
+
+</body>
+</html>
 
