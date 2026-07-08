@@ -1,7 +1,16 @@
 const RESPO_ID = {
     id: "RESPO-ROT-AXIS",
-    role: "ROTATION",
+    role: "ROTATION-CORE",
     cluster: "AXIS-CHAIN-∞",
     signature: "RESPO::AXIS::ROT",
-    relation: "ALL-MODULES"
+    relation: "ALL-MODULES",
+    define: {
+        axis: "ROTATION",
+        mode: "CIRCULAR",
+        bind: "IKI1UC-CORE",
+        anchor: "ROM",
+        shadow: "CACHE",
+        hw: ["CPU", "GPU", "RAM"],
+        multilar: true
+    }
 };
