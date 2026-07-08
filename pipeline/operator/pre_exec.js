@@ -1,1 +1,7 @@
+EXEC_INIT({
+    CACHE: ROOT,
+    GPU: RAW.HW.GPU,
+    CPU: RAW.HW.CPU,
+    RAM: RAW.HW.RAM
+});
 
