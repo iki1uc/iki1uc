@@ -2,58 +2,154 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <title>RESPO – Rotation Axis</title>
+  <title>ROOT – System Overview</title>
+
   <style>
     body {
       background: #000;
-      color: #fff;
+      color: #0f0;
       font-family: monospace;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      overflow: hidden;
+      padding: 40px;
     }
 
-    .axis {
-      display: flex;
-      gap: 30px;
-      transform: rotateZ(0deg);
-      animation: spin 6s infinite linear;
+    h1, h2 {
+      color: #0f0;
+      margin-bottom: 10px;
     }
 
-    .mod {
-      padding: 10px 20px;
-      background: #111;
-      border: 1px solid #333;
+    .block {
+      border: 1px solid #0f0;
+      padding: 15px;
+      margin-bottom: 25px;
       border-radius: 6px;
-      font-size: 18px;
-      text-align: center;
     }
 
-    @keyframes spin {
-      from { transform: rotateZ(0deg); }
-      to   { transform: rotateZ(360deg); }
+    .item {
+      margin-left: 20px;
+      padding: 4px 0;
+    }
+
+    .folder {
+      color: #6f6;
+      font-weight: bold;
+    }
+
+    .file {
+      color: #9f9;
     }
   </style>
 </head>
+
 <body>
-  <div class="axis" id="respoAxis">
-    <div class="mod">SYS</div>
-    <div class="mod">TEM</div>
-    <div class="mod">IKI</div>
-    <div class="mod">BIR</div>
-    <div class="mod">N0</div>
-    <div class="mod">NS</div>
-    <div class="mod">NC</div>
-    <div class="mod">NC.sub</div>
-    <div class="mod">ART.link</div>
-    <div class="mod">Ghost-Scan</div>
-    <div class="mod">TriAxiom</div>
-    <div class="mod">BOERSE</div>
+
+  <h1>ROOT – Systemstruktur</h1>
+
+  <!-- ROOT -->
+  <div class="block">
+    <h2>ROOT/</h2>
+    <div class="folder">ROM/</div>
+    <div class="item file">rom.map</div>
+    <div class="item file">rom.rules</div>
+
+    <div class="folder">ROM/CACHE/</div>
+    <div class="item file">cache.root</div>
+    <div class="item file">cache.rules</div>
+
+    <div class="item file">root.map</div>
   </div>
 
-  <script src="respo.js"></script>
+  <!-- RAW -->
+  <div class="block">
+    <h2>RAW/</h2>
+    <div class="folder">HW/</div>
+    <div class="item file">GPU/gpu.map</div>
+    <div class="item file">CPU/cpu.map</div>
+    <div class="item file">RAM/ram.map</div>
+    <div class="item file">ROM/rom.map</div>
+    <div class="item file">CACHE/cache.map</div>
+
+    <div class="item file">raw.map</div>
+  </div>
+
+  <!-- pipeline4 -->
+  <div class="block">
+    <h2>pipeline4/</h2>
+
+    <div class="folder">sys/</div>
+    <div class="item file">triangle.sys</div>
+
+    <div class="folder">tem/</div>
+    <div class="item file">quad.tem</div>
+
+    <div class="folder">AU/</div>
+    <div class="item file">placement.au</div>
+
+    <div class="folder">RA/</div>
+    <div class="item file">distribution.ra</div>
+
+    <div class="folder">operator/</div>
+    <div class="item file">pre_exec.js</div>
+    <div class="item file">pre_cache.js</div>
+    <div class="item file">pre_gpu.js</div>
+    <div class="item file">pre_ram.js</div>
+    <div class="item file">pre_cpu.js</div>
+    <div class="item file">pre_parallel.js</div>
+
+    <div class="item file">pipeline.map</div>
+  </div>
+
+  <!-- iki1uc -->
+  <div class="block">
+    <h2>iki1uc/</h2>
+
+    <div class="folder">core/</div>
+    <div class="item file">iki1uc.html</div>
+    <div class="item file">iki1uc.map</div>
+
+    <div class="folder">ops/</div>
+    <div class="item file">engine.js</div>
+    <div class="item file">ax_in.js</div>
+    <div class="item file">xa_out.js</div>
+    <div class="item file">ax_xa_router.js</div>
+    <div class="item file">reorder.js</div>
+
+    <div class="folder">space/</div>
+    <div class="item file">room.json</div>
+    <div class="item file">coords.json</div>
+
+    <div class="folder">state/</div>
+    <div class="item file">status.txt</div>
+    <div class="item file">buffer.state</div>
+
+    <div class="folder">read/</div>
+    <div class="item file">info.md</div>
+    <div class="item file">ops.md</div>
+
+    <div class="item file">ID.html</div>
+    <div class="item file">index.html</div>
+    <div class="item file">respo.js</div>
+    <div class="item file">README.md</div>
+  </div>
+
+  <!-- RESPO -->
+  <div class="block">
+    <h2>RESPO/</h2>
+    <div class="item file">respo.js</div>
+    <div class="item file">ec.js</div>
+    <div class="item file">respo.map</div>
+    <div class="item file">respo.scan</div>
+    <div class="item file">ghost.scan</div>
+  </div>
+
+  <!-- ghost -->
+  <div class="block">
+    <h2>ghost/</h2>
+    <div class="item file">ghost.js</div>
+    <div class="item file">drift.scan</div>
+    <div class="item file">deadlock.scan</div>
+    <div class="item file">pipeline.scan</div>
+    <div class="item file">iki1uc.scan</div>
+  </div>
+
 </body>
 </html>
-
