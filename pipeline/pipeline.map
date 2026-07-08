@@ -1,1 +1,6 @@
+PIPELINE4 → iki1uc
+ORDER: sys → tem → AU → RA
+RAW: RAW.HW
+ROOT: ROM → CACHE
+TARGET: iki1uc
 
