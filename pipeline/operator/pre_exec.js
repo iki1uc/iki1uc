@@ -4,4 +4,3 @@ EXEC_INIT({
     CPU: RAW.HW.CPU,
     RAM: RAW.HW.RAM
 });
-
