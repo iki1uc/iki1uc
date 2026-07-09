@@ -1,5 +1,16 @@
 {
   "id": "ULRM-ROOT",
-  "dirs": ["DIR", "use", "user", "MIR", "RAWATOR", "UIme"],
+  "dirs": [
+    "DIR",
+    "use",
+    "user",
+    "MIR",
+    "RAWATOR",
+    "UIme"
+  ],
+  "files": [
+    "FOR.html",
+    "REW.html"
+  ],
   "public": true
 }
