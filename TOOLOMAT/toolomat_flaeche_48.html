@@ -14,9 +14,7 @@ button { padding:6px 12px; background:#111; border:1px solid #555; color:#eee; c
 </style>
 </head>
 <body>
-
 <div id="title">FLÄCHEN‑SCANNER 48</div>
-
 <div id="wrap">
   <div id="input">
     <textarea id="src" placeholder="HTML einfügen..."></textarea>
@@ -26,29 +24,23 @@ button { padding:6px 12px; background:#111; border:1px solid #555; color:#eee; c
     <pre id="out"></pre>
   </div>
 </div>
-
 <script>
 function scan() {
   const t = document.getElementById('src').value;
   const o = document.getElementById('out');
   o.textContent = '';
-
   const divs = (t.match(/<div/g) || []).length;
   const sections = (t.match(/<section/g) || []).length;
   const containers = (t.match(/container|viewport|wrap|root/g) || []).length;
   const depthGuess = (t.match(/<\/div>/g) || []).length;
-
   let r = '';
   r += '=== FLÄCHEN ===\n';
   r += 'DIVs:          ' + divs + '\n';
   r += 'Sections:      ' + sections + '\n';
   r += 'Container:     ' + containers + '\n';
   r += 'Tiefe (guess): ' + depthGuess + '\n';
-
   o.textContent = r;
 }
 </script>
-
 </body>
 </html>
-
