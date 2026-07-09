@@ -1,1 +1,38 @@
 
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Zauberwürfel · RESPO</title>
+<style>
+body {
+  background: #000;
+  color: #0f0;
+  font-family: monospace;
+  text-align: center;
+  padding: 20px;
+}
+
+#scene {
+  width: 300px;
+  height: 300px;
+  margin: 100px auto;
+  perspective: 800px;
+}
+
+#cube {
+  width: 150px;
+  height: 150px;
+  position: relative;
+  transform-style: preserve-3d;
+  cursor: grab;
+}
+
+.face {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border: 2px solid #000;
+}
+
+/* Farben wie
