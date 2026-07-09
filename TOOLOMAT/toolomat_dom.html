@@ -1,109 +1,122 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<title>TOOLOMAT DOM · Vierfach-Achsenbildung</title>
+<meta charset="utf-8">
+<title>TOOLOMAT DOM – Struktur/Masse + Vierfach-Achsenbildung</title>
 
 <style>
-body {
-  background:#000;
-  color:#0f0;
-  font-family:monospace;
-  padding:20px;
-}
-
-input {
-  width:120px;
-  padding:8px;
-  background:#111;
-  color:#0f0;
-  border:1px solid #333;
-  margin-right:10px;
-}
-
-button {
-  padding:10px 20px;
-  background:#111;
-  color:#0f0;
-  border:1px solid #333;
-  cursor:pointer;
-}
-
-#out {
-  background:#111;
-  padding:20px;
-  margin-top:20px;
-  white-space:pre;
-}
+body{background:#000;color:#0f0;font-family:monospace;padding:20px;}
+textarea{width:48%;height:200px;background:#111;color:#0f0;border:1px solid #333;}
+.row{display:flex;gap:4px;margin-bottom:8px;}
+pre{background:#111;padding:12px;white-space:pre-wrap;border:1px solid #333;}
+button{padding:8px 16px;background:#111;color:#0f0;border:1px solid #333;cursor:pointer;}
+input{width:100px;padding:6px;background:#111;color:#0f0;border:1px solid #333;margin-right:10px;}
 </style>
 </head>
 <body>
 
-<h1>TOOLOMAT DOM – Vierfach-Achsenbildung</h1>
+<h1>TOOLOMAT DOM – Struktur/Masse + Achsenbildung</h1>
 
-<p>Stationen eingeben:</p>
+<!-- HTML-Scanner -->
+<div class="row">
+  <textarea id="h1" placeholder="HTML 1"></textarea>
+  <textarea id="h2" placeholder="HTML 2"></textarea>
+</div>
+<div class="row">
+  <textarea id="h3" placeholder="HTML 3"></textarea>
+  <textarea id="h4" placeholder="HTML 4"></textarea>
+</div>
 
+<!-- Mathematische Stationen -->
+<h2>Vierfach-Achsenbildung</h2>
 Φ: <input id="Phi" type="number" step="0.01">
 φ: <input id="phi" type="number" step="0.01">
 φ²: <input id="phi2" type="number" step="0.01">
 φ∞: <input id="phiinfty" type="number" step="0.01">
 
-<button onclick="domScan()">DOM‑SCAN</button>
+<br><br>
+<button onclick="scan()">SCAN DOM + M₅</button>
 
 <pre id="out">Bereit...</pre>
 
 <script>
-// ===============================
-// DOM-CONTROLLER FÜR 4 STATIONEN
-// ===============================
+function scanHTML(html){
+    const p=new DOMParser();
+    const d=p.parseFromString(html,"text/html");
 
-function domScan() {
+    const tags={};
+    d.querySelectorAll("*").forEach(e=>{
+        const t=e.tagName.toLowerCase();
+        tags[t]=(tags[t]||0)+1;
+    });
 
-    // Werte aus DOM holen
-    const Phi = parseFloat(document.getElementById("Phi").value);
-    const phi = parseFloat(document.getElementById("phi").value);
-    const phi2 = parseFloat(document.getElementById("phi2").value);
-    const phiinfty = parseFloat(document.getElementById("phiinfty").value);
+    const ids=[...d.querySelectorAll("[id]")].map(e=>e.id);
+    const cls=[...d.querySelectorAll("[class]")].flatMap(e=>e.className.split(/\s+/));
 
-    const out = document.getElementById("out");
+    return {
+        tags,
+        ids,
+        cls,
+        depth:(html.match(/<\/div>/g)||[]).length
+    };
+}
 
-    // Validierung
-    if (isNaN(Phi) || isNaN(phi) || isNaN(phi2) || isNaN(phiinfty)) {
-        out.textContent = "Bitte alle 4 Stationen eingeben.";
-        return;
+function scan(){
+    const out=document.getElementById("out");
+    out.textContent="";
+
+    // HTML-Scans
+    const s1=scanHTML(document.getElementById("h1").value);
+    const s2=scanHTML(document.getElementById("h2").value);
+    const s3=scanHTML(document.getElementById("h3").value);
+    const s4=scanHTML(document.getElementById("h4").value);
+
+    // Mathematische Stationen
+    const Phi=parseFloat(document.getElementById("Phi").value);
+    const phi=parseFloat(document.getElementById("phi").value);
+    const phi2=parseFloat(document.getElementById("phi2").value);
+    const phiinfty=parseFloat(document.getElementById("phiinfty").value);
+
+    let r="=== TOOLOMAT DOM ===\n\n";
+
+    // HTML-Auswertung
+    function block(label,s){
+        r+=`[${label}]\n`;
+        r+=`Tags: ${JSON.stringify(s.tags)}\n`;
+        r+=`IDs: ${s.ids.join(", ") || "-"}\n`;
+        r+=`Classes: ${s.cls.join(", ") || "-"}\n`;
+        r+=`Tiefe: ${s.depth}\n\n`;
     }
 
-    // Präsentationsmaß M₅
-    const M5 = (Phi + phi + phi2 + phiinfty) / 4;
+    block("HTML 1",s1);
+    block("HTML 2",s2);
+    block("HTML 3",s3);
+    block("HTML 4",s4);
 
-    // Einzelsicht
-    const einzel =
-`Einzelsicht:
-Φ  → Verhältnisbildung (IKI)
-φ  → Rekursionstiefe (BIR)
-φ² → Quadraturstabilität (UC)
-φ∞ → Unendlichkeitsprojektion (MA³)
-`;
+    // Mathematische Achsenbildung
+    if(!isNaN(Phi)&&!isNaN(phi)&&!isNaN(phi2)&&!isNaN(phiinfty)){
+        const M5=(Phi+phi+phi2+phiinfty)/4;
 
-    // Ausgabe
-    out.textContent =
-`=== TOOLOMAT DOM ===
+        r+=`=== Vierfach-Achsenbildung ===\n`;
+        r+=`Φ (Verhältnis / IKI):        ${Phi}\n`;
+        r+=`φ (Rekursion / BIR):         ${phi}\n`;
+        r+=`φ² (Quadratur / UC):         ${phi2}\n`;
+        r+=`φ∞ (Unendlichkeit / MA³):    ${phiinfty}\n\n`;
 
-Φ:        ${Phi}
-φ:        ${phi}
-φ²:       ${phi2}
-φ∞:       ${phiinfty}
+        r+=`M₅ = (Φ + φ + φ² + φ∞) / 4 = ${M5.toFixed(4)}\n\n`;
 
------------------------------
-M₅ = (Φ + φ + φ² + φ∞) / 4
-M₅ = ${M5.toFixed(4)}
------------------------------
+        r+=`Einzelsicht:\n`;
+        r+=`- Φ  → Verhältnisbildung\n`;
+        r+=`- φ  → Rekursionstiefe\n`;
+        r+=`- φ² → Quadraturstabilität\n`;
+        r+=`- φ∞ → Unendlichkeitsprojektion\n\n`;
 
-${einzel}
+        r+=`Daten bereit für FLÄCHEN-SCANNER 48 und Wiki Argumenteria.\n`;
+    } else {
+        r+=`(Keine Achsenwerte eingegeben – nur DOM-Scan ausgeführt.)\n`;
+    }
 
-DOM‑Scan abgeschlossen.
-Daten bereit für FLÄCHEN‑SCANNER 48 und Argumenteria.
-`;
+    out.textContent=r;
 }
 </script>
 
