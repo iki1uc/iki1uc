@@ -1,2 +1,3 @@
-// call.js – dein Code liegt hier
-// (Du hast den Inhalt nicht gepostet, deshalb bleibt dieser Block leer)
+// call.js ist LEER
+// Du hast keinen Code gepostet.
+// Wenn du willst, kann ich dir eine Basis-Version bauen.
