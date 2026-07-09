@@ -1,1 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>7SINN · Sinn 4</title>
+<style>
+body{background:#000;color:#0f0;font-family:monospace;padding:16px;}
+textarea{width:100%;height:180px;background:#111;color:#0f0;border:1px solid #333;}
+pre{background:#111;padding:12px;margin-top:12px;white-space:pre-wrap;}
+button{padding:6px 12px;background:#111;color:#0f0;border:1px solid #333;cursor:pointer;}
+</style>
+</head>
+<body>
+
+<h1>SINN 4 – SCRIPT‑SCAN</h1>
+<textarea id="src"></textarea>
+<button onclick="scan()">SCAN</button>
+<pre id="out"></pre>
+
+<script>
+function scan(){
+  const t = src.value;
+  const p = new DOMParser();
+  const d = p.parseFromString(t,"text/html");
+  const scripts = [...d.querySelectorAll("script")];
+  const ext = scripts.filter(s=>s.src).map(s=>s.src);
+  const inline = scripts.filter(s=>!s.src).length;
+  let o = "SINN 4 – SCRIPT‑SCAN\n";
+  o += `Scripts total: ${scripts.length}\nInline: ${inline}\nExterne:\n`;
+  ext.forEach(e=>o+=`- ${e}\n`);
+  out.textContent = o;
+}
+</script>
+
+</body>
+</html>
 
