@@ -2,34 +2,63 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>ERROR – AXIOM</title>
+<title>AXIOM ERROR</title>
 <style>
-body { background:#000; color:#f33; font-family:monospace; padding:20px; }
-pre { background:#100; border:1px solid #f33; padding:10px; }
+body { background:#000; color:#fff; font-family:monospace; padding:20px; }
+
+/* Kosmische Modi */
+.sun   { color:#ffdd55; }     /* SONNE */
+.moon  { color:#55ccff; }     /* MOND / Venus-Falle */
+.mars  { color:#ff3300; }     /* MARS / Schwarzes Loch */
+
+/* Schwarzes Loch Effekt */
+.blackhole {
+    background: radial-gradient(circle at center, #000 40%, #300 70%, #000 100%);
+    padding:20px;
+    border-radius:10px;
+}
+pre {
+    background:#111;
+    border:1px solid #333;
+    padding:10px;
+}
 </style>
 </head>
 
 <body>
 
-<h1>AXIOM ERROR</h1>
+<h1 id="title">AXIOM ERROR</h1>
 
-<p id="msg">Kein Fehler empfangen.</p>
+<div id="hole" class="blackhole">
+    <p id="msg">Kein Fehler empfangen.</p>
+</div>
 
 <pre id="axiom">Lade…</pre>
 
 <script>
 const p = new URLSearchParams(window.location.search);
 
-document.getElementById("msg").innerText =
-    p.get("hint") || p.get("msg") || "Unbekannter Fehler";
+// MODE = SONNE / MOND / MARS
+const mode = p.get("mode") || "MARS";
 
+// Titel-Farbe setzen
+if(mode === "SONNE") document.getElementById("title").className = "sun";
+if(mode === "MOND")  document.getElementById("title").className = "moon";
+if(mode === "MARS")  document.getElementById("title").className = "mars";
+
+// Nachricht
+document.getElementById("msg").innerText =
+    p.get("hint") || p.get("msg") || "Unbekannter Hinweis";
+
+// AXIOM-Daten
 document.getElementById("axiom").innerText =
     "FROM = " + (p.get("from") || "none") + "\n" +
     "AXIS = " + (p.get("axis") || "none") + "\n" +
     "CORE = " + (p.get("core") || "none") + "\n" +
     "POS  = " + (p.get("pos")  || "none") + "\n" +
     "CODE = " + (p.get("code") || "none") + "\n" +
-    "ID   = " + (p.get("id")   || "none") + "\n";
+    "ID   = " + (p.get("id")   || "none") + "\n" +
+    "MODE = " + mode + "\n";
 </script>
 
 </body>
