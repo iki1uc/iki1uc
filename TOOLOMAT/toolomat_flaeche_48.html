@@ -1,46 +1,138 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>FLÄCHEN-SCANNER 48</title>
+<title>FLÄCHEN‑SCANNER 48 · Vierfach-Achsenbildung</title>
+
 <style>
-body { background:#000; color:#eee; margin:0; font-family:system-ui; }
-#title { font-size:48px; padding:16px; border-bottom:2px solid #444; }
-#wrap { display:flex; height:calc(100vh - 80px); }
-#input, #output { width:50%; padding:8px; box-sizing:border-box; }
-textarea { width:100%; height:100%; background:#050505; color:#eee; border:1px solid #444; font-family:monospace; }
-pre { white-space:pre; font-family:monospace; }
-button { padding:6px 12px; background:#111; border:1px solid #555; color:#eee; cursor:pointer; }
+body {
+  background:#000;
+  color:#0f0;
+  font-family:monospace;
+  padding:20px;
+}
+
+input {
+  width:120px;
+  padding:8px;
+  background:#111;
+  color:#0f0;
+  border:1px solid #333;
+  margin-right:10px;
+}
+
+button {
+  padding:10px 20px;
+  background:#111;
+  color:#0f0;
+  border:1px solid #333;
+  cursor:pointer;
+}
+
+#out {
+  background:#111;
+  padding:20px;
+  margin-top:20px;
+  white-space:pre;
+}
+
+#cube {
+  width:200px;
+  height:200px;
+  margin:40px auto;
+  transform-style:preserve-3d;
+  animation:spin 8s linear infinite;
+}
+
+.face {
+  position:absolute;
+  width:200px;
+  height:200px;
+  border:2px solid #0f0;
+  opacity:0.8;
+}
+
+.front  { background:#0033ff; transform:translateZ(100px); }
+.back   { background:#009900; transform:rotateY(180deg) translateZ(100px); }
+.left   { background:#ff6600; transform:rotateY(-90deg) translateZ(100px); }
+.right  { background:#cc0000; transform:rotateY(90deg) translateZ(100px); }
+.top    { background:#ffffff; color:#000; transform:rotateX(90deg) translateZ(100px); }
+.bottom { background:#ffff00; color:#000; transform:rotateX(-90deg) translateZ(100px); }
+
+@keyframes spin {
+  from { transform:rotateX(0deg) rotateY(0deg); }
+  to   { transform:rotateX(360deg) rotateY(360deg); }
+}
 </style>
 </head>
 <body>
-<div id="title">FLÄCHEN‑SCANNER 48</div>
-<div id="wrap">
-  <div id="input">
-    <textarea id="src" placeholder="HTML einfügen..."></textarea>
-  </div>
-  <div id="output">
-    <button onclick="scan()">SCAN</button>
-    <pre id="out"></pre>
-  </div>
+
+<h1>FLÄCHEN‑SCANNER 48</h1>
+<h2>Mathematische Vierfach-Achsenbildung</h2>
+
+<p>Gib die Werte der 4 Stationen ein:</p>
+
+Φ: <input id="Phi" type="number" step="0.01">
+φ: <input id="phi" type="number" step="0.01">
+φ²: <input id="phi2" type="number" step="0.01">
+φ∞: <input id="phiinfty" type="number" step="0.01">
+
+<button onclick="scan48()">SCAN 48</button>
+
+<div id="out">Bereit...</div>
+
+<div id="cube">
+  <div class="face front"></div>
+  <div class="face back"></div>
+  <div class="face left"></div>
+  <div class="face right"></div>
+  <div class="face top"></div>
+  <div class="face bottom"></div>
 </div>
+
 <script>
-function scan() {
-  const t = document.getElementById('src').value;
-  const o = document.getElementById('out');
-  o.textContent = '';
-  const divs = (t.match(/<div/g) || []).length;
-  const sections = (t.match(/<section/g) || []).length;
-  const containers = (t.match(/container|viewport|wrap|root/g) || []).length;
-  const depthGuess = (t.match(/<\/div>/g) || []).length;
-  let r = '';
-  r += '=== FLÄCHEN ===\n';
-  r += 'DIVs:          ' + divs + '\n';
-  r += 'Sections:      ' + sections + '\n';
-  r += 'Container:     ' + containers + '\n';
-  r += 'Tiefe (guess): ' + depthGuess + '\n';
-  o.textContent = r;
+function scan48() {
+    const Phi = parseFloat(document.getElementById("Phi").value);
+    const phi = parseFloat(document.getElementById("phi").value);
+    const phi2 = parseFloat(document.getElementById("phi2").value);
+    const phiinfty = parseFloat(document.getElementById("phiinfty").value);
+
+    if (isNaN(Phi) || isNaN(phi) || isNaN(phi2) || isNaN(phiinfty)) {
+        out.textContent = "Bitte alle 4 Werte eingeben.";
+        return;
+    }
+
+    const M5 = (Phi + phi + phi2 + phiinfty) / 4;
+
+    const text =
+`=== FLÄCHEN-SCANNER 48 ===
+
+Φ (Verhältnis / IKI):        ${Phi}
+φ (Rekursion / BIR):         ${phi}
+φ² (Quadratur / UC):         ${phi2}
+φ∞ (Unendlichkeit / MA³):    ${phiinfty}
+
+-------------------------------------
+Präsentationsmaß M₅ = (Φ + φ + φ² + φ∞) / 4
+M₅ = ${M5.toFixed(4)}
+-------------------------------------
+
+Einzelsicht:
+- Station Φ zeigt Verhältnisbildung
+- Station φ zeigt Rekursionstiefe
+- Station φ² zeigt Quadraturstabilität
+- Station φ∞ zeigt Unendlichkeitsprojektion
+
+2D → 3D Projektion aktiv:
+Der rotierende Würfel zeigt die Flächenverteilung
+der Vierfach-Achsenbildung im Raum.
+
+Daten bereit für Wiki-Asiklopedie Argumenteria.
+`;
+
+    document.getElementById("out").textContent = text;
 }
 </script>
+
 </body>
 </html>
