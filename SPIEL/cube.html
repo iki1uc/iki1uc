@@ -1,38 +1,15 @@
+<script type="module">
+import { lagePosition, cubeTransform } from "../../TOOLOMAT/GEOMETRIA.js";
 
-<!DOCTYPE html>
-<html lang="de">
-<head>
-<meta charset="UTF-8">
-<title>Zauberwürfel · RESPO</title>
-<style>
-body {
-  background: #000;
-  color: #0f0;
-  font-family: monospace;
-  text-align: center;
-  padding: 20px;
+function applyLAGE(Phi, phi, phi2, phiinfty){
+    const pos = lagePosition(Phi, phi, phi2, phiinfty);
+    const cube = document.getElementById("cube");
+
+    cube.style.transform = `
+        translateX(${pos.x}px)
+        translateY(${pos.y}px)
+        translateZ(${pos.z}px)
+        scale(${1 + pos.stabil/10})
+    `;
 }
-
-#scene {
-  width: 300px;
-  height: 300px;
-  margin: 100px auto;
-  perspective: 800px;
-}
-
-#cube {
-  width: 150px;
-  height: 150px;
-  position: relative;
-  transform-style: preserve-3d;
-  cursor: grab;
-}
-
-.face {
-  position: absolute;
-  width: 150px;
-  height: 150px;
-  border: 2px solid #000;
-}
-
-/* Farben wie
+</script>
