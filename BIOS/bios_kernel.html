@@ -1,1 +1,26 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>BIOS Kernel · 36E</title>
+<style>
+body{background:#000;color:#0f0;font-family:monospace;padding:20px;}
+button{padding:10px 20px;background:#111;color:#0f0;border:1px solid #333;cursor:pointer;margin-right:10px;}
+pre{background:#111;padding:10px;margin-top:20px;}
+</style>
+</head>
+<body>
+
+<h1>BIOS Kernel – Systemstart</h1>
+
+<button onclick="biosBoot()">BOOT</button>
+<button onclick="biosInfo()">INFO</button>
+
+<pre id="bios_out">BIOS bereit...</pre>
+
+<script src="bios_loader.js"></script>
+<script src="bios_station.js"></script>
+
+</body>
+</html>
 
