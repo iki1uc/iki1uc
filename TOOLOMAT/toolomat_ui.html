@@ -1,84 +1,65 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8">
-  <title>TOOLOMAT UI – VISUELLER ZEUGER</title>
-  <style>
-    body { font-family: system-ui, sans-serif; background:#05060a; color:#e5e5e5; margin:0; padding:16px; }
-    h1 { font-size:18px; margin:0 0 8px; }
-    .bar { height: 10px; background:#3b82f6; margin:2px 0; }
-    .tag-row { display:flex; align-items:center; gap:8px; font-size:12px; }
-    .tag-name { width:60px; color:#a5b4fc; }
-    .tag-count { width:40px; text-align:right; color:#e5e7eb; }
-    .tag-weight { width:50px; text-align:right; color:#f97316; }
-    #fileLabel { display:inline-block; padding:6px 10px; border:1px solid #4b5563; cursor:pointer; font-size:12px; }
-    #fileInput { display:none; }
-    #meta { font-size:11px; color:#9ca3af; margin-top:4px; }
-    #panel { margin-top:16px; border-top:1px solid #1f2933; padding-top:12px; }
-  </style>
+<meta charset="UTF-8">
+<title>TOOLOMAT UI – Achsensteuerung</title>
+
+<style>
+body{background:#000;color:#0f0;font-family:monospace;padding:20px;}
+h1{color:#6cf;}
+.axis-grid{
+  display:grid;
+  grid-template-columns:repeat(3,120px);
+  grid-template-rows:repeat(3,120px);
+  gap:6px;
+  margin:auto;
+  width:max-content;
+}
+.cell{
+  border:1px solid #333;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:20px;
+  background:#111;
+}
+.center{
+  background:#222;
+  border:2px solid #0f0;
+}
+button{
+  padding:8px 16px;
+  background:#111;
+  color:#0f0;
+  border:1px solid #333;
+  cursor:pointer;
+  margin:10px;
+}
+</style>
 </head>
+
 <body>
-  <h1>TOOLOMAT UI · visueller Zeuger</h1>
-  <label id="fileLabel">
-    Datei laden (HTML / UI / DOM)
-    <input type="file" id="fileInput" accept=".html,.htm,.txt,.xml">
-  </label>
-  <div id="meta">Warte auf Input…</div>
-  <div id="panel"></div>
-  <script>
-    const weights = { html: 8, head: 20, body: 48 };
-    document.getElementById("fileInput").addEventListener("change", function () {
-      const file = this.files[0];
-      if (!file) return;
-      document.getElementById("meta").textContent =
-        "Lade: " + file.name + " (" + file.size + " Bytes)";
-      const reader = new FileReader();
-      reader.onload = e => {
-        const html = e.target.result;
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
-        const tags = {};
-        doc.querySelectorAll("*").forEach(el => {
-          const t = el.tagName.toLowerCase();
-          tags[t] = (tags[t] || 0) + 1;
-        });
-        const panel = document.getElementById("panel");
-        panel.innerHTML = "";
-        const title = document.createElement("div");
-        title.textContent = "DOM-Masse (Tags · Counts · Gewichte)";
-        title.style.fontSize = "13px";
-        title.style.marginBottom = "6px";
-        panel.appendChild(title);
-        const entries = Object.entries(tags).sort((a, b) => b[1] - a[1]);
-        entries.forEach(([tag, count]) => {
-          const weight = weights[tag] || 1;
-          const mass = count * weight;
-          const row = document.createElement("div");
-          row.className = "tag-row";
-          const name = document.createElement("div");
-          name.className = "tag-name";
-          name.textContent = tag;
-          const cnt = document.createElement("div");
-          cnt.className = "tag-count";
-          cnt.textContent = count;
-          const w = document.createElement("div");
-          w.className = "tag-weight";
-          w.textContent = "×" + weight;
-          const bar = document.createElement("div");
-          bar.className = "bar";
-          bar.style.width = Math.min(300, mass * 4) + "px";
-          row.appendChild(name);
-          row.appendChild(cnt);
-          row.appendChild(w);
-          row.appendChild(bar);
-          panel.appendChild(row);
-        });
-        if (!entries.length) {
-          panel.textContent = "Kein DOM gefunden – Datei leer oder kein HTML.";
-        }
-      };
-      reader.readAsText(file);
-    });
-  </script>
+
+<h1>TOOLOMAT UI – Achsensteuerung</h1>
+
+<div class="axis-grid">
+  <div class="cell">AH</div>
+  <div class="cell">Q1</div>
+  <div class="cell">HA</div>
+
+  <div class="cell">Q4</div>
+  <div class="cell center" id="nc">NC</div>
+  <div class="cell">Q2</div>
+
+  <div class="cell">ÄH</div>
+  <div class="cell">Q3</div>
+  <div class="cell">HÄ</div>
+</div>
+
+<button onclick="sendAxes()">SEND AXES</button>
+
+<script src="../GEOMETRIA.js"></script>
+<script src="toolomat_scripts.js"></script>
+
 </body>
 </html>
