@@ -1,1 +1,37 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Schach · RESPO</title>
+<style>
+body{background:#000;color:#0f0;font-family:monospace;padding:20px;text-align:center;}
+table{border-collapse:collapse;margin:auto;}
+td{
+  width:60px;
+  height:60px;
+  font-size:32px;
+  text-align:center;
+}
+.white{background:#eee;color:#000;}
+.black{background:#333;color:#fff;}
+</style>
+</head>
+<body>
 
+<h1>Schachbrett</h1>
+
+<table>
+<script>
+for(let r=0;r<8;r++){
+  document.write("<tr>");
+  for(let c=0;c<8;c++){
+    const cls=((r+c)%2===0)?"white":"black";
+    document.write(`<td class="${cls}"></td>`);
+  }
+  document.write("</tr>");
+}
+</script>
+</table>
+
+</body>
+</html>
