@@ -1,1 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>7SINN · Sinn 5</title>
+<style>
+body{background:#000;color:#0f0;font-family:monospace;padding:16px;}
+textarea{width:100%;height:180px;background:#111;color:#0f0;border:1px solid #333;}
+pre{background:#111;padding:12px;margin-top:12px;white-space:pre-wrap;}
+button{padding:6px 12px;background:#111;color:#0f0;border:1px solid #333;cursor:pointer;}
+</style>
+</head>
+<body>
+
+<h1>SINN 5 – LINK‑SCAN</h1>
+<textarea id="src"></textarea>
+<button onclick="scan()">SCAN</button>
+<pre id="out"></pre>
+
+<script>
+function scan(){
+  const t = src.value;
+  const p = new DOMParser();
+  const d = p.parseFromString(t,"text/html");
+  const links = [...d.querySelectorAll("a")].map(a=>a.href);
+  let o = "SINN 5 – LINK‑SCAN\n";
+  links.forEach(l=>o+=`- ${l}\n`);
+  out.textContent = o || "Keine Links.";
+}
+</script>
+
+</body>
+</html>
 
