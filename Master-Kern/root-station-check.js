@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
 
-  const stations = [
+  const paths = [
     "./Master-Kern/MASTER-SCANNER.html",
     "./Master-Kern/system-check.item",
     "./ID.html",
@@ -15,20 +15,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     "./visual/Identity.html"
   ];
 
-  const statusBox = document.getElementById("station-status");
+  const box = document.getElementById("station-status");
 
-  for (const path of stations) {
+  for (const p of paths) {
     try {
-      const res = await fetch(path);
+      const res = await fetch(p);
 
       if (!res.ok) {
-        statusBox.innerHTML += `❌ ${path} → missing<br>`;
+        box.innerHTML += `❌ ${p} → missing<br>`;
       } else {
-        statusBox.innerHTML += `✔ ${path} → ok<br>`;
+        box.innerHTML += `✔ ${p} → ok<br>`;
       }
 
-    } catch (e) {
-      statusBox.innerHTML += `❌ ${path} → error<br>`;
+    } catch {
+      box.innerHTML += `❌ ${p} → error<br>`;
     }
   }
 });
