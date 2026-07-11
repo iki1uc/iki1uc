@@ -1,10 +1,13 @@
 LAGE-CODE-FINAL.nc
 ────────────────────────────────────────
 
-# LAGE
+# LAGE (ROOT-STATUS)
 STATE: aktiv
 LEVEL: 4er-Richtigkeit (3/4 erfüllt)
 READY: 82%
+REAL: gesetzt
+
+# LAGE (TECH-SIGNAL für SYSTEM-CHECK)
 lage.state: aktiv
 lage.level: 4er-richtigkeit
 lage.ready: 82%
