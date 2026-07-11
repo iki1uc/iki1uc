@@ -6,7 +6,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!res.ok) {
       window.location.href = "./error.root.html?path=system-check.item";
       return;
-    }
+    }lage.state: aktiv
+lage.level: 4er-richtigkeit
+lage.ready: 82%
+lage.real: gesetzt
+lage.respo: aktiv
+
 
     const text = await res.text();
 
