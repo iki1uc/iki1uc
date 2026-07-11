@@ -18,16 +18,13 @@ a { color:#f55; }
 <p>Ein Modul oder Link konnte nicht geladen werden.</p>
 
 <pre>
-MASTER-SCANNER: {{SCANNER}}
-SYSTEM-CHECK: {{CHECK}}
-MODULE: {{MODULE}}
-PATH: {{PATH}}
-STATUS: missing / broken
+PATH = <script>document.write(new URLSearchParams(location.search).get("path"))</script>
+STATUS = missing / broken
+MASTER-SCANNER = neutral
+SYSTEM-CHECK = neutral
 </pre>
 
-<p>Der Fehler ist neutral. Keine Identität, keine Achsen, keine Respo.</p>
-
-<a href="../index.html">Zurück zum ROOT</a>
+<a href="./index.html">Zurück zum ROOT</a>
 
 </body>
 </html>
