@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
 
-  const orbitPaths = [
+  const paths = [
     "./visual/Orbit.html",
     "./visual/LAGE.html",
     "./visual/Identity.html"
@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const box = document.getElementById("orbit-status");
 
-  for (const p of orbitPaths) {
+  for (const p of paths) {
     try {
       const res = await fetch(p);
       box.innerHTML += res.ok
