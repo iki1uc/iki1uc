@@ -1,47 +1,29 @@
-# SYSTEM-CHECK.ITEM
-# raw.tech / neutral / no identity
+document.addEventListener("DOMContentLoaded", async () => {
 
-check.core: system
-check.mode: wait
-check.bind: none
+  try {
+    const res = await fetch("./Master-Kern/system-check.item");
 
-# Pipeline Status
-pipeline.3: drift.ok
-pipeline.6: fuse.ok
+    if (!res.ok) {
+      window.location.href = "./error.root.html?path=system-check.item";
+      return;
+    }
 
-# POS / Routing
-pos.route: zum(sys/tem)
-pos.target: iki1uc
-pos.state: neutral
+    const text = await res.text();
 
-# Response (res)
-res.input: raw.chain
-res.output: root.chain
-res.state: check
+    const ok =
+      text.includes("drift.ok") &&
+      text.includes("fuse.ok") &&
+      text.includes("root.state: wait");
 
-# System / Temperatur (sys/tem)
-sys.state: ok
-tem.state: stable
+    if (!ok) {
+      window.location.href = "./error.root.html?path=system-check.item";
+      return;
+    }
 
-# ROOT (iki1uc)
-root.state: wait
-root.bind: none
-root.input: res(po(zum(sys/tem)))
-root.output: real
+    console.log("SYSTEM-CHECK: OK");
 
-# Ergebnis
-result: real-bildend
+  } catch {
+    window.location.href = "./error.root.html?path=system-check.item";
+  }
 
-# Fehlerausgabe (wenn nicht erfüllt)
-error.iki: raw.error
-error.bir: expansion.missing
-error.uc: fusion.blocked
-error.root: root.empty
-error.pipeline3: drift.fail
-error.pipeline6: fuse.fail
-error.pos: route.fail
-error.res: output.null
-
-# Zweck
-# zeigt neutral an, welcher Teil nicht erfüllt ist
-# ohne Identität, ohne Achsen, ohne Respo
+});
