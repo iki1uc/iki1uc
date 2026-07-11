@@ -10,17 +10,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const text = await res.text();
 
-    // --- LAGE CHECK ---
+    // LAGE CHECK
     const lageOK =
-      text.includes("STATE: aktiv") &&
-      text.includes("REAL: gesetzt");
+      text.includes("lage.state: aktiv") &&
+      text.includes("lage.real: gesetzt");
 
     if (!lageOK) {
       window.location.href = "./error.root.html?path=LAGE-CODE-FINAL.nc";
       return;
     }
 
-    // --- SYSTEM CHECK ---
+    // SYSTEM CHECK
     const ok =
       text.includes("drift.ok") &&
       text.includes("fuse.ok") &&
