@@ -1,1 +1,47 @@
+# SYSTEM-CHECK.ITEM
+# raw.tech / neutral / no identity
 
+check.core: system
+check.mode: wait
+check.bind: none
+
+# Pipeline Status
+pipeline.3: drift.ok
+pipeline.6: fuse.ok
+
+# POS / Routing
+pos.route: zum(sys/tem)
+pos.target: iki1uc
+pos.state: neutral
+
+# Response (res)
+res.input: raw.chain
+res.output: root.chain
+res.state: check
+
+# System / Temperatur (sys/tem)
+sys.state: ok
+tem.state: stable
+
+# ROOT (iki1uc)
+root.state: wait
+root.bind: none
+root.input: res(po(zum(sys/tem)))
+root.output: real
+
+# Ergebnis
+result: real-bildend
+
+# Fehlerausgabe (wenn nicht erfüllt)
+error.iki: raw.error
+error.bir: expansion.missing
+error.uc: fusion.blocked
+error.root: root.empty
+error.pipeline3: drift.fail
+error.pipeline6: fuse.fail
+error.pos: route.fail
+error.res: output.null
+
+# Zweck
+# zeigt neutral an, welcher Teil nicht erfüllt ist
+# ohne Identität, ohne Achsen, ohne Respo
