@@ -21,7 +21,7 @@ hr { border:1px solid #333; margin:25px 0; }
 <hr>
 
 <h2>ROOT‑KERN</h2>
-<pre>
+<pre id="root-kern">
 CORE = iki1uc
 VERSION = 1.0
 CODE = RAW
@@ -29,6 +29,9 @@ LAGE = ROOT / Creator / NC
 STATUS = Online
 MASTER-SCANNER = aktiv
 SYSTEM-CHECK = aktiv
+ROOT-SCAN = aktiv
+STATION-CHECK = aktiv
+ERROR-ROUTER = aktiv
 </pre>
 
 <hr>
@@ -69,12 +72,15 @@ Lade Stations‑Status…
 iki1uc ist der Ursprung.
 Alle anderen Module sind Ableitungen.
 Keine Engine‑Mechanismen werden hier dargestellt.
-MASTER-SCANNER und SYSTEM-CHECK arbeiten neutral.
+MASTER-SCANNER, SYSTEM-CHECK, ROOT-SCAN und STATION-CHECK arbeiten neutral.
 ROOT ist real‑bildend.
 </pre>
 
+<!-- OPTIMUM SCRIPTS -->
 <script src="./root-station-check.js"></script>
+<script src="./system-check.js"></script>
 <script src="./error-router.js"></script>
+<script src="./root-scan.js"></script>
 
 </body>
 </html>
