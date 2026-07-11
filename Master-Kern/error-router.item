@@ -1,0 +1,17 @@
+# ERROR-ROUTER
+# raw.tech / neutral
+
+error.core: router
+error.mode: catch
+error.bind: none
+
+error.scan: MASTER-SCANNER
+error.check: SYSTEM-CHECK
+
+error.target: error.root.html
+error.state: active
+
+# Zweck
+# fängt alle fehlenden Module ab
+# leitet zu ROOT-ERROR
+# ohne Identität, ohne Achsen, ohne Respo
