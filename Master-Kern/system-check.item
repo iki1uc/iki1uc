@@ -11,6 +11,14 @@ lage.level: 4er-richtigkeit
 lage.ready: 82%
 lage.real: gesetzt
 lage.respo: aktiv
+const lageOK =
+  text.includes("lage.state: aktiv") &&
+  text.includes("lage.real: gesetzt");
+
+if (!lageOK) {
+  window.location.href = "./error.root.html?path=lage";
+  return;
+}
 
 
     const text = await res.text();
