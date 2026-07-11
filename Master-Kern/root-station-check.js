@@ -10,7 +10,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     "./modules/SEEÜ/index.html",
     "./modules/RESPO/index.html",
     "./modules/NC.link/index.html",
-    "./visual/LAGE.html",
+    "./visual/LAGE.html",paths.push("./Master-Kern/LAGE-CODE-FINAL.nc");
+paths.push("./visual/Orbit.html");
+paths.push("./visual/Identity.html");
+paths.push("./visual/LAGE.html");
+
     "./visual/Orbit.html",
     "./visual/Identity.html"
   ];
