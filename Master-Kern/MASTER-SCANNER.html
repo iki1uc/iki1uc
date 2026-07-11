@@ -15,7 +15,14 @@
 
   <pipeline>
     P4 → P0 → P1 → P2 → Pe
-  </pipeline>
+  </pipeline><pipeline-opt>
+  P4 = start
+  P0 = wake
+  P1 = melt
+  P2 = merge
+  Pe = finalize
+</pipeline-opt>
+
 
   <input>
     value = {{INPUT}}
