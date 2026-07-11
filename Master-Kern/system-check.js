@@ -10,24 +10,30 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const text = await res.text();
 
-    // Minimaler RAW-Parser
-    const status = {
-      pipeline3: text.includes("drift.ok"),
-      pipeline6: text.includes("fuse.ok"),
-      root: text.includes("root.state: wait"),
-      result: text.includes("real-bildend")
-    };
+    // --- LAGE CHECK ---
+    const lageOK =
+      text.includes("STATE: aktiv") &&
+      text.includes("REAL: gesetzt");
 
-    // Fehlererkennung
-    if (!status.pipeline3 || !status.pipeline6 || !status.root) {
+    if (!lageOK) {
+      window.location.href = "./error.root.html?path=LAGE-CODE-FINAL.nc";
+      return;
+    }
+
+    // --- SYSTEM CHECK ---
+    const ok =
+      text.includes("drift.ok") &&
+      text.includes("fuse.ok") &&
+      text.includes("root.state: wait");
+
+    if (!ok) {
       window.location.href = "./error.root.html?path=system-check.item";
       return;
     }
 
-    // ROOT ist real-bildend
     console.log("SYSTEM-CHECK: OK");
 
-  } catch (e) {
+  } catch {
     window.location.href = "./error.root.html?path=system-check.item";
   }
 
