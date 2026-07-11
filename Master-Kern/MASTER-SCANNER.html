@@ -1,15 +1,17 @@
+<!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
 <title>MASTER-SCANNER-698869 (((WIEIMMER)))</title>
-</head<root-status>
-  <script>
-    fetch("../index.html")
-      .then(r => console.log("ROOT:", r.ok ? "ok" : "error"));
-  </script>
-</root-status>
-
+</head>
 
 <body>
+
+<!-- ROOT-STATUS -->
+<script defer>
+fetch("../index.html")
+  .then(r => console.log("ROOT:", r.ok ? "ok" : "error"));
+</script>
 
 <section id="scanner">
 
@@ -21,21 +23,21 @@
 
   <pipeline>
     P4 → P0 → P1 → P2 → Pe
-  </pipeline><pipeline-opt>
-  P4 = start
-  P0 = wake
-  P1 = melt
-  P2 = merge
-  Pe = finalize
-</pipeline-opt>
+  </pipeline>
 
+  <pipeline-opt>
+    P4 = start
+    P0 = wake
+    P1 = melt
+    P2 = merge
+    Pe = finalize
+  </pipeline-opt>
 
   <input>
     value = {{INPUT}}
   </input>
 
   <execute>
-
     step_P4 = start({{INPUT}})
 
     if {{STATION}} == IKI:
@@ -55,19 +57,19 @@
 
     if {{STATION}} == MA³:
         result  = φ∞(step_P4)
-
   </execute>
 
-  <output>
-    {{RESULT}}
-  </output>
+  <output>{{RESULT}}</output>
 
-  <return>
-    SEEu.md ← {{RESULT}}
-  </return>
+  <return>SEEu.md ← {{RESULT}}</return>
 
 </section>
 
+<!-- SYSTEM -->
+<script defer src="../system-check.js"></script>
+<script defer src="../root-station-check.js"></script>
+<script defer src="../root-scan.js"></script>
+<script defer src="../error-router.js"></script>
+
 </body>
 </html>
-
