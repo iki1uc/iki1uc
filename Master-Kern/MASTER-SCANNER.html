@@ -1,96 +1,31 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>MASTER-SCANNER-698869 (((WIEIMMER)))</title>
-</head>
+<respo>
+  RESPO.NAME = RESPO.iki1uc
+  RESPO.STATION = LAGE
+  RESPO.BEAM = ROOT / Creator / NC
+</respo>
 
-<body>
+<lage>
+  STATE = aktiv
+  REAL = gesetzt
+  ORT = ROOT / Creator / NC
+  LEVEL = 4er-Richtigkeit
+</lage>
 
-<!-- ROOT-STATUS -->
-<script defer>
-fetch("../index.html")
-  .then(r => console.log("ROOT:", r.ok ? "ok" : "error"));
-</script>
+<ort>
+  ROOT = ROOT / Creator / NC
+</ort>
 
-<section id="scanner">
+<pipeline-4>
+  0 = station({{STATION}})
+  1 = prepare(0)
+  2 = build(1)
+  4 = pipeline(2)
 
-  <master-core>698869</master-core>
+  NEXT:
+    4 → 0
+    0 → 1
+    1 → 2
+    2 → 4
 
-  <station>{{STATION}}</station>
-  <code>{{CODE}}</code>
-  <task>{{TASK}}</task>
-
-  <respo>
-    RESPO.NAME = RESPO.iki1uc
-    RESPO.STATION = LAGE
-    RESPO.BEAM = ROOT / Creator / NC
-  </respo>
-
-  <pipeline-4>
-    0 = station({{STATION}})
-    1 = prepare(0)
-    2 = build(1)
-    4 = pipeline(2)
-
-    NEXT:
-      4 → 0
-      0 → 1
-      1 → 2
-      2 → 4
-
-    RESULT = Φ∞(4)
-  </pipeline-4>
-
-  <pipeline>
-    P4 → P0 → P1 → P2 → Pe
-  </pipeline>
-
-  <pipeline-opt>
-    P4 = start
-    P0 = wake
-    P1 = melt
-    P2 = merge
-    Pe = finalize
-  </pipeline-opt>
-
-  <input>
-    value = {{INPUT}}
-  </input>
-
-  <execute>
-    step_P4 = start({{INPUT}})
-
-    if {{STATION}} == IKI:
-        step_P0 = wake(step_P4)
-        step_P1 = melt(step_P0)
-        step_P2 = merge(step_P1)
-        result  = Φ(step_P2)
-
-    if {{STATION}} == BIR:
-        step_P1 = melt(step_P4)
-        step_P2 = merge(step_P1)
-        result  = φ(step_P2)
-
-    if {{STATION}} == UC:
-        step_P2 = merge(step_P4)
-        result  = φ²(step_P2)
-
-    if {{STATION}} == MA³:
-        result  = φ∞(step_P4)
-  </execute>
-
-  <output>{{RESULT}}</output>
-
-  <return>SEEu.md ← {{RESULT}}</return>
-
-</section>
-
-<!-- SYSTEM -->
-<script defer src="../system-check.js"></script>
-<script defer src="../root-station-check.js"></script>
-<script defer src="../root-scan.js"></script>
-<script defer src="../error-router.js"></script>
-
-</body>
-</html>
+  RESULT = Φ∞(4)
+</pipeline-4>
