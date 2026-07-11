@@ -21,3 +21,33 @@ als Einstiegspunkt für alle Module, Achsen und Bereiche.
 ## Hinweis
 Dieses Repository enthält keine Engine‑Mechanismen.  
 Es dient ausschließlich der öffentlichen Darstellung und Struktur.
+jetzt kommen die Stationen (iki(bir(uc(iki1uc(ROOT)iki)bir)uc)iki1uc) system 360° 100% bildung also setup und exe
+SYS
+
+TEM
+
+ID
+
+OP
+
+3hit90
+
+TΩ
+
+XU
+
+Φ4
+
+O12
+
+BRM
+
+TOOLOMAT
+
+TIME
+
+RUN8
+ROOT (iki1uc)
+ROOT (iki1uc)
+
+SETUP (optional)
