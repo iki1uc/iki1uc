@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const paths = [
     "./Master-Kern/MASTER-SCANNER.html",
     "./Master-Kern/system-check.item",
+    "./Master-Kern/LAGE-CODE-FINAL.nc",
     "./ID.html",
     "./modules/Trinity/index.html",
     "./modules/tri5mix/index.html",
@@ -10,11 +11,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     "./modules/SEEÜ/index.html",
     "./modules/RESPO/index.html",
     "./modules/NC.link/index.html",
-    "./visual/LAGE.html",paths.push("./Master-Kern/LAGE-CODE-FINAL.nc");
-paths.push("./visual/Orbit.html");
-paths.push("./visual/Identity.html");
-paths.push("./visual/LAGE.html");
-
+    "./visual/LAGE.html",
     "./visual/Orbit.html",
     "./visual/Identity.html"
   ];
