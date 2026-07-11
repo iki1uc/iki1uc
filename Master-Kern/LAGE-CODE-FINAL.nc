@@ -5,6 +5,11 @@ LAGE-CODE-FINAL.nc
 STATE: aktiv
 LEVEL: 4er-Richtigkeit (3/4 erfüllt)
 READY: 82%
+lage.state: aktiv
+lage.level: 4er-richtigkeit
+lage.ready: 82%
+lage.real: gesetzt
+lage.respo: aktiv
 
 # INTERAKTION
 USE: bestätigt
