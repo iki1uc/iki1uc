@@ -1,2 +1,29 @@
-IKI1UC_CORE: RECEIVE(sys, tem)
+// Dreiecks-Axiom – Bogenverhalten für iki1uc
 
+export function AXIOM_TRIANGLE(input) {
+
+    const A = input;                     // Punkt 1 – Input
+    const B = analyze(A);                // Punkt 2 – Spannung
+    const C = execute(A, B);             // Punkt 3 – Ausführung
+
+    return { A, B, C };
+}
+
+function analyze(A) {
+    return {
+        tension: Math.min(1, A.value / 100),
+        resonance: A.type === "NC" ? 0.8 : 0.5,
+        ready: A.value > 30
+    };
+}
+
+function execute(A, B) {
+    if (!B.ready) return { action: "hold", effect: 0 };
+
+    const effect = B.tension * B.resonance * A.value;
+
+    return {
+        action: "release",
+        effect: Math.round(effect)
+    };
+}
