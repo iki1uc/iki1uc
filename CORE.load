@@ -1,1 +1,50 @@
+// =====================================================
+// CORE.load – Haupt-Lader für iki1uc
+// =====================================================
+
+// 1. RESPO laden
+import { RESPO_AXIS } from './respo.js';
+
+// 2. RAUM-Kernel laden
+import { GHOST_SCAN_REAL, RAUM_KERNEL, MOVE } from './fin.e.js';
+
+// 3. root.map laden
+async function loadRootMap() {
+    try {
+        const txt = await fetch('./root.map').then(r => r.text());
+        console.log("ROOT-MAP geladen:", txt);
+        return txt;
+    } catch (e) {
+        console.error("Fehler beim Laden von root.map:", e);
+    }
+}
+
+// 4. CORE-Pipeline
+async function CORE_PIPELINE() {
+    console.log("CORE-PIPELINE startet…");
+
+    const map = await loadRootMap();
+    console.log("MAP:", map);
+
+    console.log("RESPO-AXIS:", RESPO_AXIS);
+
+    const raum = {
+        ZUG: "A1",
+        BLATT: "ROOT",
+        STATUS: "REAL",
+        IST: "OK",
+        NEU: "TMP"
+    };
+
+    const kernel = RAUM_KERNEL(raum);
+    console.log("RAUM-KERNEL:", kernel);
+
+    const move = MOVE(raum);
+    console.log("MOVE:", move);
+
+    console.log("CORE-PIPELINE abgeschlossen.");
+}
+
+// 5. Start
+CORE_PIPELINE();
 
