@@ -1,102 +1,214 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<title>KItriKIme · PX/PC/GHOST · iki1uc</title>
-
-<style>
-body { background:#000; color:#0f0; font-family:Consolas; padding:20px; }
-h1, h2 { color:#6cf; }
-pre { background:#111; border:1px solid #333; padding:12px; max-height:160px; overflow:auto; }
-canvas { background:#111; border:1px solid #333; margin-top:20px; display:block; }
-a { color:#6cf; display:block; margin:6px 0; }
-section { margin-bottom:20px; }
-.controls { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
-button { background:#6cf; color:#000; border:none; padding:8px 10px; border-radius:6px; cursor:pointer; font-weight:700; }
-button.small { padding:6px 8px; font-size:13px; }
-.status { margin-top:10px; color:#9f9; font-size:14px; }
-</style>
+    <meta charset="UTF-8">
+    <title>RESPO · GOURCE · iki1uc</title>
+    <style>
+        body { background:#000; color:#0f0; font-family:monospace; padding:20px; }
+        canvas { border:1px solid #0f0; display:block; margin:20px 0; }
+        .box { border:1px solid #0f0; padding:10px; margin:10px 0; }
+        .flex { display:flex; gap:10px; flex-wrap:wrap; }
+        button, input { background:#111; color:#0f0; border:1px solid #333; padding:8px; }
+        button { cursor:pointer; }
+    </style>
 </head>
-
 <body>
 
-<h1>KItriKIme · PX/PC/GHOST</h1>
+<h1>🎥 RESPO · GOURCE · iki1uc</h1>
 
-<pre>
-CORE     = iki1uc
-VERSION  = 1.0
-CODE     = RAW‑KItriKIme
-AXES     = PX / PC / GHOST
-ENERGY   = 6e
-LAW      = 6d
-ORBIT    = 360°
-FORM     = Tri‑Hexa‑Orbit
-STATE    = ACTIVE
-READY    = 100%
-</pre>
-
-<section>
-<h2>KItriKIme‑Module</h2>
-<a href="./group.html">PX/PC/GHOST SCAN</a>
-<a href="./on3.html">RUN3 Operator</a>
-<a href="./run.html">Pipeline</a>
-<a href="./kit.js">KItriKIme Kernel</a>
-
-<div class="controls" role="toolbar" aria-label="KI Controls">
-  <button id="btnPx">Trigger PX</button>
-  <button id="btnOn3">Trigger ON3</button>
-  <button id="btnPipeline">Trigger Pipeline</button>
-  <button id="btnToggle" class="small">Toggle State</button>
-  <button id="btnHelp" class="small">Help</button>
-  <button id="btnClear" class="small">Clear Log</button>
+<div class="box">
+    <h2>📁 HDF-Datei laden</h2>
+    <div class="flex">
+        <input type="file" id="hdfFile" accept=".hdf,.txt,.raw,.csv,.json">
+        <button onclick="loadHDF()">📂 Laden & Visualisieren</button>
+    </div>
 </div>
 
-<div class="status" id="status">Status: ready</div>
-</section>
+<canvas id="gourceCanvas" width="800" height="500"></canvas>
 
-<section>
-<h2>KItriKIme · Tri‑Hexa‑Orbit Renderer</h2>
-<canvas id="kitCanvas" width="500" height="500"></canvas>
-</section>
-
-<section>
-<h2>Output / Log</h2>
-<pre id="out">Console output…</pre>
-</section>
+<pre id="out">➡️ Warte auf HDF-Datei...</pre>
 
 <script>
-// ------------------------------------------------------------
-// FRAME OBJEKT (unverändert)
-const frame = {
-    state: "ACTIVE",
-    pxCode: "?13/on3",
-    pqCode: "WRAIGHT",
-    help: "HELP_FAIL"
-};
+// ============================================
+// RESPO-GOURCE-ENGINE
+// ============================================
 
-// Beispiel PX‑Fabrik (deine echte PX(frame) bleibt gleich, wir rufen sie)
-function PX(frame) {
-    // Beispielausgabe — deine echte Implementierung bleibt bestehen
-    return { axis: "PX", ok: true, info: `pxCode=${frame.pxCode}` };
-}
-
-// Platzhalterfunktionen für ON3 und Pipeline — ersetze / integriere echte Module
-function ON3(frame) {
-    return { result: "ON3_OK", details: { operator: frame.pqCode } };
-}
-function runPipeline(frame) {
-    // Simuliere asynchrone Pipeline (z. B. lädt Module, rechnet, liefert Ergebnis)
-    return new Promise(resolve => {
-        setTimeout(() => resolve({ pipeline: "DONE", time: Date.now() }), 700);
-    });
-}
-
-// DOM Elemente
-const out = document.getElementById('out');
-const statusEl = document.getElementById('status');
-const canvas = document.getElementById('kitCanvas');
+const canvas = document.getElementById('gourceCanvas');
 const ctx = canvas.getContext('2d');
 
-// einfache Logging‑Hilfen
-function log(...args){ console.log(...args); out.textContent += '\\n' + args.join(' '); out.scrollTop = out.scrollHeight
-
+// RESPO-Zustände mit Farben
+const RESPO_FARBEN = {
+    'OK': '#0f0',
+    'NOK': '#f00',
+    'FLOW': '#00f',
+    'BREAK': '#f60',
+    'ECHO': '#0ff',
+    'VOID': '#666',
+    'ROOT': '#ff0'
+};
+
+// Zustandssymbole
+const RESPO_SYMBOL = {
+    'OK': '●',
+    'NOK': '✖',
+    'FLOW': '▶',
+    'BREAK': '⛔',
+    'ECHO': '⟳',
+    'VOID': '○',
+    'ROOT': '▲'
+};
+
+let daten = [];
+let animationFrame = 0;
+let punkte = [];
+
+// ============================================
+// HDF laden und parsen
+// ============================================
+async function loadHDF() {
+    const file = document.getElementById('hdfFile').files[0];
+    if (!file) return;
+
+    try {
+        const text = await file.text();
+        const lines = text.split('\n').filter(l => l.trim());
+
+        // RESPO-Zustände aus HDF extrahieren
+        const respos = [];
+        for (const line of lines) {
+            for (const key of Object.keys(RESPO_FARBEN)) {
+                if (line.includes(key)) {
+                    respos.push(key);
+                }
+            }
+        }
+
+        // Wenn keine RESPOs gefunden, simuliere
+        if (respos.length === 0) {
+            const keys = Object.keys(RESPO_FARBEN);
+            for (let i = 0; i < 20; i++) {
+                respos.push(keys[i % keys.length]);
+            }
+        }
+
+        // Daten für Visualisierung vorbereiten
+        daten = respos.map((r, i) => ({
+            id: i,
+            respo: r,
+            farbe: RESPO_FARBEN[r] || '#0f0',
+            symbol: RESPO_SYMBOL[r] || '?',
+            x: Math.random() * 700 + 50,
+            y: Math.random() * 400 + 50,
+            vx: (Math.random() - 0.5) * 2,
+            vy: (Math.random() - 0.5) * 2
+        }));
+
+        // Punkte initialisieren
+        punkte = daten.map(d => ({ ...d }));
+
+        document.getElementById('out').textContent =
+            `📄 ${file.name} geladen\n🧩 ${daten.length} RESPO-Zustände gefunden\n${respos.join(' → ')}`;
+
+        // Animation starten
+        if (!animationFrame) animieren();
+
+    } catch (e) {
+        document.getElementById('out').textContent = '❌ Fehler: ' + e.message;
+    }
+}
+
+// ============================================
+// ANIMATION (wie Gource)
+// ============================================
+function animieren() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Hintergrund
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Zeit
+    const zeit = Date.now() / 1000;
+
+    // Punkte bewegen und zeichnen
+    for (const p of punkte) {
+        // Bewegung (Brownsche Bewegung + Orbit)
+        p.x += p.vx * 0.5 + Math.sin(zeit + p.id) * 0.3;
+        p.y += p.vy * 0.5 + Math.cos(zeit + p.id) * 0.3;
+
+        // Randbegrenzung
+        if (p.x < 20 || p.x > 780) p.vx *= -1;
+        if (p.y < 20 || p.y > 480) p.vy *= -1;
+        p.x = Math.max(20, Math.min(780, p.x));
+        p.y = Math.max(20, Math.min(480, p.y));
+
+        // Verbindungen (Gruppenbildung)
+        for (const q of punkte) {
+            if (p.id === q.id) continue;
+            const dx = p.x - q.x;
+            const dy = p.y - q.y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+
+            if (dist < 120) {
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(q.x, q.y);
+                ctx.strokeStyle = p.farbe + '44';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+            }
+        }
+
+        // Punkt zeichnen
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 8, 0, Math.PI * 2);
+        ctx.fillStyle = p.farbe;
+        ctx.fill();
+
+        // Symbol
+        ctx.fillStyle = '#000';
+        ctx.font = '12px monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(p.symbol, p.x, p.y + 1);
+
+        // RESPO-Name
+        ctx.fillStyle = '#fff';
+        ctx.font = '10px monospace';
+        ctx.fillText(p.respo, p.x, p.y - 18);
+    }
+
+    // Info
+    ctx.fillStyle = '#0f0';
+    ctx.font = '12px monospace';
+    ctx.fillText(`RESPO-GOURCE · ${punkte.length} Elemente · Frame ${Math.floor(zeit * 10)}`, 10, 20);
+
+    animationFrame = requestAnimationFrame(animieren);
+}
+
+// ============================================
+// START
+// ============================================
+// Demo-Daten beim Start
+window.onload = function() {
+    const keys = Object.keys(RESPO_FARBEN);
+    for (let i = 0; i < 15; i++) {
+        const r = keys[i % keys.length];
+        punkte.push({
+            id: i,
+            respo: r,
+            farbe: RESPO_FARBEN[r],
+            symbol: RESPO_SYMBOL[r],
+            x: Math.random() * 700 + 50,
+            y: Math.random() * 400 + 50,
+            vx: (Math.random() - 0.5) * 2,
+            vy: (Math.random() - 0.5) * 2
+        });
+    }
+    daten = punkte.map(p => ({ ...p }));
+    animieren();
+};
+</script>
+
+</body>
+</html>
