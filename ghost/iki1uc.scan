@@ -1,2 +1,35 @@
-IKI1UC: STABLE
+// iki1uc/control/bildung.control.js
+// Bildungs-Kontrolle: 3 → 9 → 81
 
+export function BILDUNG_CONTROL(input) {
+
+    // Stufe 1: Basis (3)
+    const lvl3 = {
+        value: input.value ?? 0,
+        ok: input.value > 0,
+        stage: 3
+    };
+
+    // Stufe 2: Kontrolle (9)
+    const lvl9 = {
+        factor: lvl3.value * 3,
+        ok: lvl3.ok && lvl3.value >= 3,
+        stage: 9
+    };
+
+    // Stufe 3: Superkontrolle (81)
+    const lvl81 = {
+        power: lvl9.factor * 9,
+        ok: lvl9.ok && lvl9.factor >= 9,
+        stage: 81
+    };
+
+    return {
+        route: "bildung.control",
+        timestamp: Date.now(),
+        lvl3,
+        lvl9,
+        lvl81,
+        stable: lvl3.ok && lvl9.ok && lvl81.ok
+    };
+}
