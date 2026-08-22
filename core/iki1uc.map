@@ -1,2 +1,73 @@
-MAP: pipeline4 → iki1uc.core
+// MAP: pipeline4 → iki1uc.core
+export const MAP_PIPELINE4 = {
 
+    allxall(input) {
+        return {
+            route: "allxall",
+            flow: distribute(input),
+            valid: true
+        };
+    },
+
+    allNCall(input) {
+        return {
+            route: "allNCall",
+            callstack: normalize(input),
+            depth: input.depth ?? 4
+        };
+    },
+
+    attikuklte(input) {
+        return {
+            route: "attikuklte",
+            pattern: triangulate(input),
+            resonance: 0.88
+        };
+    },
+
+    allAvailable(input) {
+        return {
+            route: "allAvailable",
+            map: collect(input),
+            ready: true
+        };
+    }
+};
+
+
+// === CORE PIPELINE → iki1uc.core ===
+
+export function pipeline4(input) {
+
+    const A = MAP_PIPELINE4.allxall(input);
+    const B = MAP_PIPELINE4.allNCall(A);
+    const C = MAP_PIPELINE4.attikuklte(B);
+    const D = MAP_PIPELINE4.allAvailable(C);
+
+    return iki1uc_core(D);
+}
+
+
+// === CORE EXECUTION ===
+
+export function iki1uc_core(stage) {
+    return {
+        stage,
+        executed: true,
+        timestamp: Date.now()
+    };
+}
+
+
+// === INTERNAL HELPERS ===
+
+function distribute(x) {
+    return Array.isArray(x) ? x.map(v => v * 1.0) : x;
+}
+
+function normalize(x) {
+    return typeof x === "object" ? { ...x, normalized: true } : x;
+}
+
+function triangulate(x) {
+    return
