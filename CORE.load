@@ -42,9 +42,23 @@ async function CORE_PIPELINE() {
     const move = MOVE(raum);
     console.log("MOVE:", move);
 
+    // Mind-Layer aktivieren
+    const mind = MIND_LAYER(raum, map);
+    console.log("MIND:", mind);
+
     console.log("CORE-PIPELINE abgeschlossen.");
 }
 
 // 5. Start
 CORE_PIPELINE();
+// 6. MIND-Layer
+function MIND_LAYER(raum, map) {
+    return {
+        WAHRNEHMUNG: raum.STATUS === "REAL" ? "klar" : "unscharf",
+        FOKUS: map ? "verbunden" : "leer",
+        EBENE: "AEON",
+        STATUS: "° & % 3",
+        SIGNAL: raum.IST === "OK" ? "grün" : "gelb"
+    };
+}
 
