@@ -13,50 +13,43 @@ button{padding:6px 12px;background:#111;color:#0f0;border:1px solid #333;cursor:
 
 <h1>phiinfty_me – Phi∞‑Ratio + Bewertung</h1>
 
-<script type="module">
-import { PHI, RATE_PHI } from "./phi.js";
-
+<script>
 // --------------------------------------
-// Phi∞‑Modul (NEU)
+// Phi‑Modul (Standalone)
 // --------------------------------------
-const PHI_INFINITY = {
-  step: 0,
-
+const PHI = {
+  a: 1,
+  b: 1,
   next(){
-    this.step++;
-    return PHI.next(); // nutzt phi.js
+    const n = this.a + this.b;
+    this.a = this.b;
+    this.b = n;
+    return n;
   },
-
   ratio(){
-    return PHI.ratio(); // nutzt phi.js
-  },
-
-  rating(){
-    return RATE_PHI(); // nutzt phi.js
+    return this.b / this.a;
   }
 };
 
 // --------------------------------------
-// Phi∞‑Ausführung + Bewertung
+// Bewertungssystem (Standalone)
 // --------------------------------------
-function runPhiInfinity(){
-  const value = PHI_INFINITY.next();
-  const ratio = PHI_INFINITY.ratio();
-  const rating = PHI_INFINITY.rating();
-
-  phi_out.textContent =
-    `Phi∞‑Step: ${PHI_INFINITY.step}\n` +
-    `Phi∞‑Wert: ${value}\n` +
-    `Ratio∞: ${ratio.toFixed(6)}\n` +
-    `Bewertung∞: ${rating.status}\n` +
-    `Delta∞: ${rating.delta.toFixed(6)}`;
+function RATE(achse, wert, norm){
+  return {
+    achse,
+    wert,
+    norm,
+    delta: wert - norm,
+    status:
+      wert === norm ? "Norm" :
+      wert > norm && wert < norm * 3 ? "Übernorm" :
+      wert >= norm * 3 ? "Extrem" :
+      "Unternorm"
+  };
 }
-</script>
 
-<div>
-<button onclick="runPhiInfinity()">Phi∞ NEXT</button>
-<pre id="phi_out">Phi∞‑System bereit</pre>
-</div>
+function RATE_PHI(){
+  return RATE("Phi∞‑Ratio", PHI.ratio(), 1.618);
+}
 
-</body>
-</html>
+// --------------------------------
