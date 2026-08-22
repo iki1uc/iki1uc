@@ -12,25 +12,72 @@ button{padding:6px 12px;background:#111;color:#0f0;border:1px solid #333;cursor:
 </head>
 <body>
 
-<h1>SINN 2 – STRUKTUR</h1>
-<textarea id="src"></textarea>
+<h1>SINN 2 – STRUKTUR + Bewertung</h1>
+<textarea id="src" placeholder="HTML einfügen…"></textarea>
 <button onclick="scan()">SCAN</button>
 <pre id="out"></pre>
 
 <script>
+// ------------------------------------------------------
+// 7SINN – Bewertungssystem (Standalone)
+// ------------------------------------------------------
+function RATE(achse, wert, norm){
+  return {
+    achse,
+    wert,
+    norm,
+    delta: wert - norm,
+    status:
+      wert === norm ? "Norm" :
+      wert > norm && wert < norm * 3 ? "Übernorm" :
+      wert >= norm * 3 ? "Extrem" :
+      "Unternorm"
+  };
+}
+
+// ------------------------------------------------------
+// SINN 2 – Struktur-Scan + Bewertung
+// ------------------------------------------------------
 function scan(){
   const t = src.value;
+  if(!t.trim()){
+    out.textContent = "Keine Eingabe.";
+    return;
+  }
+
   const p = new DOMParser();
   const d = p.parseFromString(t,"text/html");
+
+  // IDs sammeln
   const ids = [...d.querySelectorAll("[id]")].map(e=>e.id);
-  const cls = [...d.querySelectorAll("[class]")].flatMap(e=>e.className.split(/\s+/));
-  let o = "SINN 2 – STRUKTUR\nIDs:\n";
+
+  // Klassen sammeln
+  const cls = [...d.querySelectorAll("[class]")]
+                .flatMap(e=>e.className.split(/\s+/))
+                .filter(c=>c.trim().length>0);
+
+  // Struktur-Sinn = Anzahl IDs + Anzahl Klassen
+  const sinnWert = ids.length + cls.length;
+  const sinnNorm = 20; // Norm für Struktur-Sinn
+
+  const rating = RATE("Sinn-Struktur", sinnWert, sinnNorm);
+
+  let o = "SINN 2 – STRUKTUR + Bewertung\n\n";
+  o += "Struktur-Sinn: " + sinnWert + "\n";
+  o += "Norm: " + sinnNorm + "\n";
+  o += "Delta: " + rating.delta + "\n";
+  o += "Status: " + rating.status + "\n\n";
+
+  o += "IDs:\n";
   ids.forEach(i=>o+=`- ${i}\n`);
+
   o += "\nCLASSES:\n";
   cls.forEach(c=>o+=`- ${c}\n`);
-  out.textContent = o || "Keine Eingabe.";
+
+  out.textContent = o;
 }
 </script>
 
+<!-- EICH + GEN + MARKE dürfen nicht entfernt werden -->
 </body>
 </html>
