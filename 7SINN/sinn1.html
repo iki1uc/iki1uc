@@ -12,28 +12,57 @@ button{padding:6px 12px;background:#111;color:#0f0;border:1px solid #333;cursor:
 </head>
 <body>
 
-<h1>SINN 1 – BASIS</h1>
+<h1>SINN 1 – BASIS + Bewertung</h1>
 <textarea id="src" placeholder="HTML einfügen…"></textarea>
 <button onclick="scan()">SCAN</button>
 <pre id="out"></pre>
 
 <script>
+// ------------------------------------------------------
+// 7SINN – Bewertungssystem (Standalone)
+// ------------------------------------------------------
+function RATE(achse, wert, norm){
+  return {
+    achse,
+    wert,
+    norm,
+    delta: wert - norm,
+    status:
+      wert === norm ? "Norm" :
+      wert > norm && wert < norm * 3 ? "Übernorm" :
+      wert >= norm * 3 ? "Extrem" :
+      "Unternorm"
+  };
+}
+
+// ------------------------------------------------------
+// SINN 1 – Struktur-Scan + Bewertung
+// ------------------------------------------------------
 function scan(){
   const t = src.value;
+  if(!t.trim()){
+    out.textContent = "Keine Eingabe.";
+    return;
+  }
+
   const p = new DOMParser();
   const d = p.parseFromString(t,"text/html");
+
   const tags = {};
   d.querySelectorAll("*").forEach(e=>{
     const tag = e.tagName.toLowerCase();
     tags[tag] = (tags[tag]||0)+1;
   });
-  let o = "SINN 1 – BASIS\n";
-  Object.keys(tags).sort().forEach(k=>o+=`${k}: ${tags[k]}\n`);
-  out.textContent = o || "Keine Eingabe.";
-}
-</script>
 
-<!-- EICH + GEN + MARKE dürfen nicht entfernt werden -->
-</body>
-</html>
+  // Anzahl der verschiedenen Tags = Struktur-Sinn
+  const sinnWert = Object.keys(tags).length;
+  const sinnNorm = 12; // Norm für Basis-Sinn
 
+  const rating = RATE("Sinn-Struktur", sinnWert, sinnNorm);
+
+  let o = "SINN 1 – BASIS + Bewertung\n\n";
+  o += "Struktur-Sinn: " + sinnWert + "\n";
+  o += "Norm: " + sinnNorm + "\n";
+  o += "Delta: " + rating.delta + "\n";
+  o += "Status: " + rating.status + "\n\n";
+  o +=
