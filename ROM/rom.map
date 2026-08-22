@@ -1,2 +1,45 @@
-ROM: CPU + RAM + GPU + ANKER + MULTILAR
+# ROM.MAP · MASTER-KERN
 
+ROM.ID        = 6D-CORE
+ROM.STATE     = active
+ROM.MODE      = execute
+ROM.VERSION   = 1.0
+
+# ROOT-BOOT
+ROM.BOOT.ADDR = 0x00000000
+ROM.BOOT.TYPE = ROOT-START
+ROM.BOOT.REMAP = ENABLED
+
+# CPU-INSTRUCTION SETS
+CPU.MMX       = ENABLED
+CPU.SSE1      = ENABLED
+CPU.SSE2      = ENABLED
+CPU.SSE3      = ENABLED
+CPU.6D.MODE   = active
+CPU.6D.ORG    = org
+CPU.6D.REORG  = reorg
+
+# MEMORY-LINKS
+ROM.RAM       = ./RAM/ram.map
+ROM.MULTILAR  = ./RAM/multilar.zone
+ROM.GPU       = ./GPU/gpu.map
+ROM.ANKER     = ./ROM/anker.item
+
+# UNIFIED MEMORY (CPU+GPU+RAM)
+ROM.UMA.MODE  = unified
+ROM.UMA.COHERENCE = enabled
+ROM.UMA.PAGE = dynamic
+
+# GPU-MAPPING
+GPU.VRAM.MODE = mapped
+GPU.VRAM.TYPE = unified
+GPU.VRAM.LINK = ROM.MULTILAR
+
+# REORG / ORG RULES
+ROM.REORG.STATE = enabled
+ROM.ORG.STATE   = enabled
+ROM.REORG.POLICY = auto
+ROM.ORG.POLICY   = strict
+
+# READY
+ROM.READY = true
