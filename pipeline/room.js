@@ -1,5 +1,5 @@
 // pipeline/room.js
-// ROOM_PIPELINE: Normalität + Raumverteilung
+// ROOM_PIPELINE: nutzt pipeline4 + erzeugt iki1uc.space
 
 import { PIPELINE4 } from "./pipeline.js";
 
@@ -17,10 +17,10 @@ export const ROOM_PIPELINE = {
 
     run(frame, op, raw) {
 
-        // 1. Pipeline4 ausführen
+        // 1. pipeline4 ausführen
         const p = PIPELINE4.run(frame, op, raw);
 
-        // 2. PLACEMENT (Positionierung im Raum)
+        // 2. PLACEMENT (Position im Raum)
         const placement = {
             x: frame.syn,
             y: frame.vec,
@@ -28,23 +28,20 @@ export const ROOM_PIPELINE = {
             t: Date.now()
         };
 
-        
         // 3. DISTRIBUTION (Verteilung im Raum)
         const distribution = {
-            lanes: p.a.warmup.lanes || 1,
+            lanes: p.a.warmup?.lanes || 1,
             tmp: p.t.tmp,
-            hdf: p.t.tmp.hdf
+            hdf: p.t.tmp?.hdf
         };
 
-        // 4. Raumzustand erzeugen
-        const space = {
+        // 4. Raum erzeugen
+        return {
             placement,
             distribution,
             pipeline: p,
             target: this.TARGET,
             ready: true
         };
-
-        return space;
     }
 };
