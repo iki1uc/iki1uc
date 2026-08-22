@@ -1,2 +1,39 @@
-GHOST: META_MONITOR
+// GHOST.SCAN · RESPO-SHADOW-SCANNER
 
+document.addEventListener("DOMContentLoaded", async () => {
+
+  const modules = {
+    map: "./RESPO/respo.map",
+    core: "./RESPO/respo.js",
+    ec: "./RESPO/ec.js",
+    cube: "./RESPO/cube.html"
+  };
+
+  const ghost = [];
+
+  async function check(path) {
+    try {
+      const res = await fetch(path);
+      if (!res.ok) ghost.push(`Missing: ${path}`);
+    } catch {
+      ghost.push(`Error: ${path}`);
+    }
+  }
+
+  // Check all RESPO modules
+  for (const m in modules) {
+    await check(modules[m]);
+  }
+
+  // Ghost detection
+  if (ghost.length > 0) {
+    console.warn("GHOST-SCAN: Issues detected");
+    sessionStorage.setItem("RESPO_GHOST", JSON.stringify(ghost));
+
+    // Trigger EC (Error Check)
+    window.location.href = "./RESPO/ec.js?error=ghost-scan";
+    return;
+  }
+
+  console.log("GHOST-SCAN: CLEAN");
+});
