@@ -5,9 +5,11 @@
 <title>PHI – Goldener Schnitt</title>
 <style>
 body { background:#000; color:#ffd700; font-family:monospace; padding:20px; }
-pre { background:#111; padding:10px; border:1px solid #333; color:#ffd700; }
+pre  { background:#111; padding:20px; border:1px solid #333; color:#ffd700; }
+h2   { color:#ffea00; }
 </style>
 </head>
+
 <body>
 
 <h2>PHI – Goldener Schnitt</h2>
@@ -17,6 +19,7 @@ ID: ULRM-PHI
 ROLE: proportion
 MODE: RAW / RESPO / Argumenteria
 STATUS: active
+EVO: en
 
 DATA:
   phi: 1.6180339887
@@ -29,8 +32,22 @@ DATA:
   mir: "Harmonie sichtbar"
   pimp: "Betrachtung: goldener Schnitt"
 
+ENGINE:
+  function ULRM_PHI(LAGE){
+      const phi = 1.6180339887;
+
+      return {
+          x: LAGE.x * phi,
+          y: LAGE.y / phi,
+          z: LAGE.z,
+          evo: "en",
+          modi: "PHI",
+          role: "proportion"
+      };
+  }
+
 RESULT:
-  LAGE wird harmonisch ausgerichtet.
+  LAGE wird harmonisch ausgerichtet (PHI-Proportion).
 </pre>
 
 </body>
