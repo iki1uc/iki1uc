@@ -1,26 +1,27 @@
 // space/suite.js
-// SPACE-SUITE: Raum + Koordinaten + Continuum
 
-import { ROOM_PIPELINE } from "../pipeline/room.js";
-import coords from "./coords.json";
-import continuum from "./CONTINUUM.json";
+import HyPePer from "./HyPePer.json";
+import TransWarp from "./TransWarp.json";
+import Warp3 from "./Warp3.json";
 
 export const SPACE_SUITE = {
 
-    SOURCE: "ROOM_PIPELINE",
+    WARP: {
+        primary: HyPePer,
+        secondary: TransWarp,
+        synthesis: Warp3
+    },
+
     TARGET: "iki1uc.space",
 
-    run(frame, op, raw) {
-
-        const room = ROOM_PIPELINE.run(frame, op, raw);
-
+    run(room, coords, continuum) {
         return {
             room,
             coords,
             continuum,
+            warp: this.WARP,
             target: this.TARGET,
             ready: true
         };
     }
 };
-
