@@ -1,9 +1,22 @@
-<CLUSTER>
-CPU: RAW.HW.CPU
-GPU: RAW.HW.GPU
-RAM: RAW.HW.RAM
-CACHE: RAW.HW.CACHE
-ROM: RAW.HW.ROM
-FLOW: HW → pipeline4 → iki1uc
-</CLUSTER>
+document.addEventListener("DOMContentLoaded", async () => {
+  const cluster = document.getElementById("cluster");
 
+  const modules = [
+    "./Master-Kern/system-check.item",
+    "./Master-Kern/system-sync.item",
+    "./RAW/HW/RAM/ram.map",
+    "./RAW/HW/ROM/rom.map",
+    "./RAW/HW/CACHE/cache.map",
+    "./RAW/HW/GPU/gpu.map"
+  ];
+
+  for (const m of modules) {
+    try {
+      const res = await fetch(m);
+      const ok = res.ok ? "ok" : "missing";
+      cluster.innerHTML += `<div class="cluster-item">${m}: ${ok}</div>`;
+    } catch {
+      cluster.innerHTML += `<div class="cluster-item">${m}: error</div>`;
+    }
+  }
+});
