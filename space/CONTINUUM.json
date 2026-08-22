@@ -1,30 +1,15 @@
 {
-  "CONTINUUM": {
-    "SOURCE": "pipeline4",
-    "TARGET": "iki1uc.space",
-    "DIMENSIONS": 6
+  "DIFFERENTIAL": {
+    "order_1": "CONTINUUM (linear)",
+    "order_2": "TransWarp (orthogonal)",
+    "order_3": "Warp3 (synthesis)"
   },
 
-  "TIME": {
-    "tmp": true,
-    "hdf": true,
-    "cause": "forward",
-    "effect": "reverse"
+  "RELATION": {
+    "CONTINUUM": "basis",
+    "TransWarp": "90-degree-derivative",
+    "Warp3": "third-derivative-synthesis"
   },
 
-  "SPACE": {
-    "placement": {
-      "x": 0,
-      "y": 0,
-      "z": 0
-    },
-    "distribution": {
-      "lanes": 1,
-      "tmp": true,
-      "hdf": true
-    }
-  },
-
-  "FLOW": "sys → tem → AU → RA → ROOM → SUITE"
+  "FLOW_MATH": "d/dt → d²/dt² → d³/dt³"
 }
-
