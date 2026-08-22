@@ -20,3 +20,31 @@ export const RATE_TMP = (tmp) => {
     const len = tmp.length;
     return RATE("TMP‑Resultierende", len, 3);
 };
+export const RATE_CITY = (city) => {
+    const sum =
+        city.leitbahn.breite +
+        city.leitbahn.hoehe +
+        city.leitbahn.tiefe +
+        city.leitbahn.trans;
+
+    return RATE("City‑System", sum, 999);
+};
+export const RATE_SPRUNG = (sprung) => {
+    return RATE("SPRUNG‑Übergang", sprung.value, 9);
+};
+export const RATE_WAVE = (wave) => {
+    return RATE("WAVE‑Loop", wave.cycle(), 27);
+};
+export const RATE_HW = (hw) => {
+    const load = hw.cpu + hw.gpu + hw.ram + hw.cache;
+    return RATE("Hardware‑Last", load, 50);
+};
+export const RATE_ALL = (sys) => ({
+    geo: RATE_GEO(sys.geo),
+    physik: RATE_PHYSIK(sys.kraft),
+    tmp: RATE_TMP(sys.tmp),
+    city: RATE_CITY(sys.city),
+    sprung: RATE_SPRUNG(sys.sprung),
+    wave: RATE_WAVE(sys.wave),
+    hardware: RATE_HW(sys.hardware)
+});
