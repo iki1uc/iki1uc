@@ -109,6 +109,54 @@ ROOT ist real‑bildend.
 import { AXIOM_TRIANGLE } from "./core/axiom.tri.js";
 import { RAUM_KERNEL, MOVE } from "./core/fin.e.js";
 import { RESPO_AXIS } from "./core/respo.js";
+<script type="module">
+import { READY } from "./ready.js";
+import { RAUM_KERNEL, MOVE } from "./core/fin.e.js";
+
+// MIND_LAYER direkt hier definieren
+function MIND_LAYER(raum, map) {
+    return {
+        EBENE: "AEON",
+        ORDNUNG: 4,
+        STATUS: "° & % 3",
+        SIGNAL: raum.IST === "OK" ? "grün" : "gelb",
+        WAHRNEHMUNG: raum.STATUS === "REAL" ? "klar" : "unscharf",
+        FOKUS: map ? "verbunden" : "leer",
+        VERFÜGBARKEIT: map ? "hoch" : "niedrig",
+        STABILITÄT: raum.NEU === "TMP" ? "variabel" : "stabil",
+        RÜCKFÜHRUNG: raum.BLATT === "ROOT" ? "aktiv" : "neutral",
+        SIGNATUR: `AEON-${raum.ZUG}-${raum.BLATT}`
+    };
+}
+
+async function loadAll() {
+    const root = document.getElementById("root-kern");
+
+    // READY (Synthese‑Boost)
+    const ready = READY();
+    root.innerText += "\nREADY: " + ready;
+
+    // RAUM
+    const raum = RAUM_KERNEL({
+        ZUG: "A1",
+        BLATT: "ROOT",
+        STATUS: "REAL",
+        IST: "OK",
+        NEU: "TMP"
+    });
+    root.innerText += "\nRAUM: " + JSON.stringify(raum);
+
+    // MOVE
+    const move = MOVE(raum);
+    root.innerText += "\nMOVE: " + JSON.stringify(move);
+
+    // MIND
+    const mind = MIND_LAYER(raum, true);
+    root.innerText += "\nMIND: " + JSON.stringify(mind);
+}
+
+loadAll();
+</script>
 
 // Pipeline laden
 async function loadPipeline() {
