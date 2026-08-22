@@ -12,23 +12,67 @@ button{padding:6px 12px;background:#111;color:#0f0;border:1px solid #333;cursor:
 </head>
 <body>
 
-<h1>SINN 5 – LINK‑SCAN</h1>
-<textarea id="src"></textarea>
+<h1>SINN 5 – LINK‑SCAN + Bewertung</h1>
+<textarea id="src" placeholder="HTML einfügen…"></textarea>
 <button onclick="scan()">SCAN</button>
 <pre id="out"></pre>
 
 <script>
+// ------------------------------------------------------
+// 7SINN – Bewertungssystem (Standalone)
+// ------------------------------------------------------
+function RATE(achse, wert, norm){
+  return {
+    achse,
+    wert,
+    norm,
+    delta: wert - norm,
+    status:
+      wert === norm ? "Norm" :
+      wert > norm && wert < norm * 3 ? "Übernorm" :
+      wert >= norm * 3 ? "Extrem" :
+      "Unternorm"
+  };
+}
+
+// ------------------------------------------------------
+// SINN 5 – Link-Scan + Bewertung
+// ------------------------------------------------------
 function scan(){
   const t = src.value;
+  if(!t.trim()){
+    out.textContent = "Keine Eingabe.";
+    return;
+  }
+
   const p = new DOMParser();
   const d = p.parseFromString(t,"text/html");
+
   const links = [...d.querySelectorAll("a")].map(a=>a.href);
-  let o = "SINN 5 – LINK‑SCAN\n";
-  links.forEach(l=>o+=`- ${l}\n`);
-  out.textContent = o || "Keine Links.";
+
+  // Link-Sinn = Anzahl der Links
+  const sinnWert = links.length;
+  const sinnNorm = 10; // Norm für Link-Sinn
+
+  const rating = RATE("Sinn-Link", sinnWert, sinnNorm);
+
+  let o = "SINN 5 – LINK‑SCAN + Bewertung\n\n";
+  o += "Link-Sinn: " + sinnWert + "\n";
+  o += "Norm: " + sinnNorm + "\n";
+  o += "Delta: " + rating.delta + "\n";
+  o += "Status: " + rating.status + "\n\n";
+
+  o += "LINKS:\n";
+  if(links.length === 0){
+    o += "Keine Links gefunden.\n";
+  } else {
+    links.forEach(l=>o+=`- ${l}\n`);
+  }
+
+  out.textContent = o;
 }
 </script>
 
+<!-- EICH + GEN + MARKE dürfen nicht entfernt werden -->
 </body>
 </html>
-
