@@ -26,3 +26,19 @@ export const SUITE = {
         };
     }
 };
+// pipeline/suite.js
+
+import { ROOM_PIPELINE } from "./room.js";
+import { PIPELINE4 } from "./pipeline.js";
+
+export const SUITE = {
+
+    run(frame, op, raw) {
+        return {
+            room: ROOM_PIPELINE.run(frame, op, raw),
+            pipe: PIPELINE4.run(frame, op, raw),
+            target: "iki1uc.suite",
+            ready: true
+        };
+    }
+};
