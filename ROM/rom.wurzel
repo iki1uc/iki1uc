@@ -1,14 +1,14 @@
-# ROM.WURZEL · OVERDRIVE-INTEGRATION
+# ROM.WURZEL · OVERDRIVE-INTEGRATION + AXIS-MOVE-MATRIX
 
 ROM.WURZEL.ID        = 6D-ROOT
 ROM.WURZEL.STATE     = active
 ROM.WURZEL.MODE      = overdrive
-ROM.WURZEL.VERSION   = 1.0
+ROM.WURZEL.VERSION   = 1.1
 
 # OVERDRIVE (CPU-Frequenz + Spannung)
 OVERDRIVE.CPU.FREQ   = boost
 OVERDRIVE.CPU.MODE   = enabled
-OVERDRIVE.CPU.VCORE  = 0.89V        # analog STM32N6 Overdrive 
+OVERDRIVE.CPU.VCORE  = 0.89V
 OVERDRIVE.CPU.SCALE  = dynamic
 
 # CPU-INSTRUCTION SETS
@@ -38,6 +38,18 @@ ROM.WURZEL.ORG       = strict
 # ROOT-BOOT
 ROM.WURZEL.BOOT.ADDR = 0x00000000
 ROM.WURZEL.BOOT.TYPE = ROOT-START
+
+# AXIS-MOVE-MATRIX (81 → 9x9 → 3x3)
+AXIS.ROOT.SIZE       = 81
+AXIS.ROOT.GRID       = 9x9
+AXIS.ROOT.SUBGRID    = 3x3
+
+AXIS.MOVE.1          = enabled   # horizontale Achse
+AXIS.MOVE.2          = enabled   # vertikale Achse
+AXIS.MOVE.3          = enabled   # diagonale Achse
+
+AXIS.MOVE.MODE       = valid-only
+AXIS.MOVE.OUTPUT     = ./ROM/axis.move
 
 # READY
 ROM.WURZEL.READY     = true
