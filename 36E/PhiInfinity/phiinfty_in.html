@@ -11,33 +11,51 @@ button{padding:6px 12px;background:#111;color:#0f0;border:1px solid #333;cursor:
 </head>
 <body>
 
-<h1>phiinfty_in – NC‑Bewegung</h1>
+<h1>phiinfty_in – Phi∞‑Ratio + Bewertung</h1>
 
-<script>
-const NC={pos:{x:0,y:0,r:20},
-move(d){if(d==="N→")NC.pos.x+=10;if(d==="N←")NC.pos.x-=10;
-if(d==="N↑")NC.pos.y-=10;if(d==="N↓")NC.pos.y+=10;},
-circle(c){if(c==="NC↻")NC.pos.r+=2;if(c==="NC↺")NC.pos.r-=2;
-if(c==="NC+")NC.pos.r+=5;if(c==="NC-")NC.pos.r-=5;},
-neutral(){NC.pos={x:0,y:0,r:20};}};
-function runNC(cmd){
-if(cmd.startsWith("N"))NC.move(cmd);
-if(cmd.startsWith("NC"))NC.circle(cmd);
-if(cmd==="N")NC.neutral();
-nc_out.textContent=`x=${NC.pos.x}, y=${NC.pos.y}, r=${NC.pos.r}`;}
+<script type="module">
+import { PHI, RATE_PHI } from "./phi.js";
+
+// --------------------------------------
+// Phi∞‑Modul (NEU)
+// --------------------------------------
+const PHI_INFINITY = {
+  step: 0,
+
+  next(){
+    this.step++;
+    return PHI.next(); // nutzt phi.js
+  },
+
+  ratio(){
+    return PHI.ratio(); // nutzt phi.js
+  },
+
+  rating(){
+    return RATE_PHI(); // nutzt phi.js
+  }
+};
+
+// --------------------------------------
+// Phi∞‑Ausführung + Bewertung
+// --------------------------------------
+function runPhiInfinity(){
+  const value = PHI_INFINITY.next();
+  const ratio = PHI_INFINITY.ratio();
+  const rating = PHI_INFINITY.rating();
+
+  phi_out.textContent =
+    `Phi∞‑Step: ${PHI_INFINITY.step}\n` +
+    `Phi∞‑Wert: ${value}\n` +
+    `Ratio∞: ${ratio.toFixed(6)}\n` +
+    `Bewertung∞: ${rating.status}\n` +
+    `Delta∞: ${rating.delta.toFixed(6)}`;
+}
 </script>
 
 <div>
-<button onclick="runNC('N→')">N→</button>
-<button onclick="runNC('N←')">N←</button>
-<button onclick="runNC('N↑')">N↑</button>
-<button onclick="runNC('N↓')">N↓</button>
-<button onclick="runNC('NC↻')">NC↻</button>
-<button onclick="runNC('NC↺')">NC↺</button>
-<button onclick="runNC('NC+')">NC+</button>
-<button onclick="runNC('NC-')">NC-</button>
-<button onclick="runNC('N')">Neutral</button>
-<pre id="nc_out">x=0, y=0, r=20</pre>
+<button onclick="runPhiInfinity()">Phi∞ NEXT</button>
+<pre id="phi_out">Phi∞‑System bereit</pre>
 </div>
 
 </body>
