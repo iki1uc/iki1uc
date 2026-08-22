@@ -7,7 +7,7 @@
 <style>
 body { background:#000; color:#f00; font-family:monospace; padding:20px; }
 h1 { color:#f33; }
-pre { background:#111; border:1px solid #300; padding:10px; }
+pre { background:#111; border:1px solid #300; padding:10px; white-space:pre-wrap; }
 a { color:#f55; }
 </style>
 </head>
@@ -18,10 +18,14 @@ a { color:#f55; }
 <p>Ein Modul oder Link konnte nicht geladen werden.</p>
 
 <pre>
-PATH = <script>document.write(new URLSearchParams(location.search).get("path"))</script>
-STATUS = missing / broken
-MASTER-SCANNER = neutral
-SYSTEM-CHECK = neutral
+PATH   = <script>document.write(new URLSearchParams(location.search).get("path"))</script>
+REASON = <script>document.write(new URLSearchParams(location.search).get("reason"))</script>
+CACHE  = <script>document.write(new URLSearchParams(location.search).get("cache"))</script>
+
+STATUS         = missing / broken
+MASTER-SCANNER = routed
+SYSTEM-CHECK   = error-mode
+ERROR-ROUTER   = active
 </pre>
 
 <a href="./index.html">Zurück zum ROOT</a>
