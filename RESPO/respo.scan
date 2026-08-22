@@ -1,2 +1,43 @@
-SCAN: META_STATUS
+// RESPO-SCAN · MASTER-KERN
 
+document.addEventListener("DOMContentLoaded", async () => {
+
+  const RESPO = {
+    map: "./RESPO/respo.map",
+    core: "./RESPO/respo.js",
+    ec: "./RESPO/ec.js",
+    cube: "./RESPO/cube.html"
+  };
+
+  const status = {
+    map: false,
+    core: false,
+    ec: false,
+    cube: false
+  };
+
+  async function check(path) {
+    try {
+      const res = await fetch(path);
+      return res.ok;
+    } catch {
+      return false;
+    }
+  }
+
+  // MODULE CHECK
+  status.map  = await check(RESPO.map);
+  status.core = await check(RESPO.core);
+  status.ec   = await check(RESPO.ec);
+  status.cube = await check(RESPO.cube);
+
+  // ERROR CHECK
+  if (!status.map || !status.core) {
+    console.error("RESPO-SCAN: ERROR");
+    window.location.href = "./RESPO/ec.js?error=respo-scan";
+    return;
+  }
+
+  console.log("RESPO-SCAN: OK");
+
+});
