@@ -1,4 +1,42 @@
-<DISTRIBUTION>
-ZONE: MULTILAR
-TARGET: iki1uc.space
+// pipeline/RA/distribution.ra
+// RA_DISTRIBUTION: MULTILAR → iki1uc.space
 
+export function RA_DISTRIBUTION(input, space) {
+
+    // === 1. Zone MULTILAR aktivieren ===
+    const ZONE = {
+        id: "MULTILAR",
+        layers: 3,          // 3‑Layer‑Distribution
+        spread: "radial",   // radiale Verteilung
+        valid: true
+    };
+
+    // === 2. Zielraum: iki1uc.space ===
+    const TARGET = {
+        id: space?.id || "iki1uc.space",
+        field: space?.field || "neutral",
+        vector: space?.vector || { x: 0, y: 0, z: 0 }
+    };
+
+    // === 3. Verteilung durchführen ===
+    const DISTRIBUTED = {
+        layer1: {
+            x: TARGET.vector.x + 1,
+            y: TARGET.vector.y,
+            z: TARGET.vector.z
+        },
+        layer2: {
+            x: TARGET.vector.x,
+            y: TARGET.vector.y + 1,
+            z: TARGET.vector.z
+        },
+        layer3: {
+            x: TARGET.vector.x,
+            y: TARGET.vector.y,
+            z: TARGET.vector.z + 1
+        }
+    };
+
+    // === 4. Finaler RA‑Distribution‑Block ===
+    return {
+        route
