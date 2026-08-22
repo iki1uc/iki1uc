@@ -1,41 +1,59 @@
-// toolomat_scripts.js
+// ===============================
+// NC-ENGINE · 6 NC-Formen
+// ===============================
 
-function sendAxes(){
+function NC_engine(Phi, phi, phi2, phiinfty){
 
-    // Beispielwerte – später dynamisch
-    const Phi = 1.0;
-    const phi = 0.7;
-    const phi2 = 0.4;
-    const phiinfty = 0.9;
+    const base = ghost5E(Phi, phi, phi2, phiinfty);
 
-    const result = ghost5E(Phi, phi, phi2, phiinfty);
+    return {
 
-    const out = document.getElementById("out");
-    if(!out) return;
+        // NC1 – Linear
+        NC1: {
+            name: "Linear",
+            value: Phi + phi,
+            M5: base.M5,
+            G: base.G_total
+        },
 
-    out.textContent =
-`=== TOOLOMAT OUTPUT ===
+        // NC2 – Quadratisch
+        NC2: {
+            name: "Quadratisch",
+            value: (Phi * phi2),
+            stabil: base.lage.stabil,
+            evo: base.orbit.evo
+        },
 
-M₅: ${result.M5.toFixed(4)}
-G_total: ${result.G_total.toFixed(4)}
-Status: ${result.status}
+        // NC3 – Rekursiv
+        NC3: {
+            name: "Rekursiv",
+            value: phi * phi,
+            ghost: base.status,
+            radius: base.orbit.radius
+        },
 
-Orbit:
-  speed: ${result.orbit.speed}
-  radius: ${result.orbit.radius}
-  evo: ${result.orbit.evo}
+        // NC4 – Unendlichkeits-Projektion
+        NC4: {
+            name: "Unendlichkeits-Projektion",
+            value: phiinfty * Phi,
+            weite: base.operatoren.raster,
+            evo: base.orbit.evo
+        },
 
-Operatoren:
-  bewegung: ${result.operatoren.bewegung}
-  stabilitaet: ${result.operatoren.stabilitaet}
-  raster: ${result.operatoren.raster}
+        // NC5 – Dominanz
+        NC5: {
+            name: "Dominanz",
+            value: Phi - phi,
+            bewegung: base.operatoren.bewegung,
+            stabilitaet: base.operatoren.stabilitaet
+        },
 
-LAGE:
-  x: ${result.lage.x}
-  y: ${result.lage.y}
-  z: ${result.lage.z}
-  stabil: ${result.lage.stabil}
-
-GHOST‑5E: Aktiv
-`;
+        // NC6 – Herrschaftsgrad
+        NC6: {
+            name: "Herrschaft",
+            value: base.M5 * 12.5,
+            lage: base.lage,
+            ghost: base.status
+        }
+    };
 }
