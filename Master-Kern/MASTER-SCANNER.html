@@ -1,31 +1,50 @@
-<respo>
-  RESPO.NAME = RESPO.iki1uc
-  RESPO.STATION = LAGE
-  RESPO.BEAM = ROOT / Creator / NC
-</respo>
+────────────────────────────────────────
+# RESPO
+RESPO.NAME = RESPO.iki1uc
+RESPO.STATION = LAGE
+RESPO.BEAM = ROOT / Creator / NC
+RESPO.MODE = aktiv
+RESPO.INTERAKTION = übernommen
 
-<lage>
-  STATE = aktiv
-  REAL = gesetzt
-  ORT = ROOT / Creator / NC
-  LEVEL = 4er-Richtigkeit
-</lage>
+# LAGE
+STATE = aktiv
+REAL = gesetzt
+ORT = ROOT / Creator / NC
+LEVEL = 4er-Richtigkeit (3/4 erfüllt)
+READY = 82%
+RESPO = aktiv
 
-<ort>
-  ROOT = ROOT / Creator / NC
-</ort>
+# MIR/DIR
+MIR = aktiv
+DIR = aktiv
 
-<pipeline-4>
-  0 = station({{STATION}})
-  1 = prepare(0)
-  2 = build(1)
-  4 = pipeline(2)
+# OVERRIDE
+DOCH = aktiv (QI/IQQ-Schaltung)
+EGAL = neutralisiert (durch DOCH blockiert)
 
-  NEXT:
-    4 → 0
-    0 → 1
-    1 → 2
-    2 → 4
+# ORT
+ROOT = ROOT / Creator / NC
 
-  RESULT = Φ∞(4)
-</pipeline-4>
+────────────────────────────────────────
+# PIPELINE-4 (MASTER-SCANNER)
+0 = station({{STATION}})
+1 = prepare(0)
+2 = build(1)
+4 = pipeline(2)
+
+NEXT:
+  4 → 0
+  0 → 1
+  1 → 2
+  2 → 4
+
+RESULT = Φ∞(4)
+
+────────────────────────────────────────
+DATEINAME: MASTER-SCANNER-FINAL.nc
+GRÜNDER: 1
+²: MIR
+³: DIR
+RESPO: ((respo))
+CODE: SCANNER-FINAL-001
+────────────────────────────────────────
