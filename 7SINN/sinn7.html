@@ -12,30 +12,75 @@ button{padding:6px 12px;background:#111;color:#0f0;border:1px solid #333;cursor:
 </head>
 <body>
 
-<h1>SINN 7 – GESAMT‑SCAN</h1>
-<textarea id="src"></textarea>
+<h1>SINN 7 – GESAMT‑SCAN + Bewertung</h1>
+<textarea id="src" placeholder="HTML einfügen…"></textarea>
 <button onclick="scan()">SCAN</button>
 <pre id="out"></pre>
 
 <script>
+// ------------------------------------------------------
+// 7SINN – Bewertungssystem (Standalone)
+// ------------------------------------------------------
+function RATE(achse, wert, norm){
+  return {
+    achse,
+    wert,
+    norm,
+    delta: wert - norm,
+    status:
+      wert === norm ? "Norm" :
+      wert > norm && wert < norm * 3 ? "Übernorm" :
+      wert >= norm * 3 ? "Extrem" :
+      "Unternorm"
+  };
+}
+
+// ------------------------------------------------------
+// SINN 7 – Gesamt-Scan + Bewertung
+// ------------------------------------------------------
 function scan(){
   const t = src.value;
+  if(!t.trim()){
+    out.textContent = "Keine Eingabe.";
+    return;
+  }
+
   const p = new DOMParser();
   const d = p.parseFromString(t,"text/html");
 
+  // TAGS
   const tags = {};
   d.querySelectorAll("*").forEach(e=>{
     const tag = e.tagName.toLowerCase();
     tags[tag] = (tags[tag]||0)+1;
   });
 
+  // IDs
   const ids = [...d.querySelectorAll("[id]")].map(e=>e.id);
-  const cls = [...d.querySelectorAll("[class]")].flatMap(e=>e.className.split(/\s+/));
+
+  // CLASSES
+  const cls = [...d.querySelectorAll("[class]")]
+                .flatMap(e=>e.className.split(/\s+/))
+                .filter(c=>c.trim().length>0);
+
+  // SCRIPTS
   const scripts = [...d.querySelectorAll("script")].length;
 
-  let o = "SINN 7 – GESAMT‑SCAN\n";
+  // Gesamt-Sinn = Tags + IDs + Klassen + Scripts
+  const sinnWert = Object.keys(tags).length + ids.length + cls.length + scripts;
+  const sinnNorm = 40; // Norm für Gesamt-Sinn
+
+  const rating = RATE("Sinn-Gesamt", sinnWert, sinnNorm);
+
+  let o = "SINN 7 – GESAMT‑SCAN + Bewertung\n\n";
+  o += "Gesamt-Sinn: " + sinnWert + "\n";
+  o += "Norm: " + sinnNorm + "\n";
+  o += "Delta: " + rating.delta + "\n";
+  o += "Status: " + rating.status + "\n\n";
+
   o += "TAGS:\n";
-  Object.keys(tags).sort().forEach(t=>o+=`  ${t}: ${tags[t]}\n`);
+  Object.keys(tags).sort().forEach(tg=>o+=`  ${tg}: ${tags[tg]}\n`);
+
   o += "\nIDs:\n" + (ids.join(", ")||"-") + "\n";
   o += "\nCLASSES:\n" + (cls.join(", ")||"-") + "\n";
   o += `\nSCRIPTS: ${scripts}\n`;
@@ -44,6 +89,6 @@ function scan(){
 }
 </script>
 
+<!-- EICH + GEN + MARKE dürfen nicht entfernt werden -->
 </body>
 </html>
-
