@@ -1,2 +1,23 @@
-RULES: PARALLEL, SUPERSCALAR, OUT_OF_ORDER
+# CACHE.RULES · MASTER-KERN
 
+RULE.PARALLEL      = ENABLED
+RULE.SUPERSCALAR   = ENABLED
+RULE.OUT_OF_ORDER  = ENABLED
+
+# PARALLEL: Mehrere unabhängige Cache-Zugriffe pro Takt
+CACHE.ILP.MODE     = parallel
+CACHE.ILP.WIDTH    = auto
+
+# SUPERSCALAR: Mehrfach-Instruction-Fetch pro Zyklus
+CACHE.ISSUE.WIDTH  = dynamic
+CACHE.ISSUE.MODE   = superscalar
+
+# OUT-OF-ORDER: OoO-kompatible Load/Store-Queues
+CACHE.OOO.STATE    = active
+CACHE.OOO.REORDER  = enabled
+CACHE.OOO.RENAME   = enabled
+
+# MISS-HANDLING
+CACHE.MISS.THRESHOLD = 1%
+CACHE.MISS.ACTION    = CPU-RECALIBRATION
+CACHE.MISS.MODE      = auto
