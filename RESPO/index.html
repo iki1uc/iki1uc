@@ -2,25 +2,75 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>RESPO · Übersicht</title>
+<title>RESPO · Dashboard</title>
+
 <style>
-body{background:#000;color:#0f0;font-family:monospace;padding:20px;}
-a{color:#0f0;text-decoration:none;font-size:18px;}
+body{
+  background:#000;
+  color:#0f0;
+  font-family:monospace;
+  padding:20px;
+}
+h1{
+  margin-bottom:20px;
+}
+.module{
+  margin:10px 0;
+  padding:10px;
+  border:1px solid #0f0;
+}
+.ok{color:#0f0;}
+.err{color:#f00;}
+a{color:#0f0;text-decoration:none;}
 a:hover{text-decoration:underline;}
-h1{margin-bottom:20px;}
-ul{line-height:1.8;}
 </style>
+
 </head>
 <body>
 
-<h1>RESPO – Module Übersicht</h1>
+<h1>RESPO – System Dashboard</h1>
+
+<div id="status"></div>
 
 <ul>
-  <li><a href="cube.html">3D Cube Simulation</a></li>
+  <li><a href="cube.html">3D Cube</a></li>
   <li><a href="schach.html">Schach Engine</a></li>
   <li><a href="skat.html">Skat Kartenmodul</a></li>
 </ul>
 
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+
+  const status = document.getElementById("status");
+
+  const modules = {
+    "RESPO Map": "respo.map",
+    "RESPO Core": "respo.js",
+    "RESPO Scan": "respo.scan",
+    "Ghost Scan": "ghost.scan",
+    "Error Check": "ec.js",
+    "Cube": "cube.html"
+  };
+
+  for (const name in modules) {
+    const path = "./" + modules[name];
+    let ok = false;
+
+    try {
+      const res = await fetch(path);
+      ok = res.ok;
+    } catch {
+      ok = false;
+    }
+
+    const div = document.createElement("div");
+    div.className = "module";
+    div.innerHTML = `${name}: <span class="${ok ? "ok" : "err"}">${ok ? "OK" : "ERROR"}</span>`;
+    status.appendChild(div);
+  }
+
+});
+</script>
+
 </body>
 </html>
-
