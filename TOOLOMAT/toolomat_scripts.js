@@ -73,7 +73,7 @@ const NC_KOERPER = {
     Q4:  { ax: [0.7, 0.6, 0.4] },
     NC:  { ax: [1.0, 1.0, 1.0] } // Zentrum
 };
-
+ 
 // 3-Achsen-Abfrage + Antwort + Spiegelung
 function NC_abfrage(name){
     const k = NC_KOERPER[name];
