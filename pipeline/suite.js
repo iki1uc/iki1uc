@@ -5,7 +5,7 @@ import { ROOM_PIPELINE } from "./room.js";
 import { PIPELINE4 } from "./pipeline.js";
 
 export const SUITE = {
-
+ 
     MODULES: {
         ROOM: ROOM_PIPELINE,
         PIPELINE: PIPELINE4
