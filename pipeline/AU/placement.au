@@ -1,5 +1,41 @@
-<PLACEMENT>
-COORD: RAW/HW
-ANCHOR: ROM
-TARGET: iki1uc.space
+// pipeline/AU/placement.au
+// PLACEMENT: RAW/HW → ROM → iki1uc.space
 
+export function PLACEMENT_AU(input, space) {
+
+    // === 1. RAW/HW Koordinaten laden ===
+    const COORD = {
+        raw: input?.coord?.raw ?? { x: 0, y: 0, z: 0 },
+        hw:  input?.coord?.hw  ?? { x: 0, y: 0, z: 0 },
+        valid: !!input?.coord
+    };
+
+    // === 2. ROM-Anker setzen ===
+    const ANCHOR = {
+        type: "ROM",
+        id: input?.anchor?.id || "ROM-DEFAULT",
+        stable: true
+    };
+
+    // === 3. Ziel: iki1uc.space ===
+    const TARGET = {
+        id: space?.id || "iki1uc.space",
+        vector: {
+            x: COORD.hw.x + COORD.raw.x,
+            y: COORD.hw.y + COORD.raw.y,
+            z: COORD.hw.z + COORD.raw.z
+        },
+        anchor: ANCHOR.id,
+        field: space?.field || "neutral"
+    };
+
+    // === 4. Finaler PLACEMENT-Block ===
+    return {
+        route: "PLACEMENT_AU",
+        timestamp: Date.now(),
+        COORD,
+        ANCHOR,
+        TARGET,
+        ready: COORD.valid && ANCHOR.stable
+    };
+}
