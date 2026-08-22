@@ -11,22 +11,75 @@ button{padding:6px 12px;background:#111;color:#0f0;border:1px solid #333;margin-
 </head>
 <body>
 
-<h1>nc_u – NC‑Bewegung</h1>
+<h1>nc_u – NC‑Bewegung + Bewertung</h1>
 
 <script>
+// -----------------------------
+// 1) NC‑Modul (Bewegung)
+// -----------------------------
 const NC={
   pos:{x:0,y:0,r:20},
-  move(d){if(d==="N→")NC.pos.x+=10;if(d==="N←")NC.pos.x-=10;
-          if(d==="N↑")NC.pos.y-=10;if(d==="N↓")NC.pos.y+=10;},
-  circle(c){if(c==="NC↻")NC.pos.r+=2;if(c==="NC↺")NC.pos.r-=2;
-            if(c==="NC+")NC.pos.r+=5;if(c==="NC-")NC.pos.r-=5;},
-  neutral(){NC.pos={x:0,y:0,r:20};}
+  move(d){
+    if(d==="N→")NC.pos.x+=10;
+    if(d==="N←")NC.pos.x-=10;
+    if(d==="N↑")NC.pos.y-=10;
+    if(d==="N↓")NC.pos.y+=10;
+  },
+  circle(c){
+    if(c==="NC↻")NC.pos.r+=2;
+    if(c==="NC↺")NC.pos.r-=2;
+    if(c==="NC+")NC.pos.r+=5;
+    if(c==="NC-")NC.pos.r-=5;
+  },
+  neutral(){
+    NC.pos={x:0,y:0,r:20};
+  }
 };
+
+// -----------------------------
+// 2) Bewertungs‑Kern (NEU)
+// -----------------------------
+function RATE(achse, wert, norm){
+  return {
+    achse,
+    wert,
+    norm,
+    delta: wert - norm,
+    status:
+      wert === norm ? "Norm" :
+      wert > norm && wert < norm * 3 ? "Übernorm" :
+      wert >= norm * 3 ? "Extrem" :
+      "Unternorm"
+  };
+}
+
+// -----------------------------
+// 3) NC‑Bewertung (NEU)
+// -----------------------------
+function RATE_NC(pos){
+  const dx = Math.abs(pos.x);
+  const dy = Math.abs(pos.y);
+  const dr = Math.abs(pos.r - 20);
+
+  const sum = dx + dy + dr;
+
+  return RATE("NC‑Bewegung", sum, 50);
+}
+
+// -----------------------------
+// 4) NC‑Ausführung + Bewertung
+// -----------------------------
 function runNC(cmd){
   if(cmd.startsWith("N"))NC.move(cmd);
   if(cmd.startsWith("NC"))NC.circle(cmd);
   if(cmd==="N")NC.neutral();
-  nc_out.textContent=`x=${NC.pos.x}, y=${NC.pos.y}, r=${NC.pos.r}`;
+
+  const rating = RATE_NC(NC.pos);
+
+  nc_out.textContent =
+    `x=${NC.pos.x}, y=${NC.pos.y}, r=${NC.pos.r}\n` +
+    `Bewertung: ${rating.status}\n` +
+    `Delta: ${rating.delta}`;
 }
 </script>
 
@@ -40,6 +93,7 @@ function runNC(cmd){
 <button onclick="runNC('NC+')">NC+</button>
 <button onclick="runNC('NC-')">NC-</button>
 <button onclick="runNC('N')">Neutral</button>
+
 <pre id="nc_out">x=0, y=0, r=20</pre>
 </div>
 
