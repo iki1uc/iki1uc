@@ -12,23 +12,65 @@ button{padding:6px 12px;background:#111;color:#0f0;border:1px solid #333;cursor:
 </head>
 <body>
 
-<h1>SINN 3 – MASSE</h1>
-<textarea id="src"></textarea>
+<h1>SINN 3 – MASSE + Bewertung</h1>
+<textarea id="src" placeholder="HTML einfügen…"></textarea>
 <button onclick="scan()">SCAN</button>
 <pre id="out"></pre>
 
 <script>
+// ------------------------------------------------------
+// 7SINN – Bewertungssystem (Standalone)
+// ------------------------------------------------------
+function RATE(achse, wert, norm){
+  return {
+    achse,
+    wert,
+    norm,
+    delta: wert - norm,
+    status:
+      wert === norm ? "Norm" :
+      wert > norm && wert < norm * 3 ? "Übernorm" :
+      wert >= norm * 3 ? "Extrem" :
+      "Unternorm"
+  };
+}
+
+// ------------------------------------------------------
+// SINN 3 – Masse-Scan + Bewertung
+// ------------------------------------------------------
 function scan(){
   const t = src.value;
+  if(!t.trim()){
+    out.textContent = "Keine Eingabe.";
+    return;
+  }
+
+  // Masse zählen
   const divs = (t.match(/<div/g)||[]).length;
   const spans = (t.match(/<span/g)||[]).length;
   const sections = (t.match(/<section/g)||[]).length;
-  let o = "SINN 3 – MASSE\n";
-  o += `DIV: ${divs}\nSPAN: ${spans}\nSECTION: ${sections}\n`;
+
+  // Masse-Sinn = Summe aller Masse-Tags
+  const sinnWert = divs + spans + sections;
+  const sinnNorm = 15; // Norm für Masse-Sinn
+
+  const rating = RATE("Sinn-Masse", sinnWert, sinnNorm);
+
+  let o = "SINN 3 – MASSE + Bewertung\n\n";
+  o += "Masse-Sinn: " + sinnWert + "\n";
+  o += "Norm: " + sinnNorm + "\n";
+  o += "Delta: " + rating.delta + "\n";
+  o += "Status: " + rating.status + "\n\n";
+
+  o += "DETAILS:\n";
+  o += `DIV: ${divs}\n`;
+  o += `SPAN: ${spans}\n`;
+  o += `SECTION: ${sections}\n`;
+
   out.textContent = o;
 }
 </script>
 
+<!-- EICH + GEN + MARKE dürfen nicht entfernt werden -->
 </body>
 </html>
-
