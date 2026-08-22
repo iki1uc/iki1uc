@@ -15,7 +15,6 @@ input{width:100px;padding:6px;background:#111;color:#0f0;border:1px solid #333;m
 </head>
 <body>
 
-
 <h1>TOOLOMAT DOM – Struktur/Masse + Achsenbildung</h1>
 
 <!-- HTML-Scanner -->
@@ -68,10 +67,10 @@ function herrschaft(Phi, phi, phi2, phiinfty){
     const M5 = (Phi + phi + phi2 + phiinfty) / 4;
 
     return {
-        dominanz: Phi - phi,          // Verhältnis vs Rekursion
-        stabil: phi2,                 // Quadratur-Stabilität
-        weite: phiinfty,              // Unendlichkeits-Projektion
-        herrschaftsGrad: M5 * 12.5    // M₅ skaliert zur Herrschaft
+        dominanz: Phi - phi,
+        stabil: phi2,
+        weite: phiinfty,
+        herrschaftsGrad: M5 * 12.5
     };
 }
 
@@ -80,13 +79,11 @@ function scan(){
     const out=document.getElementById("out");
     out.textContent="";
 
-    // HTML-Scans
     const s1=scanHTML(document.getElementById("h1").value);
     const s2=scanHTML(document.getElementById("h2").value);
     const s3=scanHTML(document.getElementById("h3").value);
     const s4=scanHTML(document.getElementById("h4").value);
 
-    // Mathematische Stationen
     const Phi=parseFloat(document.getElementById("Phi").value);
     const phi=parseFloat(document.getElementById("phi").value);
     const phi2=parseFloat(document.getElementById("phi2").value);
@@ -94,7 +91,6 @@ function scan(){
 
     let r="=== TOOLOMAT DOM ===\n\n";
 
-    // HTML-Auswertung
     function block(label,s){
         r+=`[${label}]\n`;
         r+=`Tags: ${JSON.stringify(s.tags)}\n`;
@@ -108,7 +104,6 @@ function scan(){
     block("HTML 3",s3);
     block("HTML 4",s4);
 
-    // Mathematische Achsenbildung
     if(!isNaN(Phi)&&!isNaN(phi)&&!isNaN(phi2)&&!isNaN(phiinfty)){
         const M5=(Phi+phi+phi2+phiinfty)/4;
 
@@ -118,7 +113,31 @@ function scan(){
         r+=`φ² (Quadratur / UC):         ${phi2}\n`;
         r+=`φ∞ (Unendlichkeit / MA³):    ${phiinfty}\n\n`;
 
-        r+=`M₅ = (Φ + φ + φ² + φ∞) / 4 =
+        r+=`M₅ = (Φ + φ + φ² + φ∞) / 4 = ${M5.toFixed(4)}\n\n`;
+
+        r+=`Einzelsicht:\n`;
+        r+=`- Φ  → Verhältnisbildung\n`;
+        r+=`- φ  → Rekursionstiefe\n`;
+        r+=`- φ² → Quadraturstabilität\n`;
+        r+=`- φ∞ → Unendlichkeitsprojektion\n\n`;
+
+        // Herrschafts-Auswertung
+        const H = herrschaft(Phi, phi, phi2, phiinfty);
+
+        r+=`=== Herrschafts-Auswertung ===\n`;
+        r+=`Dominanz (Φ - φ):           ${H.dominanz}\n`;
+        r+=`Quadratur-Stabilität:       ${H.stabil}\n`;
+        r+=`Unendlichkeits-Weite:        ${H.weite}\n`;
+        r+=`Herrschafts-Grad (M₅*12.5):  ${H.herrschaftsGrad.toFixed(4)}\n\n`;
+
+        r+=`Daten bereit für FLÄCHEN-SCANNER 48 und Wiki Argumenteria.\n`;
+    } else {
+        r+=`(Keine Achsenwerte eingegeben – nur DOM-Scan ausgeführt.)\n`;
+    }
+
+    out.textContent=r;
+}
+</script>
 
 </body>
 </html>
