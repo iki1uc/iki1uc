@@ -1,6 +1,88 @@
 <!DOCTYPE html>
-<html>
-<body style="background:#000;color:#0f0;font-family:monospace">
-user – Identitätsebene aktiv.
-</body>
-</html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>user – Identitätsebene / Controller / Controler</title>
+<style>
+body { background:#000; color:#0f0; font-family:monospace; padding:20px; }
+pre  { background:#111; padding:20px; border:1px solid #333; color:#0f0; }
+h2   { color:#6cf; }
+</style>
+</head>
+
+<body>
+
+<h2>user – Identitätsebene</h2>
+
+<pre>
+ID: ULRM-user
+ROLE: identity
+MODE: RAW / INPUT / LINK
+STATUS: active
+
+DATA:
+  id: "user"
+  identity_level: 1
+  effect: "Identität wird erkannt"
+  modi: "user"
+  rawator: "id-link"
+  pimp: "Betrachtung: Identität"
+
+ENGINE:
+  function ULRM_user(ID){
+      return {
+          id: ID,
+          identity: true,
+          modi: "user",
+          role: "identity"
+      };
+  }
+
+RESULT:
+  user stellt die Identität bereit.
+</pre>
+
+
+<h2>user.controller – Steuerungsebene</h2>
+
+<pre>
+ID: ULRM-user.controller
+ROLE: controller
+MODE: RAW / CONTROL / DIRECT
+STATUS: active
+
+DATA:
+  control_level: 2
+  effect: "user steuert Module direkt"
+  modi: "controller"
+  rawator: "id-drive"
+  pimp: "Betrachtung: Steuerfluss"
+
+ENGINE:
+  function ULRM_user_controller(cmd){
+      return {
+          command: cmd,
+          execute: true,
+          modi: "controller",
+          role: "controller"
+      };
+  }
+
+RESULT:
+  user.controller steuert Module direkt.
+</pre>
+
+
+<h2>user.controler – Kontrollebene</h2>
+
+<pre>
+ID: ULRM-user.controler
+ROLE: controler
+MODE: RAW / VERIFY / CHECK
+STATUS: active
+
+DATA:
+  controler_level: 3
+  effect: "user prüft und kontrolliert System"
+  modi: "controler"
+  raw
