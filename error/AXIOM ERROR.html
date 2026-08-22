@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>AXIOM ERROR</title>
+
+<style>
+body { background:#000; color:#fff; font-family:monospace; padding:20px; }
+
+/* Kosmische Modi */
+.sun   { color:#ffdd55; }
+.moon  { color:#55ccff; }
+.mars  { color:#ff3300; }
+
+/* Schwarzes Loch Effekt */
+.blackhole {
+    background: radial-gradient(circle at center, #000 40%, #300 70%, #000 100%);
+    padding:20px;
+    border-radius:10px;
+}
+
+pre {
+    background:#111;
+    border:1px solid #333;
+    padding:10px;
+}
+</style>
+</head>
+
+<body>
+
+<h1 id="title">AXIOM ERROR</h1>
+
+<div id="hole" class="blackhole">
+    <p id="msg">Kein Fehler empfangen.</p>
+</div>
+
+<pre id="axiom">Lade…</pre>
+
+<script>
+// Query-Parameter laden
+const p = new URLSearchParams(window.location.search);
+
+// MODE = SONNE / MOND / MARS
+const mode = p.get("mode") || "MARS";
+
+// Titel-Farbe setzen
+if(mode === "SONNE") document.getElementById("title").className = "sun";
+if(mode === "MOND")  document.getElementById("title").className = "moon";
+if(mode === "MARS")  document.getElementById("title").className = "mars";
+
+// Nachricht
+document.getElementById("msg").innerText =
+    p.get("hint") || p.get("msg") || "Unbekannter Hinweis";
+
+
+// === CONTROLLER: Error-Flow steuern ===
+function errorController(data) {
+    return {
+        route: "error.controller",
+        valid: data.code !== "none",
+        forward: data.mode === "MARS" ? "core" : "map",
+        data
+    };
+}
+
+// === CONTROLER: Error-Flow prüfen ===
+function errorControler(packet) {
+    return {
+        route: "error.controler",
+        verified: packet.valid,
+        allow: packet.valid && packet.forward === "core",
+        packet
+    };
+}
+
+
+// AXIOM-Daten sammeln
+const axiomData = {
+    from: p.get("from") || "none",
+    axis: p.get("axis") || "none",
+    core: p.get("core") || "none",
+    pos:  p.get("pos")  || "none",
+    code: p.get("code") || "none",
+    id:   p.get("id")   || "none",
+    mode
+};
+
+// Controller + Controler ausführen
+const ctrl  = errorController(axiomData);
+const check = errorControler(ctrl);
+
+// Ausgabe
+document.getElementById("axiom").innerText =
+    "FROM = " + axiomData.from + "\n" +
+    "AXIS = " + axiomData.axis + "\n" +
+    "CORE = " + axiomData.core + "\n" +
+    "POS  = " + axiomData.pos  + "\n" +
+    "CODE = " + axiomData.code + "\n" +
+    "ID   = " + axiomData.id   + "\n" +
+    "MODE = " + axiomData.mode + "\n\n" +
+    "CONTROLLER: " + JSON.stringify(ctrl, null, 2) +
