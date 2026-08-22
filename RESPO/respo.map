@@ -1,1 +1,16 @@
-MAP: RESPO → iki1uc
+# RESPO-MAP · MASTER-KERN
+
+fix      = ROOT
+flow     = FLOW
+expand   = OK
+charge   = ECHO
+shield   = VOID
+release  = BREAK
+
+# DEFAULT
+default  = NOK
+
+# META
+respo.level = 4u
+respo.state = active
+respo.core  = ready
