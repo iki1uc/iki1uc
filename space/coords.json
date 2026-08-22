@@ -1,2 +1,21 @@
-COORDS: RAW/HW → SPACE
+{
+  "COORDS": {
+    "RAW": "RAW.HW",
+    "SPACE": "iki1uc.space"
+  },
+
+  "PLACEMENT": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+
+  "DISTRIBUTION": {
+    "lanes": 1,
+    "tmp": true,
+    "hdf": true
+  },
+
+  "FLOW": "AU → RA → iki1uc.space"
+}
 
