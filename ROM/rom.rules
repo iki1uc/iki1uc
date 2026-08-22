@@ -1,2 +1,47 @@
-RULES: STATIC, CORRECT, UNCHANGED
+# ROM.RULES · 4-SPACE ACCEPTANCE + TMP-PATH MATRIX + INTEGRITY FLAGS
 
+ROM.RULES.ID        = 6D-RULES
+ROM.RULES.STATE     = active
+ROM.RULES.VERSION   = 1.1
+
+# INTEGRITY FLAGS
+RULE.STATIC         = true
+RULE.CORRECT        = true
+RULE.UNCHANGED      = true
+
+# 4-SPACE MODEL (alle Räume akzeptieren)
+SPACE.1             = ROM
+SPACE.2             = RAM
+SPACE.3             = GPU
+SPACE.4             = TMP
+
+SPACE.MODE          = accept-all
+SPACE.COUNT         = 4
+
+# TMP-PATHS (alle gültig, aber nicht gleich)
+TMP.1.PATH          = ./TMP/axis.tmp
+TMP.2.PATH          = ./TMP/cache.tmp
+TMP.3.PATH          = ./TMP/multilar.tmp
+TMP.4.PATH          = ./TMP/overdrive.tmp
+
+TMP.1.MODE          = axis
+TMP.2.MODE          = cache
+TMP.3.MODE          = multilar
+TMP.4.MODE          = overdrive
+
+TMP.VALID           = true
+TMP.UNIQUE          = true
+
+# SPACE-LINKING
+SPACE.ROM.LINK      = ./ROM/rom.map
+SPACE.RAM.LINK      = ./RAM/ram.map
+SPACE.GPU.LINK      = ./GPU/gpu.map
+SPACE.TMP.LINK      = ./TMP/tmp.map
+
+# RULE-MODE
+RULE.MODE           = strict-4
+RULE.ACCEPT         = all
+RULE.OUTPUT         = ./ROM/rom.rules.out
+
+# READY
+ROM.RULES.READY     = true
