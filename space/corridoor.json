@@ -7,6 +7,27 @@
     "DIMENSIONS": 6
   },
 
+  "WARP": {
+    "HyPePer": {
+      "axis": "height-or-width",
+      "mode": "primary",
+      "compatibility": false
+    },
+
+    "TransWarp": {
+      "axis": "90-degree-offset",
+      "mode": "secondary",
+      "compatibility": false
+    },
+
+    "Warp3": {
+      "axis": "synthesis",
+      "origin": ["HyPePer", "TransWarp"],
+      "mode": "cross",
+      "compatibility": true
+    }
+  },
+
   "AXIS": {
     "forward": "cause→effect",
     "reverse": "effect→cause"
@@ -25,4 +46,3 @@
 
   "FLOW": "ROOM → CORRIDOOR → CONTINUUM → SPACE_SUITE"
 }
-
