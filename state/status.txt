@@ -1,1 +1,7 @@
 STATUS: ° & % 3
+"DIFFERENTIAL_ORDER": {
+  "1": "linear",
+  "2": "orthogonal",
+  "3": "synthesis",
+  "4": "infinity (AEON)"
+}
