@@ -2,27 +2,21 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Phi Übersicht · 36E</title>
+<title>Phi · AXIS‑36E</title>
 <style>
 body{background:#000;color:#0f0;font-family:monospace;padding:20px;}
-a{color:#0f0;text-decoration:none;}
-a:hover{text-decoration:underline;}
-ul{list-style:none;padding-left:0;}
-li{margin:6px 0;}
+button{padding:10px 20px;background:#111;color:#0f0;border:1px solid #333;cursor:pointer;margin:6px;}
+pre{background:#111;padding:10px;margin-top:20px;white-space:pre-wrap;}
 </style>
 </head>
 <body>
 
-<h1>Phi – Übersicht</h1>
+<h1>Phi – AXIS‑Kernel</h1>
 
-<ul>
-  <li><a href="Phi/phi_u.html">phi_u</a></li>
-  <li><a href="Phi/phi_in.html">phi_in</a></li>
-  <li><a href="Phi/phi_me.html">phi_me</a></li>
-  <li><a href="Phi/phi_run.html">phi_run</a></li>
-  <li><a href="Phi/phi_ces.html">phi_ces</a></li>
-  <li><a href="Phi/phi_sec.html">phi_sec</a></li>
-</ul>
+<button onclick="phiNext()">Phi NEXT</button>
+<button onclick="phiAI()">KI‑Phi</button>
+
+<pre id="phi_out">Phi bereit…</pre>
 
 <script src="phi.param.js"></script>
 <script src="phi.kernel.js"></script>
