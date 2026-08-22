@@ -1,5 +1,33 @@
-<TRIANGLE>
-SIDES: 3
-TYPE: FORM
-TARGET: iki1uc.core
+// pipeline/sys/triangle.sys
+// TRIANGLE: FORM-Axiom für iki1uc.core
 
+export const TRIANGLE = {
+
+    SIDES: 3,
+    TYPE: "FORM",
+    TARGET: "iki1uc.core",
+
+    AXIOM: {
+        SYN: {
+            role: "sync",
+            stable: true
+        },
+        FLX: {
+            role: "flex",
+            stable: true
+        },
+        VEC: {
+            role: "vector",
+            stable: true
+        }
+    },
+
+    resolve() {
+        return {
+            id: "TRIANGLE_FORM",
+            axioms: this.AXIOM,
+            target: this.TARGET,
+            ready: true
+        };
+    }
+};
