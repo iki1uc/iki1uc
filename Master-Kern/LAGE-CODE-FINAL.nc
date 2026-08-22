@@ -1,13 +1,11 @@
-LAGE-CODE-FINAL.nc
 ────────────────────────────────────────
-
 # LAGE (ROOT-STATUS)
 STATE: aktiv
 LEVEL: 4er-Richtigkeit (3/4 erfüllt)
 READY: 82%
 REAL: gesetzt
 
-# LAGE (TECH-SIGNAL für SYSTEM-CHECK)
+# LAGE (TECH-SIGNAL)
 lage.state: aktiv
 lage.level: 4er-richtigkeit
 lage.ready: 82%
@@ -18,7 +16,7 @@ lage.respo: aktiv
 USE: bestätigt
 MOV: bestätigt
 USER: gebunden
-MODI: ersetzt durch RESPO-MODI
+MODI: RESPO-MODI (aktiv)
 
 # MIR/DIR
 MIR: aktiv
@@ -44,3 +42,5 @@ GRÜNDER: 1
 ³: DIR
 RESPO: ((respo))
 CODE: LAGE-FINAL-001
+SIGNAL: piep
+────────────────────────────────────────
