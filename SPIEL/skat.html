@@ -3,7 +3,16 @@ import { lagePosition } from "../../TOOLOMAT/GEOMETRIA.js";
 
 function applyLAGEtoSkat(Phi, phi, phi2, phiinfty){
     const pos = lagePosition(Phi, phi, phi2, phiinfty);
-    document.getElementById("orbitDeck").style.left = pos.x + "px";
-    document.getElementById("orbitDeck").style.top  = pos.y + "px";
+    const deck = document.getElementById("orbitDeck");
+
+    deck.style.transform = `
+        translateX(${pos.x}px)
+        translateY(${pos.y}px)
+        translateZ(${pos.z}px)
+        rotateX(${Phi}deg)
+        rotateY(${phi}deg)
+        rotateZ(${phi2}deg)
+        scale(${1 + pos.stabil/10})
+    `;
 }
 </script>
