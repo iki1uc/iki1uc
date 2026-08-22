@@ -13,7 +13,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     map: false,
     core: false,
     ec: false,
-    cube: false
+    cube: false,
+    respoState: "NOK"
   };
 
   async function check(path) {
@@ -31,13 +32,33 @@ document.addEventListener("DOMContentLoaded", async () => {
   status.ec   = await check(RESPO.ec);
   status.cube = await check(RESPO.cube);
 
-  // ERROR CHECK
+  // ERROR CHECK (Dateien fehlen)
   if (!status.map || !status.core) {
-    console.error("RESPO-SCAN: ERROR");
-    window.location.href = "./RESPO/ec.js?error=respo-scan";
+    console.error("RESPO-SCAN: ERROR (Module missing)");
+    window.location.href = "./RESPO/ec.js?error=respo-scan-missing";
     return;
   }
 
-  console.log("RESPO-SCAN: OK");
+  // RESPO MAP CONTENT CHECK (Slide/Wette Parameter)
+  try {
+    const mapText = await (await fetch(RESPO.map)).text();
 
+    const slideOK = mapText.includes("slide");
+    const wetteOK = mapText.includes("wette");
+
+    if (!slideOK || !wetteOK) {
+      console.warn("RESPO-SCAN: WARNING (Slide/Wette missing)");
+      status.respoState = "NOK";
+      sessionStorage.setItem("RESPO_WARNING", "slide_wette_missing");
+    } else {
+      status.respoState = "OK";
+    }
+
+  } catch {
+    console.error("RESPO-SCAN: ERROR (Map unreadable)");
+    window.location.href = "./RESPO/ec.js?error=respo-scan-map";
+    return;
+  }
+
+  console.log("RESPO-SCAN: OK (" + status.respoState + ")");
 });
