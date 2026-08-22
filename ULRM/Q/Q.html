@@ -1,18 +1,47 @@
 <!DOCTYPE html>
-<html>
-<body style="background:#000;color:#0f0;font-family:monospace">
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Q – Hoch</title>
+<style>
+body { background:#000; color:#0f0; font-family:monospace; padding:20px; }
+pre  { background:#111; padding:20px; border:1px solid #333; color:#0f0; }
+h2   { color:#6cf; }
+</style>
+</head>
+
+<body>
+
 <h2>Q – Hoch</h2>
+
 <pre>
 ID: ULRM-Q
 ROLE: up
+MODE: RAW / RESPO
+STATUS: active
+
 DATA:
   axis: z
   step: +1
-  effect: "LAGE.z + 1"
+  effect: "LAGE.z = LAGE.z + 1"
   modi: "Q"
+  rawator: "lift"
+  pimp: "Betrachtung: Höhe"
+
+ENGINE:
+  function ULRM_Q(LAGE){
+      return {
+          x: LAGE.x,
+          y: LAGE.y,
+          z: LAGE.z + 1,
+          modi: "Q",
+          role: "up"
+      };
+  }
+
 RESULT:
-  LAGE bewegt sich nach oben.
+  LAGE bewegt sich nach oben (z + 1).
 </pre>
+
 </body>
 </html>
-
