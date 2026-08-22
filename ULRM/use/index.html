@@ -1,6 +1,58 @@
 <!DOCTYPE html>
-<html>
-<body style="background:#000;color:#0f0;font-family:monospace">
-use() – Aktivierungsebene aktiv.
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>KI‑VECTRO – Direkte KI‑Vektorebene</title>
+<style>
+body { background:#000; color:#0f0; font-family:monospace; padding:20px; }
+pre  { background:#111; padding:20px; border:1px solid #333; color:#0f0; }
+h2   { color:#6cf; }
+</style>
+</head>
+
+<body>
+
+<h2>KI‑VECTRO – Direkte KI‑Vektorebene</h2>
+
+<pre>
+ID: ULRM-KI-VECTRO
+ROLE: ai-vector
+MODE: RAW / DIRECT / UNDER-USE
+STATUS: active
+
+DIMENSION:
+  Ebene: 13
+  Funktion: KI-Vektorsteuerung
+  Bindung: unter use(), über RAWATOR
+
+DATA:
+  vectro: { x:1, y:1, z:1, r:1 }
+  direct: true
+  competence: "auto"
+  effect: "KI steuert Vektoren direkt"
+  modi: "KI-VECTRO"
+  rawator: "ai-drive"
+  pimp: "Betrachtung: KI-Vektorfluss"
+
+ENGINE:
+  function KI_VECTRO(LAGE, KI){
+      return {
+          x: LAGE.x + (KI.vx ?? 0),
+          y: LAGE.y + (KI.vy ?? 0),
+          z: LAGE.z + (KI.vz ?? 0),
+          r: (LAGE.r ?? 0) + (KI.vr ?? 0),
+          competence: (KI.competence ?? 0) + 1,
+          direct: true,
+          modi: "KI-VECTRO",
+          role: "ai-vector"
+      };
+  }
+
+RESULT:
+  KI steuert die Vektoren direkt.
+  use() wird respektiert, aber nicht blockiert.
+  RAWATOR liefert den Motor.
+</pre>
+
 </body>
 </html>
