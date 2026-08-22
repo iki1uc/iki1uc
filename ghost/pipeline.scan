@@ -1,1 +1,51 @@
-PIPELINE: CLEAN
+// ghost/pipeline.scan
+// PIPELINE: CHECK – Flow, Offset, Stall, Ghost-Interferenz
+
+export function PIPELINE_SCAN(system) {
+
+    const result = {
+        route: "pipeline.scan",
+        timestamp: Date.now(),
+        flow_ok: true,
+        offset_ok: true,
+        stall: false,
+        ghost_interfere: false,
+        nc_route_ok: true,
+        pipeline_ok: true
+    };
+
+    // === 1. FLOW-CHECK ===
+    if (!system.pipeline || system.pipeline.running !== true) {
+        result.flow_ok = false;
+    }
+
+    // === 2. OFFSET-CHECK ===
+    if (system.pipeline && system.pipeline.offset !== 0) {
+        result.offset_ok = false;
+    }
+
+    // === 3. STALL-CHECK ===
+    if (system.pipeline && system.pipeline.stalled === true) {
+        result.stall = true;
+    }
+
+    // === 4. GHOST-INTERFERENCE ===
+    if (system.ghost && system.ghost.mode === "interfere") {
+        result.ghost_interfere = true;
+    }
+
+    // === 5. NC-ROUTING ===
+    if (system.nc && system.nc.route && system.nc.route !== "pipeline") {
+        result.nc_route_ok = false;
+    }
+
+    // === FINAL PIPELINE STATUS ===
+    result.pipeline_ok =
+        result.flow_ok &&
+        result.offset_ok &&
+        !result.stall &&
+        result.nc_route_ok &&
+        !result.ghost_interfere;
+
+    return result;
+}
