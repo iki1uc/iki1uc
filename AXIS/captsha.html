@@ -4,40 +4,44 @@
 <meta charset="UTF-8">
 <title>CaptScha · 36E</title>
 <style>
-body{background:#000;color:#0f0;font-family:monospace;padding:20px;}
-input{padding:10px;background:#111;color:#0f0;border:1px solid #333;width:200px;}
-button{padding:10px 20px;background:#111;color:#0f0;border:1px solid #333;cursor:pointer;}
-pre{background:#111;padding:10px;margin-top:20px;}
+body {
+  background:#000;
+  color:#0f0;
+  font-family:monospace;
+  padding:20px;
+}
+input {
+  padding:10px;
+  background:#111;
+  color:#0f0;
+  border:1px solid #333;
+  width:200px;
+}
+button {
+  padding:10px 20px;
+  background:#111;
+  color:#0f0;
+  border:1px solid #333;
+  cursor:pointer;
+}
+pre {
+  background:#111;
+  padding:10px;
+  margin-top:20px;
+  white-space:pre-wrap;
+}
 </style>
 </head>
 <body>
 
-<h1>CaptScha – Sicherheitsprüfung</h1>
+<h1>CaptScha – Sicherheitsprüfung · AXIS‑36E</h1>
 
 <p>Gib den CaptScha‑Code ein:</p>
 <input id="cs_in" placeholder="Code eingeben">
-<button onclick="checkCS()">Prüfen</button>
+<button onclick="runCaptScha()">Prüfen</button>
 
 <pre id="cs_out">Ergebnis erscheint hier...</pre>
 
-<script>
-function checkCS(){
-    const v = document.getElementById("cs_in").value.trim();
-    const out = document.getElementById("cs_out");
-
-    if(!v){
-        out.textContent = "Bitte einen Code eingeben.";
-        return;
-    }
-
-    if(v === "36E"){
-        out.textContent = "✔ CaptScha erfolgreich!";
-    } else {
-        out.textContent = "❌ Falscher Code.";
-    }
-}
-</script>
-
+<script src="captsha.js"></script>
 </body>
 </html>
-
