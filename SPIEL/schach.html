@@ -1,9 +1,16 @@
-<script type="module">
 import { lagePosition } from "../../TOOLOMAT/GEOMETRIA.js";
 
 function applyLAGEtoSchach(Phi, phi, phi2, phiinfty){
     const pos = lagePosition(Phi, phi, phi2, phiinfty);
-    document.getElementById("schachBoard").style.transform =
-        `translate(${pos.x}px, ${pos.y}px)`;
+    const board = document.getElementById("schachBoard");
+
+    board.style.transform = `
+        translateX(${pos.x}px)
+        translateY(${pos.y}px)
+        translateZ(${pos.z}px)
+        rotateX(${Phi}deg)
+        rotateY(${phi}deg)
+        rotateZ(${phi2}deg)
+        scale(${1 + pos.stabil/10})
+    `;
 }
-</script>
