@@ -1,29 +1,19 @@
-// Dreiecks-Axiom – Bogenverhalten für iki1uc
+// Pumpensystem – kein Zylinder, aber zylindrisches Verhalten
+export function PUMPEN_SYSTEM(input) {
 
-export function AXIOM_TRIANGLE(input) {
+    // Bogenverhalten statt Kolbenhub
+    const curve = Math.sin(input.value / 100 * Math.PI);
 
-    const A = input;                     // Punkt 1 – Input
-    const B = analyze(A);                // Punkt 2 – Spannung
-    const C = execute(A, B);             // Punkt 3 – Ausführung
+    // Alt/Neu-Verhalten (historisch vs. modern)
+    const mode = input.mode === "alt" ? 0.7 : 1.0;
 
-    return { A, B, C };
-}
-
-function analyze(A) {
-    return {
-        tension: Math.min(1, A.value / 100),
-        resonance: A.type === "NC" ? 0.8 : 0.5,
-        ready: A.value > 30
-    };
-}
-
-function execute(A, B) {
-    if (!B.ready) return { action: "hold", effect: 0 };
-
-    const effect = B.tension * B.resonance * A.value;
+    // Wette-Slide: gleitender Druckbogen
+    const slide = curve * mode * input.value;
 
     return {
-        action: "release",
-        effect: Math.round(effect)
+        curve,          // Bogenform
+        mode,           // alt/neu
+        slide,          // resultierender Druckbogen
+        usable: slide > 10
     };
 }
