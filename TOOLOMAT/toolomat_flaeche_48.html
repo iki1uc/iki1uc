@@ -91,48 +91,10 @@ button {
 </div>
 
 <script>
-function scan48() {
-    const Phi = parseFloat(document.getElementById("Phi").value);
-    const phi = parseFloat(document.getElementById("phi").value);
-    const phi2 = parseFloat(document.getElementById("phi2").value);
-    const phiinfty = parseFloat(document.getElementById("phiinfty").value);
-
-    if (isNaN(Phi) || isNaN(phi) || isNaN(phi2) || isNaN(phiinfty)) {
-        out.textContent = "Bitte alle 4 Werte eingeben.";
-        return;
-    }
-
+// Herrschafts-Leitung
+function herrschaft(Phi, phi, phi2, phiinfty){
     const M5 = (Phi + phi + phi2 + phiinfty) / 4;
 
-    const text =
-`=== FLÄCHEN-SCANNER 48 ===
-
-Φ (Verhältnis / IKI):        ${Phi}
-φ (Rekursion / BIR):         ${phi}
-φ² (Quadratur / UC):         ${phi2}
-φ∞ (Unendlichkeit / MA³):    ${phiinfty}
-
--------------------------------------
-Präsentationsmaß M₅ = (Φ + φ + φ² + φ∞) / 4
-M₅ = ${M5.toFixed(4)}
--------------------------------------
-
-Einzelsicht:
-- Station Φ zeigt Verhältnisbildung
-- Station φ zeigt Rekursionstiefe
-- Station φ² zeigt Quadraturstabilität
-- Station φ∞ zeigt Unendlichkeitsprojektion
-
-2D → 3D Projektion aktiv:
-Der rotierende Würfel zeigt die Flächenverteilung
-der Vierfach-Achsenbildung im Raum.
-
-Daten bereit für Wiki-Asiklopedie Argumenteria.
-`;
-
-    document.getElementById("out").textContent = text;
-}
-</script>
-
-</body>
-</html>
+    return {
+        dominanz: Phi - phi,
+        stabil
