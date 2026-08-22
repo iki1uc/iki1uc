@@ -1,17 +1,55 @@
 <!DOCTYPE html>
-<html>
-<body style="background:#000;color:#0f0;font-family:monospace">
-<h2>A – Links</h2>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>ULRM-A · Links</title>
+<style>
+body{
+  background:#000;
+  color:#0f0;
+  font-family:monospace;
+  padding:20px;
+}
+pre{
+  background:#111;
+  padding:20px;
+  border:1px solid #333;
+  white-space:pre-wrap;
+}
+h2{
+  color:#6cf;
+}
+</style>
+</head>
+
+<body>
+
+<h2>ULRM-A · Links</h2>
+
 <pre>
 ID: ULRM-A
 ROLE: left
+
 DATA:
   axis: y
   step: -1
-  effect: "LAGE.y - 1"
+  effect: "LAGE.y = LAGE.y - 1"
   modi: "A"
+
+ENGINE:
+  function ULRM_A(LAGE){
+      return {
+          x: LAGE.x,
+          y: LAGE.y - 1,
+          z: LAGE.z,
+          modi: "A",
+          role: "left"
+      };
+  }
+
 RESULT:
-  LAGE bewegt sich nach links.
+  LAGE bewegt sich nach links (y - 1).
 </pre>
+
 </body>
 </html>
