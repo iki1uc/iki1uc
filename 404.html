@@ -1,59 +1,102 @@
+<!--
+  © iki1uc wieimmer — CONTINIUM · Unified OS7
+  Licensed under the MIT License (see LICENSE).
+  Branding: "© iki1uc wieimmer" should remain visible on public pages.
+  No warranty — use at your own risk.
+-->
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<title>404 · KIMIND‑CORE</title>
-<style>
-body { background:#000; color:#0f0; font-family:Consolas, monospace; padding:30px; }
-h1 { color:#0ff; margin-bottom:20px; }
-.module {
-    background:#111;
-    padding:20px;
-    margin:25px 0;
-    border-left:4px solid #f00;
-}
-pre { white-space:pre; font-size:15px; line-height:17px; }
-a { color:#0ff; text-decoration:none; }
-a:hover { color:#fff; }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Explain‑Bear — Page not found / Seite nicht gefunden</title>
+  <style>
+    :root{--bg:#000;--fg:#0f0;--card:#111;--accent:#6cf}
+    body{margin:0;background:var(--bg);color:var(--fg);font-family:Consolas,monospace;line-height:1.4}
+    .wrap{max-width:900px;margin:30px auto;padding:20px}
+    header h1{color:var(--accent);margin:0 0 6px}
+    .brand{font-size:14px;margin-bottom:18px}
+    .card{background:var(--card);padding:18px;border-left:4px solid var(--accent);border-radius:4px}
+    .cols{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
+    @media(min-width:720px){.cols{grid-template-columns:1fr 1fr}}
+    .title{font-weight:bold;margin-bottom:6px}
+    a.button{display:inline-block;background:var(--accent);color:#000;padding:10px 14px;border-radius:6px;text-decoration:none;font-weight:600;margin-right:8px}
+    footer{margin-top:18px;font-size:13px;color:#8f8}
+    .hint{color:#afa;font-size:14px;margin-top:8px}
+    .muted{color:#6f6;font-size:13px}
+    .small{font-size:13px;color:#9f9;margin-top:8px}
+  </style>
 </head>
-
 <body>
+  <div class="wrap">
+    <header>
+      <h1>Explain‑Bear — Friendly 404 Helper</h1>
+      <div class="brand">© iki1uc wieimmer · CONTINIUM · Unified OS7</div>
+    </header>
 
-<h1>404 · KIMIND‑CORE</h1>
+    <section class="card" aria-labelledby="eng-title">
+      <div id="eng-title" class="title">English (short, friendly)</div>
+      <p>Hello — I'm Explain‑Bear. The page you tried to open cannot be found (404). It might have moved, been renamed, or the link could be broken. Don't worry — here are easy options to continue:</p>
+      <div class="cols" role="list">
+        <div role="listitem">
+          <div class="title">Quick actions</div>
+          <a class="button" href="/index.html">Go to Home</a>
+          <a class="button" href="/net.html">Site Index</a>
+          <div class="hint">If you came from another page, try your browser's Back button.</div>
+        </div>
+        <div role="listitem">
+          <div class="title">Help & Report</div>
+          <p class="muted">Found a broken link? Tell us in one click:</p>
+          <a class="button" href="https://github.com/iki1uc/error404/issues/new?labels=bug&title=Broken+link+report">Report issue</a>
+          <p class="small">If you're not sure what to do, write a short message — we'll check.</p>
+        </div>
+      </div>
+    </section>
 
-<div class="module">
-<pre>
-ERROR 404
-Die angeforderte Station existiert nicht.
+    <section class="card" aria-labelledby="de-title" style="margin-top:12px">
+      <div id="de-title" class="title">Deutsch (Kontrolle für den Autor)</div>
+      <p>Hallo — das ist die „Erklärbär“‑Ansicht. Diese Seite erklärt kurz den Sachverhalt auf Deutsch, damit du prüfen kannst, ob Texte / Links korrekt sind.</p>
+      <ul>
+        <li><strong>Ursache:</strong> Die angeforderte Datei existiert nicht mehr oder hat einen anderen Namen.</li>
+        <li><strong>Prüfe als Autor:</strong> Liegt die Datei im Repo‑Root? Ist die Groß-/Kleinschreibung korrekt (wichtig auf Linux/Webservern)?</li>
+        <li><strong>Weitere Schritte:</strong> Falls die Datei fehlt, lade sie hoch oder passe Links an; für Hilfe öffne ein Issue (Link oben).</li>
+      </ul>
+      <p class="small">Empfehlung: Prüfe index.html, 404.html, net.html, 360.html und build.html auf korrekte Dateinamen und Links. Nutze README für Anleitungen.</p>
+    </section>
 
-SYSTEM:
-KIMIND‑CORE aktiv
-ULTRA3.0 Engine stabil
-GEO‑Engine neutral
-ROOM‑Engine neutral
-TECH‑Engine neutral
+    <section class="card" aria-labelledby="info-title" style="margin-top:12px">
+      <div id="info-title" class="title">Extra (automatisch)</div>
+      <p id="referrerInfo" class="muted">Referrer: unknown</p>
+      <p class="small">Diese Seite bietet einfache Optionen — keine persönlichen Daten werden gespeichert. Wenn du möchtest, kann diese Seite auch in anderen Sprachen angezeigt werden.</p>
+    </section>
 
-STATUS:
-VOID → ROOT Rückführung eingeleitet
-</pre>
-</div>
+    <footer>
+      <div class="muted">If you need help, open a GitHub issue: <a href="https://github.com/iki1uc/error404/issues" style="color:#6cf">github.com/iki1uc/error404/issues</a></div>
+    </footer>
+  </div>
 
-<div class="module">
-<h2>Zurück zum CORE</h2>
-<a href="/">CORE öffnen</a>
-</div>
+<script>
+(function(){
+  // Show referrer if any, simple friendly behaviour
+  const ref = document.referrer || '';
+  const info = document.getElementById('referrerInfo');
+  if(ref){
+    info.textContent = 'You came from: ' + ref;
+  } else {
+    info.textContent = 'No referrer information available.';
+  }
 
-<div class="module">
-<pre>
-Hinweis:
-404‑Seiten starten keine Engine‑Loops.
-Keine GEO‑3D‑Frames.
-Keine ASCII‑Scenes.
-Keine Pipeline‑Ausführung.
-ERROR‑ROUTER bleibt aktiv.
-</pre>
-</div>
+  // If user prefers German (browser setting), show a console hint for the author
+  const lang = navigator.language || navigator.userLanguage || 'de';
+  if(lang.startsWith('de')) {
+    console.info('Browser language suggests German — the page shows both English and German for review.');
+  }
 
+  // Keyboard: press H to go home (small accessibility nicety)
+  window.addEventListener('keydown', function(e){
+    if(e.key === 'h' || e.key === 'H') location.href = '/index.html';
+  });
+})();
+</script>
 </body>
 </html>
