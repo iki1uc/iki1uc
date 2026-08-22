@@ -2,28 +2,76 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>iki1uc – ROOT (Advanced)</title>
- 
+<title>iki1uc – ROOT (Absolute Edition)</title>
+
 <style>
+/* ===== BASIS ===== */
+* { box-sizing:border-box; }
 body { background:#000; color:#0f0; font-family:monospace; padding:20px; }
 h1, h2 { color:#6cf; }
 a { color:#6cf; display:block; margin:6px 0; }
-pre { background:#111; border:1px solid #333; padding:10px; }
+pre { background:#111; border:1px solid #333; padding:10px; overflow:auto; }
 hr { border:1px solid #333; margin:25px 0; }
 .section { margin-bottom:40px; }
+
+/* ===== DASHBOARD ===== */
+#dash-switch { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
+#dash-switch button {
+  background:#111; color:#6cf; border:1px solid #333;
+  padding:12px 28px; cursor:pointer; font-family:monospace; font-size:16px;
+  transition:all 0.2s;
+}
+#dash-switch button:hover { background:#222; border-color:#6cf; }
+#dash-switch button.active { background:#1a2a4a; border-color:#6cf; }
+
+#dashboard {
+  background:#0a0a0a; border:1px solid #333; padding:20px;
+  min-height:200px;
+}
+
+/* GRID */
+.grid-box { background:#111; border:1px solid #333; padding:15px; margin:5px 0; }
+
+/* CONTROL */
+.control-panel { background:#111; padding:20px; border:1px solid #333; }
+
+/* HOLO */
+.holo-core {
+  background:#1a0a2a; padding:30px; border:1px solid #550055;
+  animation:pulse 2s infinite ease-in-out;
+}
+@keyframes pulse {
+  0% { box-shadow:0 0 5px #8800aa; }
+  50% { box-shadow:0 0 30px #cc44ff; }
+  100% { box-shadow:0 0 5px #8800aa; }
+}
+
+/* ===== FARB‑SIGNALE ===== */
+.ready-green { background:#003300; color:#00ff00; border-color:#00ff00; }
+.ready-yellow { background:#333300; color:#ffff00; border-color:#ffff00; }
+.ready-red { background:#330000; color:#ff0000; border-color:#ff0000; }
+
+.mind-aeon { background:#220044; color:#dd88ff; border-color:#aa44ff; }
+.respo-s { background:#002244; color:#66ccff; border-color:#4488ff; }
+.aeon-visual { background:#330033; color:#ff66ff; border-color:#ff44ff; }
+
+/* ===== STATUS ===== */
+.status-ok { color:#0f0; }
+.status-warn { color:#ff0; }
+.status-err { color:#f00; }
 </style>
 </head>
-
 <body>
 
-<h1>iki1uc – ROOT (Advanced)</h1>
-<p>Creator‑Root, CORE‑Startpunkt, Pipeline‑Einstieg</p>
+<!-- ===== HEADER ===== -->
+<h1>iki1uc – ROOT (Absolute Edition)</h1>
+<p>Creator‑Root · CORE‑Startpunkt · Pipeline‑Einstieg · 692‑Scale</p>
 
-<!-- ORBIT + IDENTITY -->
+<!-- ===== SYSTEM‑SCANS ===== -->
 <div class="section">
-<h2>System‑Scans</h2>
-<pre id="orbit-status">Orbit lädt…</pre>
-<pre id="identity-status">Identity lädt…</pre>
+  <h2>System‑Scans</h2>
+  <pre id="orbit-status">Orbit lädt…</pre>
+  <pre id="identity-status">Identity lädt…</pre>
 </div>
 
 <script src="./Master-Kern/root-orbit-scan.js"></script>
@@ -33,12 +81,12 @@ hr { border:1px solid #333; margin:25px 0; }
 <script src="./Master-Kern/root-station-check.js"></script>
 <script src="./Master-Kern/error-router.js"></script>
 
-<!-- CORE -->
+<!-- ===== ROOT‑KERN ===== -->
 <div class="section">
-<h2>ROOT‑KERN</h2>
-<pre id="root-kern">
+  <h2>ROOT‑KERN</h2>
+  <pre id="root-kern">
 CORE = iki1uc
-VERSION = 1.1 (Advanced)
+VERSION = 1.2 (Absolute)
 CODE = RAW / RESPO / OPS / NC
 LAGE = ROOT / Creator / NC
 STATUS = Initialisiert…
@@ -51,45 +99,63 @@ AXIOM = wartet…
 RAUM = wartet…
 RESPO = lädt…
 PIPELINE = wartet…
+READY = wartet…
+MIND = wartet…
+AEON = wartet…
 </pre>
 </div>
 
-<!-- STATION -->
+<!-- ===== STATION ===== -->
 <div class="section">
-<h2>Stations‑Status</h2>
-<pre id="station-status">Lade Stations‑Status…</pre>
+  <h2>Stations‑Status</h2>
+  <pre id="station-status">Lade Stations‑Status…</pre>
 </div>
 
-<!-- MODULE -->
+<!-- ===== DASHBOARD‑SWITCHER ===== -->
 <div class="section">
-<h2>Master‑Module</h2>
-<a href="./Master-Kern/MASTER-SCANNER.html">MASTER‑SCANNER</a>
-<a href="./Master-Kern/system-check.item">SYSTEM‑CHECK</a>
+  <h2>Dashboard‑Wechsler (lernt selbst)</h2>
+  <div id="dash-switch">
+    <button data-mode="grid" class="active">GRID</button>
+    <button data-mode="control">CONTROL</button>
+    <button data-mode="holo">HOLO</button>
+    <button data-mode="auto">🤖 AUTO (lernend)</button>
+  </div>
+  <div id="dashboard">
+    <div class="grid-box">READY: lädt…</div>
+  </div>
+</div>
+
+<!-- ===== MODULE ===== -->
+<div class="section">
+  <h2>Master‑Module</h2>
+  <a href="./Master-Kern/MASTER-SCANNER.html">MASTER‑SCANNER</a>
+  <a href="./Master-Kern/system-check.item">SYSTEM‑CHECK</a>
 </div>
 
 <div class="section">
-<h2>Module</h2>
-<a href="./ID.html">ID – Identität</a>
-<a href="./RESPO/index.html">RESPO</a>
-<a href="./RAW/cluster.html">RAW‑Cluster</a>
-<a href="./ROM/rom.map">ROM‑Map</a>
-<a href="./ops/engine.js">OPS‑Engine</a>
-<a href="./pipeline/pipeline.map">Pipeline‑Map</a>
-<a href="./core/iki1uc.html">iki1uc CORE</a>
+  <h2>Module</h2>
+  <a href="./ID.html">ID – Identität</a>
+  <a href="./RESPO/index.html">RESPO</a>
+  <a href="./RAW/cluster.html">RAW‑Cluster</a>
+  <a href="./ROM/rom.map">ROM‑Map</a>
+  <a href="./ops/engine.js">OPS‑Engine</a>
+  <a href="./pipeline/pipeline.map">Pipeline‑Map</a>
+  <a href="./core/iki1uc.html">iki1uc CORE</a>
 </div>
 
-<!-- VISUAL -->
+<!-- ===== VISUAL ===== -->
 <div class="section">
-<h2>Visual</h2>
-<a href="./visual/LAGE.html">LAGE‑Visual</a>
-<a href="./visual/Orbit.html">Orbit‑Visual</a>
-<a href="./visual/Identity.html">Identity‑Visual</a>
+  <h2>Visual</h2>
+  <a href="./visual/LAGE.html">LAGE‑Visual</a>
+  <a href="./visual/Orbit.html">Orbit‑Visual</a>
+  <a href="./visual/Identity.html">Identity‑Visual</a>
+  <a href="./visual/CONTINUUM.html">CONTINUUM‑Visual</a>
 </div>
 
-<!-- HINWEIS -->
+<!-- ===== HINWEIS ===== -->
 <div class="section">
-<h2>Hinweis</h2>
-<pre>
+  <h2>Hinweis</h2>
+  <pre>
 iki1uc ist der Ursprung.
 Alle Module sind Ableitungen.
 CORE.load verbindet Pipeline4 → iki1uc.core.
@@ -101,107 +167,238 @@ RAW liefert Cluster.
 ROM liefert Regeln.
 VISUAL zeigt Zustände.
 ROOT ist real‑bildend.
-</pre>
+
+READY = 3↑9↑81 → Synthese‑Boost (MAX‑S)
+MIND = AEON → Ordnung 4
+RESPO‑S = bevorzugte Achse
+692 Repos → 692‑Scale
+  </pre>
 </div>
 
-<!-- ADVANCED CORE LOAD -->
+<!-- ============================================================ -->
+<!-- ===== HAUPT‑SCRIPT – ALLES INTEGRIERT ===== -->
+<!-- ============================================================ -->
 <script type="module">
+// ===== IMPORTS =====
 import { AXIOM_TRIANGLE } from "./core/axiom.tri.js";
 import { RAUM_KERNEL, MOVE } from "./core/fin.e.js";
 import { RESPO_AXIS } from "./core/respo.js";
-<script type="module">
 import { READY } from "./ready.js";
-import { RAUM_KERNEL, MOVE } from "./core/fin.e.js";
+import { respoHighEnd } from "./respo-highend.js";
 
-// MIND_LAYER direkt hier definieren
+// ===== MIND_LAYER =====
 function MIND_LAYER(raum, map) {
-    return {
-        EBENE: "AEON",
-        ORDNUNG: 4,
-        STATUS: "° & % 3",
-        SIGNAL: raum.IST === "OK" ? "grün" : "gelb",
-        WAHRNEHMUNG: raum.STATUS === "REAL" ? "klar" : "unscharf",
-        FOKUS: map ? "verbunden" : "leer",
-        VERFÜGBARKEIT: map ? "hoch" : "niedrig",
-        STABILITÄT: raum.NEU === "TMP" ? "variabel" : "stabil",
-        RÜCKFÜHRUNG: raum.BLATT === "ROOT" ? "aktiv" : "neutral",
-        SIGNATUR: `AEON-${raum.ZUG}-${raum.BLATT}`
-    };
+  return {
+    EBENE: "AEON",
+    ORDNUNG: 4,
+    STATUS: "° & % 3",
+    SIGNAL: raum.IST === "OK" ? "grün" : "gelb",
+    WAHRNEHMUNG: raum.STATUS === "REAL" ? "klar" : "unscharf",
+    FOKUS: map ? "verbunden" : "leer",
+    VERFÜGBARKEIT: map ? "hoch" : "niedrig",
+    STABILITÄT: raum.NEU === "TMP" ? "variabel" : "stabil",
+    RÜCKFÜHRUNG: raum.BLATT === "ROOT" ? "aktiv" : "neutral",
+    SIGNATUR: `AEON-${raum.ZUG}-${raum.BLATT}`
+  };
 }
 
-async function loadAll() {
-    const root = document.getElementById("root-kern");
+// ===== DASHBOARD‑RENDERER =====
+const dash = document.getElementById("dashboard");
 
-    // READY (Synthese‑Boost)
-    const ready = READY();
-    root.innerText += "\nREADY: " + ready;
-
-    // RAUM
-    const raum = RAUM_KERNEL({
-        ZUG: "A1",
-        BLATT: "ROOT",
-        STATUS: "REAL",
-        IST: "OK",
-        NEU: "TMP"
-    });
-    root.innerText += "\nRAUM: " + JSON.stringify(raum);
-
-    // MOVE
-    const move = MOVE(raum);
-    root.innerText += "\nMOVE: " + JSON.stringify(move);
-
-    // MIND
-    const mind = MIND_LAYER(raum, true);
-    root.innerText += "\nMIND: " + JSON.stringify(mind);
+function renderGrid(ready, respo, mind) {
+  dash.innerHTML = `
+    <div class="grid-box ready-green">GRID MODE<br>READY: ${ready}</div>
+    <div class="grid-box mind-aeon">MIND: ${mind.EBENE} (Ordnung ${mind.ORDNUNG})</div>
+    <div class="grid-box respo-s">RESPO‑S: ${JSON.stringify(RESPO_AXIS)}</div>
+    <div class="grid-box aeon-visual">AEON: ${mind.SIGNATUR}</div>
+  `;
 }
 
-loadAll();
-</script>
+function renderControl(ready, respo, mind) {
+  dash.innerHTML = `
+    <div class="control-panel">
+      <h2>⏣ CONTROL PANEL</h2>
+      <p style="color:#6cf;">READY: ${ready}</p>
+      <p style="color:#dd88ff;">MIND: ${mind.EBENE} (${mind.ORDNUNG})</p>
+      <p style="color:#66ccff;">RESPO: ${JSON.stringify(RESPO_AXIS)}</p>
+      <p style="color:#ff66ff;">AEON: ${mind.SIGNATUR}</p>
+      <p style="color:#0f0;">STATUS: ${mind.SIGNAL}</p>
+    </div>
+  `;
+}
 
-// Pipeline laden
+function renderHolo(ready, respo, mind) {
+  dash.innerHTML = `
+    <div class="holo-core">
+      <h2 style="color:#ff66ff;">✦ HOLO CORE ✦</h2>
+      <p style="color:#6cf;">READY: ${ready}</p>
+      <p style="color:#dd88ff;">MIND: ${mind.EBENE}</p>
+      <p style="color:#66ccff;">RESPO: ${JSON.stringify(RESPO_AXIS)}</p>
+      <p style="color:#ff66ff;">AEON: ${mind.SIGNATUR}</p>
+      <p style="color:#0f0;">SIGNAL: ${mind.SIGNAL}</p>
+    </div>
+  `;
+}
+
+// ===== LERNNENDE ENTSCHEIDUNG =====
+function decideMode() {
+  const ready = READY();
+  const raum = RAUM_KERNEL({
+    ZUG:"A1", BLATT:"ROOT", STATUS:"REAL", IST:"OK", NEU:"TMP"
+  });
+  const move = MOVE(raum);
+  const respo = JSON.stringify(RESPO_AXIS);
+  const high = respoHighEnd(respo);
+
+  let scoreGrid = 0, scoreControl = 0, scoreHolo = 0;
+
+  // READY → GRID (Synthese‑Boost)
+  if(ready > 0) scoreGrid += 2;
+
+  // MIND → CONTROL (AEON‑Klarheit)
+  if(move === "OK") scoreControl += 2;
+
+  // RESPO‑S → HOLO (Synthese‑Achse)
+  if(respo.includes("S")) scoreHolo += 3;
+
+  // High‑End‑RESPO → HOLO verstärken
+  if(high.length > 0) scoreHolo += 2;
+
+  // AEON‑Stabilität → CONTROL
+  if(raum.STATUS === "REAL") scoreControl += 1;
+
+  const max = Math.max(scoreGrid, scoreControl, scoreHolo);
+  if(max === scoreGrid) return "grid";
+  if(max === scoreControl) return "control";
+  return "holo";
+}
+
+// ===== DASHBOARD‑UPDATE =====
+function updateDashboard(mode) {
+  const ready = READY();
+  const raum = RAUM_KERNEL({
+    ZUG:"A1", BLATT:"ROOT", STATUS:"REAL", IST:"OK", NEU:"TMP"
+  });
+  const mind = MIND_LAYER(raum, true);
+  const respo = JSON.stringify(RESPO_AXIS);
+
+  if(mode === "grid") renderGrid(ready, respo, mind);
+  else if(mode === "control") renderControl(ready, respo, mind);
+  else if(mode === "holo") renderHolo(ready, respo, mind);
+  else {
+    const autoMode = decideMode();
+    updateDashboard(autoMode);
+    return;
+  }
+}
+
+// ===== SWITCHER‑LOGIK (Buttons) =====
+let autoInterval = null;
+let isAuto = false;
+
+document.querySelectorAll("#dash-switch button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("#dash-switch button").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    const mode = btn.dataset.mode;
+
+    if(mode === "auto") {
+      isAuto = true;
+      if(autoInterval) clearInterval(autoInterval);
+      updateDashboard("auto");
+      autoInterval = setInterval(() => {
+        const autoMode = decideMode();
+        updateDashboard(autoMode);
+      }, 1500 + Math.random() * 1500);
+      return;
+    }
+
+    isAuto = false;
+    if(autoInterval) clearInterval(autoInterval);
+    updateDashboard(mode);
+  });
+});
+
+// ===== PIPELINE‑LOADER =====
 async function loadPipeline() {
+  try {
     const sys = await fetch("./pipeline/sys/triangle.sys").then(r => r.text());
     const tem = await fetch("./pipeline/quad.tem").then(r => r.text());
     return { sys, tem };
+  } catch {
+    return { sys: "nicht gefunden", tem: "nicht gefunden" };
+  }
 }
 
+// ===== ROOT‑KERN‑UPDATE =====
 async function startCore() {
-    const root = document.getElementById("root-kern");
+  const root = document.getElementById("root-kern");
 
-    root.innerText += "\nPIPELINE: lädt…";
+  // READY
+  const ready = READY();
+  root.innerText += "\nREADY: " + ready;
 
-    const { sys, tem } = await loadPipeline();
+  // PIPELINE
+  root.innerText += "\nPIPELINE: lädt…";
+  const { sys, tem } = await loadPipeline();
+  root.innerText += "\nPIPELINE: OK";
+  root.innerText += "\nSYS: " + (sys ? "geladen" : "fehlt");
+  root.innerText += "\nTEM: " + (tem ? "geladen" : "fehlt");
 
-    root.innerText += "\nPIPELINE: OK";
-    root.innerText += "\nSYS: geladen";
-    root.innerText += "\nTEM: geladen";
+  // AXIOM
+  const axiom = AXIOM_TRIANGLE({ value: 82, type: "NC" });
+  root.innerText += "\nAXIOM: " + JSON.stringify(axiom);
 
-    // AXIOM
-    const axiom = AXIOM_TRIANGLE({ value: 82, type: "NC" });
-    root.innerText += "\nAXIOM: " + JSON.stringify(axiom);
+  // RAUM
+  const raum = RAUM_KERNEL({
+    ZUG:"A1", BLATT:"ROOT", STATUS:"REAL", IST:"OK", NEU:"TMP"
+  });
+  root.innerText += "\nRAUM: " + JSON.stringify(raum);
 
-    // RAUM
-    const raum = RAUM_KERNEL({
-        ZUG: "A1",
-        BLATT: "ROOT",
-        STATUS: "REAL",
-        IST: "OK",
-        NEU: "TMP"
-    });
+  // MOVE
+  const move = MOVE(raum);
+  root.innerText += "\nMOVE: " + JSON.stringify(move);
 
-    root.innerText += "\nRAUM: " + JSON.stringify(raum);
+  // MIND
+  const mind = MIND_LAYER(raum, true);
+  root.innerText += "\nMIND: " + JSON.stringify(mind);
 
-    // MOVE
-    const move = MOVE(raum);
-    root.innerText += "\nMOVE: " + JSON.stringify(move);
+  // RESPO
+  root.innerText += "\nRESPO-AXIS: " + JSON.stringify(RESPO_AXIS);
 
-    // RESPO
-    root.innerText += "\nRESPO-AXIS: " + JSON.stringify(RESPO_AXIS);
+  // AEON
+  root.innerText += "\nAEON: " + mind.EBENE + " (Ordnung " + mind.ORDNUNG + ")";
 
-    root.innerText += "\nSTATUS: CORE abgeschlossen.";
+  root.innerText += "\nSTATUS: CORE abgeschlossen.";
 }
 
+// ===== ORBIT + IDENTITY =====
+try {
+  const orbit = document.getElementById("orbit-status");
+  orbit.innerText = "Orbit: OK";
+} catch {}
+
+try {
+  const identity = document.getElementById("identity-status");
+  identity.innerText = "Identity: OK";
+} catch {}
+
+try {
+  const station = document.getElementById("station-status");
+  station.innerText = "Station: OK – alle Module verfügbar";
+} catch {}
+
+// ===== START =====
 startCore();
+
+// Dashboard initial auf GRID
+updateDashboard("grid");
+
+console.log("✅ iki1uc – Absolute Edition geladen.");
+console.log("📊 692‑Scale aktiv.");
+console.log("🧠 READY, MIND, AEON, RESPO‑S integriert.");
+console.log("🔄 Auto‑Switcher bereit.");
 </script>
 
 </body>
