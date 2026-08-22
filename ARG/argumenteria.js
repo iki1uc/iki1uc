@@ -1,3 +1,9 @@
+// ------------------------------------------------------
+// ARGUMENTERIA · 36E
+// Argument-Generator + arg.sync-Technik
+// ------------------------------------------------------
+
+// Hauptfunktion
 function runArgumenteria() {
     const input = document.getElementById("arg_input").value.trim();
     const out = document.getElementById("arg_output");
@@ -8,9 +14,14 @@ function runArgumenteria() {
     }
 
     const argument = generateArgument(input);
-    out.textContent = argument;
+    const synced = argSync(argument);
+
+    out.textContent = synced;
 }
 
+// ------------------------------------------------------
+// Argument-Erzeugung
+// ------------------------------------------------------
 function generateArgument(topic) {
     return `
 Thema: ${topic}
@@ -32,3 +43,26 @@ Thema: ${topic}
 `;
 }
 
+// ------------------------------------------------------
+// arg.sync – Argument-Synchronisation
+// ------------------------------------------------------
+// Ziel:
+// - Argumente strukturieren
+// - Wiederholungen entfernen
+// - Klarheit erhöhen
+// - Konsistenz prüfen
+// - 36E-Standard anwenden
+
+function argSync(text) {
+    const lines = text.split("\n").map(l => l.trim()).filter(l => l.length > 0);
+
+    const cleaned = [];
+    let last = "";
+
+    for (const line of lines) {
+        if (line !== last) cleaned.push(line);
+        last = line;
+    }
+
+    return cleaned.join("\n");
+}
