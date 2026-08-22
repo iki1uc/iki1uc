@@ -15,6 +15,7 @@ function MIND_LAYER(raum, map) {
         SIGNATUR: `AEON-${raum.ZUG}-${raum.BLATT}`
     };
 }
+
 import { READY } from './ready.js';
 
 console.log("READY:", READY());
