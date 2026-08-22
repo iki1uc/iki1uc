@@ -1,17 +1,115 @@
 <!DOCTYPE html>
-<html>
-<body style="background:#000;color:#0f0;font-family:monospace">
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Y – Rotate / Triple-Y</title>
+<style>
+body { background:#000; color:#0f0; font-family:monospace; padding:20px; }
+pre  { background:#111; padding:20px; border:1px solid #333; color:#0f0; }
+h2   { color:#6cf; }
+</style>
+</head>
+
+<body>
+
 <h2>Y – Rotate</h2>
+
 <pre>
 ID: ULRM-Y
 ROLE: rotate
+MODE: RAW / RESPO
+STATUS: active
+
 DATA:
   axis: r
   step: +1
-  effect: "LAGE.r + 1"
+  effect: "LAGE.r = LAGE.r + 1"
   modi: "Y"
+  rawator: "spin"
+  pimp: "Betrachtung: Rotation"
+
+ENGINE:
+  function ULRM_Y(LAGE){
+      return {
+          x: LAGE.x,
+          y: LAGE.y,
+          z: LAGE.z,
+          r: (LAGE.r ?? 0) + 1,
+          modi: "Y",
+          role: "rotate"
+      };
+  }
+
 RESULT:
-  LAGE rotiert.
+  LAGE rotiert (r + 1).
 </pre>
+
+
+<h2>YY – Doppelrotation</h2>
+
+<pre>
+ID: ULRM-YY
+ROLE: rotate-strong
+MODE: RAW / RESPO
+STATUS: active
+
+DATA:
+  axis: r
+  step: +2
+  effect: "LAGE.r = LAGE.r + 2"
+  modi: "YY"
+  rawator: "spin+boost"
+  pimp: "Betrachtung: starke Rotation"
+
+ENGINE:
+  function ULRM_YY(LAGE){
+      return {
+          x: LAGE.x,
+          y: LAGE.y,
+          z: LAGE.z,
+          r: (LAGE.r ?? 0) + 2,
+          modi: "YY",
+          role: "rotate-strong"
+      };
+  }
+
+RESULT:
+  LAGE rotiert doppelt stark (r + 2).
+</pre>
+
+
+<h2>YYY – Triple-Rotation</h2>
+
+<pre>
+ID: ULRM-YYY
+ROLE: rotate-core
+MODE: RAW / RESPO / CORE
+STATUS: active
+
+DATA:
+  axis: r
+  step: +3
+  effect: "LAGE.r = LAGE.r + 3"
+  modi: "YYY"
+  rawator: "spin+boost+core"
+  pimp: "Betrachtung: Kernrotation"
+
+ENGINE:
+  function ULRM_YYY(LAGE){
+      return {
+          x: LAGE.x,
+          y: LAGE.y,
+          z: LAGE.z,
+          r: (LAGE.r ?? 0) + 3,
+          core: true,
+          modi: "YYY",
+          role: "rotate-core"
+      };
+  }
+
+RESULT:
+  LAGE rotiert dreifach stark (r + 3).
+</pre>
+
 </body>
 </html>
