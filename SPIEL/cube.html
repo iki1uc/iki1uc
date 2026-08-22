@@ -1,6 +1,3 @@
-<script type="module">
-import { lagePosition, cubeTransform } from "../../TOOLOMAT/GEOMETRIA.js";
-
 function applyLAGE(Phi, phi, phi2, phiinfty){
     const pos = lagePosition(Phi, phi, phi2, phiinfty);
     const cube = document.getElementById("cube");
@@ -12,4 +9,3 @@ function applyLAGE(Phi, phi, phi2, phiinfty){
         scale(${1 + pos.stabil/10})
     `;
 }
-</script>
