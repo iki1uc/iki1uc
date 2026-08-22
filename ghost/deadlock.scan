@@ -1,1 +1,44 @@
-DEADLOCK: CHECK
+// iki1uc/deadlock.scan
+// Deadlock-Scanner für pipeline4 → iki1uc.core
+
+export function DEADLOCK_SCAN(state) {
+
+    const result = {
+        route: "deadlock.scan",
+        timestamp: Date.now(),
+        freeze: false,
+        cycle: false,
+        nc_block: false,
+        ghost_interfere: false,
+        deadlock: false
+    };
+
+    // === 1. Pipeline-Freeze ===
+    if (state.pipeline && state.pipeline.stalled === true) {
+        result.freeze = true;
+    }
+
+    // === 2. Lock-Cycle-Erkennung ===
+    if (state.lock && state.lock.waiting && state.lock.waiting.includes(state.lock.owner)) {
+        result.cycle = true;
+    }
+
+    // === 3. NC-Block ===
+    if (state.nc && state.nc.active && state.nc.hold === true) {
+        result.nc_block = true;
+    }
+
+    // === 4. Ghost-Interferenz ===
+    if (state.ghost && state.ghost.mode === "interfere") {
+        result.ghost_interfere = true;
+    }
+
+    // === Deadlock-Bestimmung ===
+    result.deadlock =
+        result.freeze ||
+        result.cycle ||
+        result.nc_block ||
+        result.ghost_interfere;
+
+    return result;
+}
