@@ -12,26 +12,68 @@ button{padding:6px 12px;background:#111;color:#0f0;border:1px solid #333;cursor:
 </head>
 <body>
 
-<h1>SINN 4 – SCRIPT‑SCAN</h1>
-<textarea id="src"></textarea>
+<h1>SINN 4 – SCRIPT‑SCAN + Bewertung</h1>
+<textarea id="src" placeholder="HTML einfügen…"></textarea>
 <button onclick="scan()">SCAN</button>
 <pre id="out"></pre>
 
 <script>
+// ------------------------------------------------------
+// 7SINN – Bewertungssystem (Standalone)
+// ------------------------------------------------------
+function RATE(achse, wert, norm){
+  return {
+    achse,
+    wert,
+    norm,
+    delta: wert - norm,
+    status:
+      wert === norm ? "Norm" :
+      wert > norm && wert < norm * 3 ? "Übernorm" :
+      wert >= norm * 3 ? "Extrem" :
+      "Unternorm"
+  };
+}
+
+// ------------------------------------------------------
+// SINN 4 – Script-Scan + Bewertung
+// ------------------------------------------------------
 function scan(){
   const t = src.value;
+  if(!t.trim()){
+    out.textContent = "Keine Eingabe.";
+    return;
+  }
+
   const p = new DOMParser();
   const d = p.parseFromString(t,"text/html");
+
   const scripts = [...d.querySelectorAll("script")];
   const ext = scripts.filter(s=>s.src).map(s=>s.src);
   const inline = scripts.filter(s=>!s.src).length;
-  let o = "SINN 4 – SCRIPT‑SCAN\n";
-  o += `Scripts total: ${scripts.length}\nInline: ${inline}\nExterne:\n`;
+
+  // Script-Sinn = Inline + Extern
+  const sinnWert = scripts.length;
+  const sinnNorm = 5; // Norm für Script-Sinn
+
+  const rating = RATE("Sinn-Script", sinnWert, sinnNorm);
+
+  let o = "SINN 4 – SCRIPT‑SCAN + Bewertung\n\n";
+  o += "Script-Sinn: " + sinnWert + "\n";
+  o += "Norm: " + sinnNorm + "\n";
+  o += "Delta: " + rating.delta + "\n";
+  o += "Status: " + rating.status + "\n\n";
+
+  o += "DETAILS:\n";
+  o += `Scripts total: ${scripts.length}\n`;
+  o += `Inline: ${inline}\n`;
+  o += `Extern:\n`;
   ext.forEach(e=>o+=`- ${e}\n`);
+
   out.textContent = o;
 }
 </script>
 
+<!-- EICH + GEN + MARKE dürfen nicht entfernt werden -->
 </body>
 </html>
-
