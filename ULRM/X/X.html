@@ -1,18 +1,114 @@
 <!DOCTYPE html>
-<html>
-<body style="background:#000;color:#0f0;font-family:monospace">
-<h2>X – Neutral</h2>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>X – Neutral / Triple-X</title>
+<style>
+body { background:#000; color:#0f0; font-family:monospace; padding:20px; }
+pre  { background:#111; padding:20px; border:1px solid #333; color:#0f0; }
+h2   { color:#6cf; }
+</style>
+</head>
+
+<body>
+
+<h2>X – Neutral / Triple-X</h2>
+
 <pre>
 ID: ULRM-X
 ROLE: neutral
+MODE: RAW / RESPO
+STATUS: active
+
 DATA:
   axis: none
   step: 0
   effect: "LAGE unverändert"
   modi: "X"
+  rawator: "still"
+  pimp: "Betrachtung: Ruhe"
+
+ENGINE:
+  function ULRM_X(LAGE){
+      return {
+          x: LAGE.x,
+          y: LAGE.y,
+          z: LAGE.z,
+          modi: "X",
+          role: "neutral"
+      };
+  }
+
 RESULT:
   LAGE bleibt neutral.
 </pre>
+
+
+<h2>XX – Doppelneutral</h2>
+
+<pre>
+ID: ULRM-XX
+ROLE: neutral-strong
+MODE: RAW / RESPO
+STATUS: active
+
+DATA:
+  axis: none
+  step: 0
+  effect: "LAGE stabilisiert"
+  modi: "XX"
+  rawator: "still+lock"
+  pimp: "Betrachtung: starke Ruhe"
+
+ENGINE:
+  function ULRM_XX(LAGE){
+      return {
+          x: LAGE.x,
+          y: LAGE.y,
+          z: LAGE.z,
+          lock: true,
+          modi: "XX",
+          role: "neutral-strong"
+      };
+  }
+
+RESULT:
+  LAGE bleibt neutral und wird zusätzlich stabilisiert.
+</pre>
+
+
+<h2>XXX – Triple-Neutral</h2>
+
+<pre>
+ID: ULRM-XXX
+ROLE: neutral-core
+MODE: RAW / RESPO / CORE
+STATUS: active
+
+DATA:
+  axis: none
+  step: 0
+  effect: "LAGE tief-neutralisiert"
+  modi: "XXX"
+  rawator: "still+lock+core"
+  pimp: "Betrachtung: Kernneutralität"
+
+ENGINE:
+  function ULRM_XXX(LAGE){
+      return {
+          x: LAGE.x,
+          y: LAGE.y,
+          z: LAGE.z,
+          lock: true,
+          core: true,
+          modi: "XXX",
+          role: "neutral-core"
+      };
+  }
+
+RESULT:
+  LAGE wird vollständig neutralisiert (Triple-X).
+</pre>
+
 </body>
 </html>
-
