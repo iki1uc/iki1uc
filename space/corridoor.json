@@ -1,1 +1,28 @@
+{
+  "CORRIDOOR": {
+    "TYPE": "HyPePer-TransWarp",
+    "SOURCE": "ROOM",
+    "TARGET": "SPACE_SUITE",
+    "CHANNEL": "warp-axis",
+    "DIMENSIONS": 6
+  },
+
+  "AXIS": {
+    "forward": "cause→effect",
+    "reverse": "effect→cause"
+  },
+
+  "TMP": {
+    "lanes": 2,
+    "active": true,
+    "mode": "warp"
+  },
+
+  "HDF": {
+    "density": "high",
+    "frame": true
+  },
+
+  "FLOW": "ROOM → CORRIDOOR → CONTINUUM → SPACE_SUITE"
+}
 
