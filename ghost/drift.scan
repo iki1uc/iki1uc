@@ -1,2 +1,47 @@
-DRIFT: CHECK
+// ghost/drift.scan
+// DRIFT: CHECK – erkennt Positions-, Vektor- und Systemdrift
 
+export function DRIFT_SCAN(state) {
+
+    const result = {
+        route: "drift.scan",
+        timestamp: Date.now(),
+        vector_drift: false,
+        pipeline_drift: false,
+        nc_drift: false,
+        ghost_drift: false,
+        drift: false
+    };
+
+    // === 1. Vektor-Drift (x,y,z,r) ===
+    if (state.vector) {
+        const { x, y, z, r } = state.vector;
+        if (Math.abs(x) > 1 || Math.abs(y) > 1 || Math.abs(z) > 1 || Math.abs(r) > 1) {
+            result.vector_drift = true;
+        }
+    }
+
+    // === 2. Pipeline-Drift ===
+    if (state.pipeline && state.pipeline.offset && state.pipeline.offset !== 0) {
+        result.pipeline_drift = true;
+    }
+
+    // === 3. NC-Drift ===
+    if (state.nc && state.nc.delta && Math.abs(state.nc.delta) > 0.2) {
+        result.nc_drift = true;
+    }
+
+    // === 4. Ghost-Drift ===
+    if (state.ghost && state.ghost.mode === "drift") {
+        result.ghost_drift = true;
+    }
+
+    // === Drift-Bestimmung ===
+    result.drift =
+        result.vector_drift ||
+        result.pipeline_drift ||
+        result.nc_drift ||
+        result.ghost_drift;
+
+    return result;
+}
