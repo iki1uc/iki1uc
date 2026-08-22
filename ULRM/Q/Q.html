@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Q – Hoch</title>
+<title>Q – Vertikal / Triple-Q</title>
 <style>
 body { background:#000; color:#0f0; font-family:monospace; padding:20px; }
 pre  { background:#111; padding:20px; border:1px solid #333; color:#0f0; }
@@ -12,11 +12,11 @@ h2   { color:#6cf; }
 
 <body>
 
-<h2>Q – Hoch</h2>
+<h2>Q – Vertikal</h2>
 
 <pre>
 ID: ULRM-Q
-ROLE: up
+ROLE: vertical
 MODE: RAW / RESPO
 STATUS: active
 
@@ -35,13 +35,23 @@ ENGINE:
           y: LAGE.y,
           z: LAGE.z + 1,
           modi: "Q",
-          role: "up"
+          role: "vertical"
       };
   }
 
 RESULT:
-  LAGE bewegt sich nach oben (z + 1).
+  LAGE bewegt sich vertikal nach oben (z + 1).
 </pre>
 
-</body>
-</html>
+
+<h2>QQ – Doppel-Vertikal</h2>
+
+<pre>
+ID: ULRM-QQ
+ROLE: vertical-strong
+MODE: RAW / RESPO
+STATUS: active
+
+DATA:
+  axis: z
+  step:
