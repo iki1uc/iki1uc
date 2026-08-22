@@ -1,2 +1,11 @@
-BUFFER: READY
-
+{
+  "BUFFER": {
+    "state": "° & % 3",
+    "signal": {
+      "green": "ready",
+      "yellow": "standby",
+      "red": "blocked"
+    },
+    "active": "green"
+  }
+}
