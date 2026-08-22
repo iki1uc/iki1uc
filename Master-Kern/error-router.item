@@ -1,3 +1,4 @@
+────────────────────────────────────────
 # ERROR-ROUTER
 # raw.tech / neutral
 
@@ -11,7 +12,32 @@ error.check: SYSTEM-CHECK
 error.target: error.root.html
 error.state: active
 
-# Zweck
+────────────────────────────────────────
+# CACHE
+cache.level: 36E
+cache.load: dynamic
+cache.status: auto
+cache.mode: expand
+cache.limit: unlimited
+cache.signal: overflow → expand
+
+────────────────────────────────────────
+# ZWECK
 # fängt alle fehlenden Module ab
 # leitet zu ROOT-ERROR
-# ohne Identität, ohne Achsen, ohne Respo
+# ohne Identität
+# ohne Achsen
+# ohne Respo
+# neutraler raw.tech-Kern
+# kompatibel zu MASTER-SCANNER
+# kompatibel zu LAGE-CODE-FINAL.nc
+# kompatibel zu SYSTEM-CHECK
+# kompatibel zu ROOT-ERROR
+
+────────────────────────────────────────
+DATEINAME: error-router.item
+GRÜNDER: 1
+²: MIR
+³: DIR
+CODE: ERROR-ROUTER-36E-FINAL
+────────────────────────────────────────
