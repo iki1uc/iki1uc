@@ -15,7 +15,7 @@ export function CACHE_WARMUP(config, ROM, CACHE) {
         data: romData || {},
         stable: romData !== null
     };
-
+ 
     // === 2. SHADOW-CACHE vorbereiten ===
     const CACHE_BLOCK = {
         id: "CACHE",
