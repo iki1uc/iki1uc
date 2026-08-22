@@ -1,6 +1,49 @@
-PIPELINE4 → iki1uc
-ORDER: sys → tem → AU → RA
-RAW: RAW.HW
-ROOT: ROM → CACHE
-TARGET: iki1uc
+// pipeline/pipeline.js
 
+import { TRIANGLE } from "./sys/triangle.sys";
+import { QUAD } from "./tem/quad.tem";
+import { TMP_LANES } from "./tem/tmp.lanes";
+import { TEM } from "./tem/temporal";
+import { AU } from "./au/au.exec";
+import { RA } from "./ra/raw.exec";
+
+export const PIPELINE4 = {
+
+    ORDER: ["sys", "tem", "AU", "RA"],
+
+    LAYER: {
+        RAW: "RAW.HW",
+        ROOT: ["ROM", "CACHE"],
+        TMP: "HDF.tmp",
+        FLOW: "AX↔XA"
+    },
+
+    sys() {
+        return {
+            triangle: TRIANGLE.resolve(),
+            quad: QUAD.resolve(),
+            tmp: TMP_LANES
+        };
+    },
+
+    tem(frame) {
+        return TEM(frame, TMP_LANES);
+    },
+
+    AU(op) {
+        return AU(op, TMP_LANES);
+    },
+
+    RA(raw) {
+        return RA(raw, TMP_LANES);
+    },
+
+    run(frame, op, raw) {
+        const s = this.sys();
+        const t = this.tem(frame);
+        const a = this.AU(op);
+        const r = this.RA(raw);
+
+        return { s, t, a, r };
+    }
+};
