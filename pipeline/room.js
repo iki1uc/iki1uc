@@ -28,6 +28,7 @@ export const ROOM_PIPELINE = {
             t: Date.now()
         };
 
+        
         // 3. DISTRIBUTION (Verteilung im Raum)
         const distribution = {
             lanes: p.a.warmup.lanes || 1,
