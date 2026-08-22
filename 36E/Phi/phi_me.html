@@ -11,36 +11,69 @@ button{padding:6px 12px;background:#111;color:#0f0;border:1px solid #333;margin-
 </head>
 <body>
 
-<h1>phi_me – NC‑Bewegung</h1>
+<h1>phi_me – Phi‑Ratio + Bewertung</h1>
 
 <script>
-const NC={
-  pos:{x:0,y:0,r:20},
-  move(d){if(d==="N→")NC.pos.x+=10;if(d==="N←")NC.pos.x-=10;
-          if(d==="N↑")NC.pos.y-=10;if(d==="N↓")NC.pos.y+=10;},
-  circle(c){if(c==="NC↻")NC.pos.r+=2;if(c==="NC↺")NC.pos.r-=2;
-            if(c==="NC+")NC.pos.r+=5;if(c==="NC-")NC.pos.r-=5;},
-  neutral(){NC.pos={x:0,y:0,r:20};}
+// --------------------------------------
+// 1) Phi‑Modul (NEU)
+// --------------------------------------
+const PHI = {
+  a: 1,
+  b: 1,
+  next(){
+    const n = PHI.a + PHI.b;
+    PHI.a = PHI.b;
+    PHI.b = n;
+    return n;
+  },
+  ratio(){
+    return PHI.b / PHI.a;
+  }
 };
-function runNC(cmd){
-  if(cmd.startsWith("N"))NC.move(cmd);
-  if(cmd.startsWith("NC"))NC.circle(cmd);
-  if(cmd==="N")NC.neutral();
-  nc_out.textContent=`x=${NC.pos.x}, y=${NC.pos.y}, r=${NC.pos.r}`;
+
+// --------------------------------------
+// 2) Bewertungs‑Kern (NEU)
+// --------------------------------------
+function RATE(achse, wert, norm){
+  return {
+    achse,
+    wert,
+    norm,
+    delta: wert - norm,
+    status:
+      wert === norm ? "Norm" :
+      wert > norm && wert < norm * 3 ? "Übernorm" :
+      wert >= norm * 3 ? "Extrem" :
+      "Unternorm"
+  };
+}
+
+// --------------------------------------
+// 3) Phi‑Bewertung (NEU)
+// --------------------------------------
+function RATE_PHI(){
+  const r = PHI.ratio();
+  return RATE("Phi‑Ratio", r, 1.618);
+}
+
+// --------------------------------------
+// 4) Phi‑Ausführung + Bewertung
+// --------------------------------------
+function runPhi(){
+  const n = PHI.next();
+  const rating = RATE_PHI();
+
+  phi_out.textContent =
+    `Phi‑Wert: ${n}\n` +
+    `Ratio: ${PHI.ratio().toFixed(6)}\n` +
+    `Bewertung: ${rating.status}\n` +
+    `Delta: ${rating.delta.toFixed(6)}`;
 }
 </script>
 
 <div>
-<button onclick="runNC('N→')">N→</button>
-<button onclick="runNC('N←')">N←</button>
-<button onclick="runNC('N↑')">N↑</button>
-<button onclick="runNC('N↓')">N↓</button>
-<button onclick="runNC('NC↻')">NC↻</button>
-<button onclick="runNC('NC↺')">NC↺</button>
-<button onclick="runNC('NC+')">NC+</button>
-<button onclick="runNC('NC-')">NC-</button>
-<button onclick="runNC('N')">Neutral</button>
-<pre id="nc_out">x=0, y=0, r=20</pre>
+<button onclick="runPhi()">Phi NEXT</button>
+<pre id="phi_out">Phi‑Ratio bereit</pre>
 </div>
 
 </body>
