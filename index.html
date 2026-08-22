@@ -2,181 +2,314 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>iki1uc – ROOT (Absolute Edition)</title>
+<title>iki1uc – COCKPIT (Absolute)</title>
 
 <style>
-/* ===== BASIS ===== */
-* { box-sizing:border-box; }
-body { background:#000; color:#0f0; font-family:monospace; padding:20px; }
-h1, h2 { color:#6cf; }
-a { color:#6cf; display:block; margin:6px 0; }
-pre { background:#111; border:1px solid #333; padding:10px; overflow:auto; }
-hr { border:1px solid #333; margin:25px 0; }
-.section { margin-bottom:40px; }
-
-/* ===== DASHBOARD ===== */
-#dash-switch { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
-#dash-switch button {
-  background:#111; color:#6cf; border:1px solid #333;
-  padding:12px 28px; cursor:pointer; font-family:monospace; font-size:16px;
-  transition:all 0.2s;
+/* ===== COCKPIT BASIS ===== */
+* { box-sizing:border-box; margin:0; padding:0; }
+body {
+  background: #0a0a0f;
+  color: #00ff88;
+  font-family: 'Courier New', monospace;
+  padding: 20px;
+  min-height: 100vh;
 }
-#dash-switch button:hover { background:#222; border-color:#6cf; }
-#dash-switch button.active { background:#1a2a4a; border-color:#6cf; }
 
+/* ===== COCKPIT GRID ===== */
+.cockpit {
+  display: grid;
+  grid-template-columns: 280px 1fr 280px;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 12px;
+  height: 100vh;
+}
+
+/* ===== PANELS ===== */
+.panel {
+  background: #111118;
+  border: 1px solid #2a2a3a;
+  border-radius: 8px;
+  padding: 16px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0,255,136,0.05);
+}
+
+.panel-title {
+  color: #66ccff;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border-bottom: 1px solid #2a2a3a;
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+}
+
+/* ===== LINKS ===== */
+.panel a {
+  color: #66ccff;
+  text-decoration: none;
+  display: block;
+  padding: 3px 0;
+  font-size: 12px;
+  border-bottom: 1px solid #1a1a2a;
+  transition: all 0.2s;
+}
+.panel a:hover {
+  color: #00ff88;
+  background: #1a1a2a;
+  padding-left: 8px;
+}
+
+/* ===== INSTRUMENTE ===== */
+.instrument {
+  background: #0d0d18;
+  border: 1px solid #1a1a3a;
+  border-radius: 4px;
+  padding: 10px;
+  margin: 6px 0;
+  font-size: 13px;
+}
+.instrument .label { color: #6688aa; font-size: 10px; text-transform: uppercase; }
+.instrument .value { color: #00ff88; font-size: 16px; font-weight: bold; }
+.instrument .value.aeon { color: #ff66ff; }
+.instrument .value.respo { color: #66ccff; }
+.instrument .value.ready { color: #88ff44; }
+
+/* ===== DASHBOARD (3 Modi) ===== */
 #dashboard {
-  background:#0a0a0a; border:1px solid #333; padding:20px;
-  min-height:200px;
+  background: #0a0a12;
+  border: 1px solid #2a2a4a;
+  border-radius: 8px;
+  padding: 20px;
+  min-height: 200px;
+  grid-column: 2;
+  grid-row: 2 / 4;
 }
 
-/* GRID */
-.grid-box { background:#111; border:1px solid #333; padding:15px; margin:5px 0; }
+/* ===== SWITCHER ===== */
+#dash-switch {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+#dash-switch button {
+  background: #111122;
+  color: #6688aa;
+  border: 1px solid #2a2a4a;
+  padding: 6px 16px;
+  cursor: pointer;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+#dash-switch button:hover { background: #1a1a3a; border-color: #66ccff; }
+#dash-switch button.active {
+  background: #1a2a4a;
+  color: #00ff88;
+  border-color: #00ff88;
+}
 
-/* CONTROL */
-.control-panel { background:#111; padding:20px; border:1px solid #333; }
-
-/* HOLO */
+/* ===== GRID, CONTROL, HOLO ===== */
+.grid-box { background:#111120; border:1px solid #2a2a4a; padding:12px; margin:4px 0; border-radius:4px; }
+.control-panel { background:#111120; padding:16px; border:1px solid #2a2a4a; border-radius:4px; }
 .holo-core {
-  background:#1a0a2a; padding:30px; border:1px solid #550055;
-  animation:pulse 2s infinite ease-in-out;
+  background:#1a0a2a;
+  padding:24px;
+  border:1px solid #550055;
+  border-radius:8px;
+  animation: pulse 2.2s infinite ease-in-out;
 }
 @keyframes pulse {
-  0% { box-shadow:0 0 5px #8800aa; }
-  50% { box-shadow:0 0 30px #cc44ff; }
-  100% { box-shadow:0 0 5px #8800aa; }
+  0% { box-shadow:0 0 8px #8800aa; }
+  50% { box-shadow:0 0 40px #cc44ff; }
+  100% { box-shadow:0 0 8px #8800aa; }
 }
 
-/* ===== FARB‑SIGNALE ===== */
-.ready-green { background:#003300; color:#00ff00; border-color:#00ff00; }
-.ready-yellow { background:#333300; color:#ffff00; border-color:#ffff00; }
-.ready-red { background:#330000; color:#ff0000; border-color:#ff0000; }
-
+/* ===== FARBEN ===== */
+.ready-green { background:#002200; color:#88ff44; border-color:#88ff44; }
 .mind-aeon { background:#220044; color:#dd88ff; border-color:#aa44ff; }
 .respo-s { background:#002244; color:#66ccff; border-color:#4488ff; }
 .aeon-visual { background:#330033; color:#ff66ff; border-color:#ff44ff; }
 
+/* ===== DATEI-LISTE ===== */
+.file-list {
+  max-height: 300px;
+  overflow-y: auto;
+  font-size: 11px;
+}
+.file-list::-webkit-scrollbar { width:4px; }
+.file-list::-webkit-scrollbar-track { background:#0a0a12; }
+.file-list::-webkit-scrollbar-thumb { background:#2a2a4a; border-radius:2px; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .cockpit { grid-template-columns: 1fr; grid-template-rows: auto; height: auto; }
+  #dashboard { grid-column: 1; grid-row: auto; }
+}
+
 /* ===== STATUS ===== */
-.status-ok { color:#0f0; }
-.status-warn { color:#ff0; }
-.status-err { color:#f00; }
+.status-ok { color:#00ff88; }
+.status-warn { color:#ffcc00; }
+.status-err { color:#ff3366; }
 </style>
 </head>
 <body>
 
-<!-- ===== HEADER ===== -->
-<h1>iki1uc – ROOT (Absolute Edition)</h1>
-<p>Creator‑Root · CORE‑Startpunkt · Pipeline‑Einstieg · 692‑Scale</p>
+<!-- ============================================================ -->
+<!-- ===== COCKPIT ===== -->
+<!-- ============================================================ -->
+<div class="cockpit">
 
-<!-- ===== SYSTEM‑SCANS ===== -->
-<div class="section">
-  <h2>System‑Scans</h2>
-  <pre id="orbit-status">Orbit lädt…</pre>
-  <pre id="identity-status">Identity lädt…</pre>
-</div>
+  <!-- ===== LINKES PANEL: NAVIGATION ===== -->
+  <div class="panel" style="grid-column:1; grid-row:1/5;">
+    <div class="panel-title">✦ NAVIGATION</div>
 
-<script src="./Master-Kern/root-orbit-scan.js"></script>
-<script src="./Master-Kern/root-identity-scan.js"></script>
-<script src="./Master-Kern/root-scan.js"></script>
-<script src="./Master-Kern/system-check.js"></script>
-<script src="./Master-Kern/root-station-check.js"></script>
-<script src="./Master-Kern/error-router.js"></script>
+    <div style="margin:8px 0; font-size:12px; color:#6688aa;">
+      <span class="status-ok">●</span> CORE: iki1uc
+      <br><span class="status-ok">●</span> VERSION: 1.2 (Cockpit)
+      <br><span class="status-ok">●</span> SCALE: 692
+    </div>
 
-<!-- ===== ROOT‑KERN ===== -->
-<div class="section">
-  <h2>ROOT‑KERN</h2>
-  <pre id="root-kern">
-CORE = iki1uc
-VERSION = 1.2 (Absolute)
-CODE = RAW / RESPO / OPS / NC
-LAGE = ROOT / Creator / NC
-STATUS = Initialisiert…
-MASTER-SCANNER = lädt…
-SYSTEM-CHECK = lädt…
-ROOT-SCAN = lädt…
-STATION-CHECK = lädt…
-ERROR-ROUTER = aktiv
-AXIOM = wartet…
-RAUM = wartet…
-RESPO = lädt…
-PIPELINE = wartet…
-READY = wartet…
-MIND = wartet…
-AEON = wartet…
-</pre>
-</div>
+    <div style="margin-top:12px;">
+      <a href="./CORE.load">⚡ CORE.load</a>
+      <a href="./fin.e.js">🧠 fin.e.js</a>
+      <a href="./ready.js">📈 ready.js</a>
+      <a href="./respo.js">🎯 respo.js</a>
+      <a href="./ID.html">🆔 ID.html</a>
+      <a href="./suite.html">📦 suite.html</a>
+    </div>
 
-<!-- ===== STATION ===== -->
-<div class="section">
-  <h2>Stations‑Status</h2>
-  <pre id="station-status">Lade Stations‑Status…</pre>
-</div>
+    <div style="margin-top:16px; border-top:1px solid #1a1a2a; padding-top:10px;">
+      <div class="panel-title" style="font-size:10px;">MASTER‑KERN</div>
+      <a href="./Master-Kern/MASTER-SCANNER.html">🔍 MASTER‑SCANNER</a>
+      <a href="./Master-Kern/system-check.item">✅ SYSTEM‑CHECK</a>
+      <a href="./Master-Kern/error-router.js">🚨 ERROR‑ROUTER</a>
+    </div>
 
-<!-- ===== DASHBOARD‑SWITCHER ===== -->
-<div class="section">
-  <h2>Dashboard‑Wechsler (lernt selbst)</h2>
-  <div id="dash-switch">
-    <button data-mode="grid" class="active">GRID</button>
-    <button data-mode="control">CONTROL</button>
-    <button data-mode="holo">HOLO</button>
-    <button data-mode="auto">🤖 AUTO (lernend)</button>
+    <div style="margin-top:16px; border-top:1px solid #1a1a2a; padding-top:10px;">
+      <div class="panel-title" style="font-size:10px;">VISUAL</div>
+      <a href="./visual/CONTINUUM.html">🌀 CONTINUUM</a>
+      <a href="./visual/LAGE.html">📍 LAGE</a>
+      <a href="./visual/ORT.html">🧭 ORT</a>
+      <a href="./visual/home.html">🏠 HOME</a>
+    </div>
+
+    <div style="margin-top:16px; border-top:1px solid #1a1a2a; padding-top:10px;">
+      <div class="panel-title" style="font-size:10px;">KERNEL</div>
+      <a href="./core/iki1uc.html">⚙️ iki1uc CORE</a>
+      <a href="./core/iki1uc.map">🗺️ CORE MAP</a>
+      <a href="./pipeline/pipeline.map">📋 PIPELINE</a>
+    </div>
+
+    <div style="margin-top:16px; border-top:1px solid #1a1a2a; padding-top:10px;">
+      <div class="panel-title" style="font-size:10px;">ESPECIAL</div>
+      <a href="./AXIS/nc.html">🌀 NC</a>
+      <a href="./AXIS/phi.html">Φ PHI</a>
+      <a href="./AXIS/phi2.html">Φ² PHI2</a>
+      <a href="./AXIS/phiinfty.html">♾️ PHI∞</a>
+    </div>
+
+    <div style="margin-top:16px; border-top:1px solid #1a1a2a; padding-top:10px;">
+      <div class="panel-title" style="font-size:10px;">MODULE</div>
+      <a href="./RESPO/index.html">📊 RESPO</a>
+      <a href="./RAW/cluster.html">💎 RAW</a>
+      <a href="./ROM/rom.map">📖 ROM</a>
+      <a href="./ops/engine.js">⚙️ OPS</a>
+      <a href="./SPIEL/skat.html">🃏 SPIEL</a>
+    </div>
   </div>
-  <div id="dashboard">
-    <div class="grid-box">READY: lädt…</div>
+
+  <!-- ===== MITTE: DASHBOARD ===== -->
+  <div style="grid-column:2; grid-row:1/5; display:flex; flex-direction:column; gap:12px;">
+
+    <!-- HEADER -->
+    <div class="panel" style="flex:0;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="color:#66ccff; font-size:18px; font-weight:bold;">☕ COCKPIT · iki1uc</span>
+        <span style="color:#6688aa; font-size:11px;">692 Repos · Ordnung 1–4 · AEON aktiv</span>
+      </div>
+    </div>
+
+    <!-- INSTRUMENTE -->
+    <div class="panel" style="flex:0;">
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:8px;">
+        <div class="instrument"><div class="label">READY (3↑9↑81)</div><div class="value ready" id="ready-val">…</div></div>
+        <div class="instrument"><div class="label">MIND (AEON)</div><div class="value aeon" id="mind-val">…</div></div>
+        <div class="instrument"><div class="label">RESPO‑S</div><div class="value respo" id="respo-val">…</div></div>
+        <div class="instrument"><div class="label">MOVE</div><div class="value" id="move-val" style="color:#ffcc44;">…</div></div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="panel" style="flex:1; display:flex; flex-direction:column;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <span class="panel-title" style="margin:0; border:0;">📺 DASHBOARD</span>
+        <div id="dash-switch">
+          <button data-mode="grid" class="active">GRID</button>
+          <button data-mode="control">CONTROL</button>
+          <button data-mode="holo">HOLO</button>
+          <button data-mode="auto" style="color:#ff66ff; border-color:#550055;">🤖 AUTO</button>
+        </div>
+      </div>
+      <div id="dashboard" style="flex:1; overflow:auto;">
+        <div class="grid-box">READY: lädt…</div>
+      </div>
+    </div>
+
+    <!-- DATEI-BROWSER -->
+    <div class="panel" style="flex:0; max-height:180px;">
+      <div class="panel-title">📂 DATEI‑BROWSER (Auswahl)</div>
+      <div class="file-list" id="file-list">
+        <span style="color:#6688aa;">Lade Datei‑Struktur…</span>
+      </div>
+    </div>
+
   </div>
-</div>
 
-<!-- ===== MODULE ===== -->
-<div class="section">
-  <h2>Master‑Module</h2>
-  <a href="./Master-Kern/MASTER-SCANNER.html">MASTER‑SCANNER</a>
-  <a href="./Master-Kern/system-check.item">SYSTEM‑CHECK</a>
-</div>
+  <!-- ===== RECHTES PANEL: STATUS ===== -->
+  <div class="panel" style="grid-column:3; grid-row:1/5;">
+    <div class="panel-title">✦ SYSTEM‑STATUS</div>
 
-<div class="section">
-  <h2>Module</h2>
-  <a href="./ID.html">ID – Identität</a>
-  <a href="./RESPO/index.html">RESPO</a>
-  <a href="./RAW/cluster.html">RAW‑Cluster</a>
-  <a href="./ROM/rom.map">ROM‑Map</a>
-  <a href="./ops/engine.js">OPS‑Engine</a>
-  <a href="./pipeline/pipeline.map">Pipeline‑Map</a>
-  <a href="./core/iki1uc.html">iki1uc CORE</a>
-</div>
+    <div id="status-list" style="font-size:12px; line-height:1.8;">
+      <div><span class="status-ok">●</span> CORE: <span style="color:#00ff88;">aktiv</span></div>
+      <div><span class="status-ok">●</span> PIPELINE: <span style="color:#00ff88;">bereit</span></div>
+      <div><span class="status-ok">●</span> RESPO: <span style="color:#66ccff;">geladen</span></div>
+      <div><span class="status-ok">●</span> MIND: <span style="color:#dd88ff;">AEON</span></div>
+      <div><span class="status-ok">●</span> READY: <span style="color:#88ff44;">aktiv</span></div>
+      <div><span class="status-ok">●</span> MOVE: <span style="color:#ffcc44;">OK</span></div>
+      <div><span class="status-ok">●</span> AEON: <span style="color:#ff66ff;">pulsiert</span></div>
+    </div>
 
-<!-- ===== VISUAL ===== -->
-<div class="section">
-  <h2>Visual</h2>
-  <a href="./visual/LAGE.html">LAGE‑Visual</a>
-  <a href="./visual/Orbit.html">Orbit‑Visual</a>
-  <a href="./visual/Identity.html">Identity‑Visual</a>
-  <a href="./visual/CONTINUUM.html">CONTINUUM‑Visual</a>
-</div>
+    <div style="margin-top:16px; border-top:1px solid #1a1a2a; padding-top:12px;">
+      <div class="panel-title" style="font-size:10px;">HIGH‑END RESPO</div>
+      <div id="high-end-list" style="font-size:11px; color:#66ccff;">
+        Q81 · X81 · A81 · RESPO.ai · RESPO‑Station · RESPO‑Pipeline
+      </div>
+    </div>
 
-<!-- ===== HINWEIS ===== -->
-<div class="section">
-  <h2>Hinweis</h2>
-  <pre>
-iki1uc ist der Ursprung.
-Alle Module sind Ableitungen.
-CORE.load verbindet Pipeline4 → iki1uc.core.
-AXIOM erzeugt Bogenverhalten.
-RAUM erzeugt Kernzustände.
-RESPO liefert Achsen.
-OPS liefert Engine.
-RAW liefert Cluster.
-ROM liefert Regeln.
-VISUAL zeigt Zustände.
-ROOT ist real‑bildend.
+    <div style="margin-top:16px; border-top:1px solid #1a1a2a; padding-top:12px;">
+      <div class="panel-title" style="font-size:10px;">ORDNUNGEN</div>
+      <div style="font-size:11px; color:#6688aa;">
+        1: CONTINUUM <span style="color:#00ff88;">●</span><br>
+        2: TRANSWARP <span style="color:#66ccff;">●</span><br>
+        3: WARP3 <span style="color:#88ff44;">●</span><br>
+        4: AEON <span style="color:#ff66ff;">●</span>
+      </div>
+    </div>
 
-READY = 3↑9↑81 → Synthese‑Boost (MAX‑S)
-MIND = AEON → Ordnung 4
-RESPO‑S = bevorzugte Achse
-692 Repos → 692‑Scale
-  </pre>
+    <div style="margin-top:16px; border-top:1px solid #1a1a2a; padding-top:12px;">
+      <div style="font-size:10px; color:#445566;">
+        <span id="clock" style="color:#6688aa;">⏱️ </span>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- ============================================================ -->
-<!-- ===== HAUPT‑SCRIPT – ALLES INTEGRIERT ===== -->
+<!-- ===== HAUPT-SCRIPT ===== -->
 <!-- ============================================================ -->
 <script type="module">
 // ===== IMPORTS =====
@@ -202,27 +335,43 @@ function MIND_LAYER(raum, map) {
   };
 }
 
-// ===== DASHBOARD‑RENDERER =====
+// ===== INSTRUMENTE UPDATEN =====
+function updateInstruments() {
+  const ready = READY();
+  const raum = RAUM_KERNEL({
+    ZUG:"A1", BLATT:"ROOT", STATUS:"REAL", IST:"OK", NEU:"TMP"
+  });
+  const mind = MIND_LAYER(raum, true);
+  const move = MOVE(raum);
+  const respo = JSON.stringify(RESPO_AXIS);
+
+  document.getElementById("ready-val").innerText = ready.toFixed(0);
+  document.getElementById("mind-val").innerText = mind.EBENE + " (" + mind.ORDNUNG + ")";
+  document.getElementById("respo-val").innerText = respo.includes("S") ? "S‑aktiv" : "…";
+  document.getElementById("move-val").innerText = move || "—";
+}
+
+// ===== DASHBOARD =====
 const dash = document.getElementById("dashboard");
 
 function renderGrid(ready, respo, mind) {
   dash.innerHTML = `
-    <div class="grid-box ready-green">GRID MODE<br>READY: ${ready}</div>
-    <div class="grid-box mind-aeon">MIND: ${mind.EBENE} (Ordnung ${mind.ORDNUNG})</div>
-    <div class="grid-box respo-s">RESPO‑S: ${JSON.stringify(RESPO_AXIS)}</div>
-    <div class="grid-box aeon-visual">AEON: ${mind.SIGNATUR}</div>
+    <div class="grid-box ready-green">📊 GRID MODE<br>READY: ${ready}</div>
+    <div class="grid-box mind-aeon">🧠 MIND: ${mind.EBENE} (Ordnung ${mind.ORDNUNG})</div>
+    <div class="grid-box respo-s">🎯 RESPO‑S: ${JSON.stringify(RESPO_AXIS)}</div>
+    <div class="grid-box aeon-visual">♾️ AEON: ${mind.SIGNATUR}</div>
   `;
 }
 
 function renderControl(ready, respo, mind) {
   dash.innerHTML = `
     <div class="control-panel">
-      <h2>⏣ CONTROL PANEL</h2>
-      <p style="color:#6cf;">READY: ${ready}</p>
+      <h2 style="color:#66ccff;">⏣ CONTROL PANEL</h2>
+      <p style="color:#88ff44;">READY: ${ready}</p>
       <p style="color:#dd88ff;">MIND: ${mind.EBENE} (${mind.ORDNUNG})</p>
       <p style="color:#66ccff;">RESPO: ${JSON.stringify(RESPO_AXIS)}</p>
       <p style="color:#ff66ff;">AEON: ${mind.SIGNATUR}</p>
-      <p style="color:#0f0;">STATUS: ${mind.SIGNAL}</p>
+      <p style="color:#00ff88;">SIGNAL: ${mind.SIGNAL}</p>
     </div>
   `;
 }
@@ -231,16 +380,16 @@ function renderHolo(ready, respo, mind) {
   dash.innerHTML = `
     <div class="holo-core">
       <h2 style="color:#ff66ff;">✦ HOLO CORE ✦</h2>
-      <p style="color:#6cf;">READY: ${ready}</p>
+      <p style="color:#88ff44;">READY: ${ready}</p>
       <p style="color:#dd88ff;">MIND: ${mind.EBENE}</p>
       <p style="color:#66ccff;">RESPO: ${JSON.stringify(RESPO_AXIS)}</p>
       <p style="color:#ff66ff;">AEON: ${mind.SIGNATUR}</p>
-      <p style="color:#0f0;">SIGNAL: ${mind.SIGNAL}</p>
+      <p style="color:#00ff88;">SIGNAL: ${mind.SIGNAL}</p>
     </div>
   `;
 }
 
-// ===== LERNNENDE ENTSCHEIDUNG =====
+// ===== ENTSCHEIDUNG =====
 function decideMode() {
   const ready = READY();
   const raum = RAUM_KERNEL({
@@ -251,20 +400,10 @@ function decideMode() {
   const high = respoHighEnd(respo);
 
   let scoreGrid = 0, scoreControl = 0, scoreHolo = 0;
-
-  // READY → GRID (Synthese‑Boost)
   if(ready > 0) scoreGrid += 2;
-
-  // MIND → CONTROL (AEON‑Klarheit)
   if(move === "OK") scoreControl += 2;
-
-  // RESPO‑S → HOLO (Synthese‑Achse)
   if(respo.includes("S")) scoreHolo += 3;
-
-  // High‑End‑RESPO → HOLO verstärken
   if(high.length > 0) scoreHolo += 2;
-
-  // AEON‑Stabilität → CONTROL
   if(raum.STATUS === "REAL") scoreControl += 1;
 
   const max = Math.max(scoreGrid, scoreControl, scoreHolo);
@@ -273,7 +412,6 @@ function decideMode() {
   return "holo";
 }
 
-// ===== DASHBOARD‑UPDATE =====
 function updateDashboard(mode) {
   const ready = READY();
   const raum = RAUM_KERNEL({
@@ -286,119 +424,64 @@ function updateDashboard(mode) {
   else if(mode === "control") renderControl(ready, respo, mind);
   else if(mode === "holo") renderHolo(ready, respo, mind);
   else {
-    const autoMode = decideMode();
-    updateDashboard(autoMode);
+    updateDashboard(decideMode());
     return;
   }
+  updateInstruments();
 }
 
-// ===== SWITCHER‑LOGIK (Buttons) =====
+// ===== SWITCHER =====
 let autoInterval = null;
-let isAuto = false;
 
 document.querySelectorAll("#dash-switch button").forEach(btn => {
   btn.addEventListener("click", () => {
     document.querySelectorAll("#dash-switch button").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
 
-    const mode = btn.dataset.mode;
+    if(autoInterval) clearInterval(autoInterval);
 
-    if(mode === "auto") {
-      isAuto = true;
-      if(autoInterval) clearInterval(autoInterval);
+    if(btn.dataset.mode === "auto") {
       updateDashboard("auto");
-      autoInterval = setInterval(() => {
-        const autoMode = decideMode();
-        updateDashboard(autoMode);
-      }, 1500 + Math.random() * 1500);
+      autoInterval = setInterval(() => updateDashboard("auto"), 1500 + Math.random() * 1500);
       return;
     }
-
-    isAuto = false;
-    if(autoInterval) clearInterval(autoInterval);
-    updateDashboard(mode);
+    updateDashboard(btn.dataset.mode);
   });
 });
 
-// ===== PIPELINE‑LOADER =====
-async function loadPipeline() {
+// ===== DATEI-BROWSER =====
+async function loadFileList() {
+  const list = document.getElementById("file-list");
   try {
-    const sys = await fetch("./pipeline/sys/triangle.sys").then(r => r.text());
-    const tem = await fetch("./pipeline/quad.tem").then(r => r.text());
-    return { sys, tem };
+    const files = [
+      "CORE.load", "fin.e.js", "ready.js", "respo.js", "ID.html", "suite.html",
+      "Master-Kern/MASTER-SCANNER.html", "Master-Kern/system-check.item",
+      "visual/CONTINUUM.html", "visual/LAGE.html", "visual/ORT.html",
+      "core/iki1uc.html", "pipeline/pipeline.map", "RESPO/index.html",
+      "AXIS/nc.html", "AXIS/phi.html", "AXIS/phi2.html", "AXIS/phiinfty.html"
+    ];
+    list.innerHTML = files.map(f => `<a href="./${f}">📄 ${f}</a>`).join("");
   } catch {
-    return { sys: "nicht gefunden", tem: "nicht gefunden" };
+    list.innerHTML = "<span style='color:#ff3366;'>Fehler beim Laden</span>";
   }
 }
 
-// ===== ROOT‑KERN‑UPDATE =====
-async function startCore() {
-  const root = document.getElementById("root-kern");
-
-  // READY
-  const ready = READY();
-  root.innerText += "\nREADY: " + ready;
-
-  // PIPELINE
-  root.innerText += "\nPIPELINE: lädt…";
-  const { sys, tem } = await loadPipeline();
-  root.innerText += "\nPIPELINE: OK";
-  root.innerText += "\nSYS: " + (sys ? "geladen" : "fehlt");
-  root.innerText += "\nTEM: " + (tem ? "geladen" : "fehlt");
-
-  // AXIOM
-  const axiom = AXIOM_TRIANGLE({ value: 82, type: "NC" });
-  root.innerText += "\nAXIOM: " + JSON.stringify(axiom);
-
-  // RAUM
-  const raum = RAUM_KERNEL({
-    ZUG:"A1", BLATT:"ROOT", STATUS:"REAL", IST:"OK", NEU:"TMP"
-  });
-  root.innerText += "\nRAUM: " + JSON.stringify(raum);
-
-  // MOVE
-  const move = MOVE(raum);
-  root.innerText += "\nMOVE: " + JSON.stringify(move);
-
-  // MIND
-  const mind = MIND_LAYER(raum, true);
-  root.innerText += "\nMIND: " + JSON.stringify(mind);
-
-  // RESPO
-  root.innerText += "\nRESPO-AXIS: " + JSON.stringify(RESPO_AXIS);
-
-  // AEON
-  root.innerText += "\nAEON: " + mind.EBENE + " (Ordnung " + mind.ORDNUNG + ")";
-
-  root.innerText += "\nSTATUS: CORE abgeschlossen.";
+// ===== CLOCK =====
+function updateClock() {
+  const now = new Date();
+  document.getElementById("clock").innerText = "⏱️ " + now.toLocaleTimeString();
 }
 
-// ===== ORBIT + IDENTITY =====
-try {
-  const orbit = document.getElementById("orbit-status");
-  orbit.innerText = "Orbit: OK";
-} catch {}
-
-try {
-  const identity = document.getElementById("identity-status");
-  identity.innerText = "Identity: OK";
-} catch {}
-
-try {
-  const station = document.getElementById("station-status");
-  station.innerText = "Station: OK – alle Module verfügbar";
-} catch {}
-
 // ===== START =====
-startCore();
-
-// Dashboard initial auf GRID
+updateInstruments();
 updateDashboard("grid");
+loadFileList();
+updateClock();
+setInterval(updateClock, 1000);
 
-console.log("✅ iki1uc – Absolute Edition geladen.");
-console.log("📊 692‑Scale aktiv.");
-console.log("🧠 READY, MIND, AEON, RESPO‑S integriert.");
-console.log("🔄 Auto‑Switcher bereit.");
+console.log("☕ COCKPIT geladen – iki1uc Absolute Edition");
+console.log("📊 692 Repos · Ordnung 1–4 · AEON · RESPO‑S");
+console.log("🔄 Auto‑Switcher bereit");
 </script>
 
 </body>
