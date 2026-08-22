@@ -1,9 +1,0 @@
-<script type="module">
-import { lagePosition } from "../../TOOLOMAT/GEOMETRIA.js";
-
-function applyLAGEtoTime(Phi, phi, phi2, phiinfty){
-    const pos = lagePosition(Phi, phi, phi2, phiinfty);
-    document.getElementById("grid").style.transform =
-        `translate(${pos.x}px, ${pos.y}px)`;
-}
-</script>
