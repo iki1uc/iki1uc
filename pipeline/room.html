@@ -1,6 +1,17 @@
-<ROOM_PIPELINE>
-SOURCE: pipeline4
-TARGET: iki1uc.space
-CONTENT: PLACEMENT + DISTRIBUTION
-FLOW: AU → RA → iki1uc.space
-</ROOM_PIPELINE>
+<script type="module">
+    import { ROOM_PIPELINE } from "./pipeline/room.js";
+    import { PIPELINE4 } from "./pipeline/pipeline.js";
+
+    // Beispiel-Frame
+    const frame = { syn: 1, vec: 2, flx: 3 };
+
+    // Beispiel-Operator
+    const op = () => ({ warmup: { lanes: 2 } });
+
+    // Beispiel-RAW
+    const raw = { gpu: true, cpu: true };
+
+    const space = ROOM_PIPELINE.run(frame, op, raw);
+
+    console.log("iki1uc.space:", space);
+</script>
