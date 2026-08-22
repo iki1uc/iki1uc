@@ -15,6 +15,7 @@ input{width:100px;padding:6px;background:#111;color:#0f0;border:1px solid #333;m
 </head>
 <body>
 
+
 <h1>TOOLOMAT DOM – Struktur/Masse + Achsenbildung</h1>
 
 <!-- HTML-Scanner -->
@@ -40,6 +41,7 @@ input{width:100px;padding:6px;background:#111;color:#0f0;border:1px solid #333;m
 <pre id="out">Bereit...</pre>
 
 <script>
+// DOM-Scanner
 function scanHTML(html){
     const p=new DOMParser();
     const d=p.parseFromString(html,"text/html");
@@ -61,6 +63,19 @@ function scanHTML(html){
     };
 }
 
+// Herrschafts-Leitung
+function herrschaft(Phi, phi, phi2, phiinfty){
+    const M5 = (Phi + phi + phi2 + phiinfty) / 4;
+
+    return {
+        dominanz: Phi - phi,          // Verhältnis vs Rekursion
+        stabil: phi2,                 // Quadratur-Stabilität
+        weite: phiinfty,              // Unendlichkeits-Projektion
+        herrschaftsGrad: M5 * 12.5    // M₅ skaliert zur Herrschaft
+    };
+}
+
+// Hauptfunktion
 function scan(){
     const out=document.getElementById("out");
     out.textContent="";
@@ -103,22 +118,7 @@ function scan(){
         r+=`φ² (Quadratur / UC):         ${phi2}\n`;
         r+=`φ∞ (Unendlichkeit / MA³):    ${phiinfty}\n\n`;
 
-        r+=`M₅ = (Φ + φ + φ² + φ∞) / 4 = ${M5.toFixed(4)}\n\n`;
-
-        r+=`Einzelsicht:\n`;
-        r+=`- Φ  → Verhältnisbildung\n`;
-        r+=`- φ  → Rekursionstiefe\n`;
-        r+=`- φ² → Quadraturstabilität\n`;
-        r+=`- φ∞ → Unendlichkeitsprojektion\n\n`;
-
-        r+=`Daten bereit für FLÄCHEN-SCANNER 48 und Wiki Argumenteria.\n`;
-    } else {
-        r+=`(Keine Achsenwerte eingegeben – nur DOM-Scan ausgeführt.)\n`;
-    }
-
-    out.textContent=r;
-}
-</script>
+        r+=`M₅ = (Φ + φ + φ² + φ∞) / 4 =
 
 </body>
 </html>
