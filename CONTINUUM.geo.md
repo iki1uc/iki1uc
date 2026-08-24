@@ -1,0 +1,21 @@
+CONTINUUM:
+  SELF: C∞
+  USE: TMP:C∞.712
+  GEO: C∞
+
+  ZEIT: CLOCK.∞
+  SEQUENZ: ACTIVE
+  DYNAMIK: TRUE
+
+  RADAR: C∞R
+  SAT: C∞S
+  GEOPHYSIK: C∞G
+
+  U1: NOAH
+  U2: OS
+  U3: BOOT
+  U4: 243
+  U5: iki1uc
+  U6: SYS.VEC
+  U7: 3↺
+  U8: COORD0
