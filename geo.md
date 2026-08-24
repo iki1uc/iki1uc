@@ -24,16 +24,18 @@ iki1uc:
     - sorter.js
     - manager.js
 
-  KENNTNIS:
-    CONTINUUM: KNOWN
-    CONTINUUM.ROLE: ZEIT-SCHICHT
-    CONTINUUM.LINK: /CONTINUUM/geo.md
+  META:
+    KENNTNIS:
+      CONTINUUM: KNOWN
+      ROLE: ZEIT-SCHICHT
+      LINK: /CONTINUUM/geo.md
 
-  U1: NOAH
-  U2: OS
-  U3: BOOT
-  U4: 243
-  U5: iki1uc
-  U6: 3↺
-  U7: 81
-  U8: COORD0
+  U-ACHSEN:
+    U1: NOAH
+    U2: OS
+    U3: BOOT
+    U4: 243
+    U5: iki1uc
+    U6: 3↺
+    U7: 81
+    U8: COORD0
