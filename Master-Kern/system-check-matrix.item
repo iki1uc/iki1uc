@@ -1,6 +1,0 @@
-matrix.pipeline3: drift.ok | drift.fail
-matrix.pipeline6: fuse.ok | fuse.fail
-matrix.root: wait | empty | blocked
-matrix.lage: aktiv | neutral | missing
-matrix.visual: ok | missing
-matrix.modules: ok | missing
