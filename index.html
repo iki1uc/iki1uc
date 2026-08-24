@@ -208,28 +208,21 @@ function zeigeIki() {
         }
     }
     out.innerHTML = text;
-}
+<script type="module">
+import { NarrativMaschine } from './core/243-iki1uc-verbindung.js';
 
-function zeigeNarrativ() {
-    const out = document.getElementById('output-narrativ');
-    const text = maschine.textNarrativ();
-    out.innerHTML = text;
-    log('📖 Narrativ erzeugt', 'ok');
-}
+// dein kompletter Narrativ-Code bleibt hier unverändert
+</script>
 
-// --- Buttons ---
-document.getElementById('btn-243').addEventListener('click', () => {
-    const narrativ = maschine.verarbeiteAlle();
-    log(`🔺 243: ${narrativ.triolets.length} Triolets erzeugt`, 'two43');
-    zeige243();
-});
+<script type="module">
+import { VECTOR_SYSTEM } from './vector-system.js';
 
-document.getElementById('btn-iki').addEventListener('click', () => {
-    const n = maschine.zeigeNarrativ();
-    if (n.status === 'kein_narrativ') {
-        log('⚠️ Bitte zuerst 243 verarbeiten', 'ok');
-        return;
-    }
+// optional: VECTOR_SYSTEM starten
+VECTOR_SYSTEM.init?.();
+</script>
+</body>
+</html>
+
     maschine.master.sortiereNarrative(n.triolets);
     log('📊 iki1uc: Narrative sortiert', 'iki');
     zeigeIki();
