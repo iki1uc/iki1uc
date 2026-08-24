@@ -1,25 +1,39 @@
-## 🕒 CONTINUUM · ZEIT · SEQUENZ · GEO-PHYSIK
+# iki1uc.geo.md
+# König der Ordnung · Station 4
+# Ordnung · Struktur · Verwaltung · Sortierung
 
-CONTINUUM ist die Zeit- und Dynamikschicht des Kaisersystems.
-Es verbindet die 3⁹ Tiefenmatrix mit der 81 Oberflächenmatrix.
+iki1uc:
+  SELF: K4
+  USE: TMP:K4.712
+  GEO: K4
 
-CONTINUUM:
-  SELF: C∞
-  USE: TMP:C∞.712
-  GEO: C∞
+  TITEL: König der Ordnung
+  STATION: 4
+  ROLLE: Sortierung · Verwaltung · Struktur
 
-  ZEIT: CLOCK.∞
-  SEQUENZ: ACTIVE
-  DYNAMIK: TRUE
-  GEO-PHYSIK: C∞G
-  RADAR: ACTIVE
-  SAT: ACTIVE
+  LINIE:
+    - NOAH
+    - OS
+    - BOOT
+    - 243
+    - iki1uc
+    - NOAH
+
+  KOMPONENTEN:
+    - master.js
+    - sorter.js
+    - manager.js
+
+  KENNTNIS:
+    CONTINUUM: KNOWN
+    CONTINUUM.ROLE: ZEIT-SCHICHT
+    CONTINUUM.LINK: /CONTINUUM/geo.md
 
   U1: NOAH
   U2: OS
   U3: BOOT
   U4: 243
   U5: iki1uc
-  U6: 81
-  U7: 3↺
+  U6: 3↺
+  U7: 81
   U8: COORD0
