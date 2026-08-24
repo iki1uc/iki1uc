@@ -1,1 +1,98 @@
+document.addEventListener("DOMContentLoaded", async () => {
 
+  const CACHE = {
+    load: 0,
+    max: 360,
+    add(x) {
+      this.load += x;
+      if (this.load > this.max) this.load = this.max;
+    },
+    status() {
+      if (this.load < 120) return "STABIL";
+      if (this.load < 360) return "HOCH";
+      return "VOLL";
+    }
+  };
+
+  const AXIOM = 81;
+  const MATRIX = 692;
+
+  const ERROR_ROUTER = (path, reason) => {
+    window.location.href =
+      "./error.root.html?path=" + encodeURIComponent(path) +
+      "&reason=" + encodeURIComponent(reason) +
+      "&cache=" + CACHE.status() +
+      "&axiom=" + AXIOM +
+      "&matrix=" + MATRIX;
+  };
+
+  try {
+    // SYSTEM-CHECK
+    const resCheck = await fetch("./Master-Kern/system-check.item");
+    CACHE.add(36);
+
+    if (!resCheck.ok) {
+      ERROR_ROUTER("system-check.item", "missing");
+      return;
+    }
+
+    const checkText = await resCheck.text();
+
+    // LAGE CHECK
+    const lageOK =
+      checkText.includes("lage.state: aktiv") &&
+      checkText.includes("lage.real: gesetzt");
+
+    if (!lageOK) {
+      ERROR_ROUTER("lage", "lage-failed");
+      return;
+    }
+
+    // DRIFT/FUSE CHECK
+    const driftFuseOK =
+      checkText.includes("drift.ok") &&
+      checkText.includes("fuse.ok");
+
+    if (!driftFuseOK) {
+      ERROR_ROUTER("system-check.item", "drift-fuse-failed");
+      return;
+    }
+
+    // ROOT CHECK
+    const rootOK = checkText.includes("root.state: wait");
+    if (!rootOK) {
+      ERROR_ROUTER("system-check.item", "root-failed");
+      return;
+    }
+
+    // SYSTEM-SYNC
+    const resSync = await fetch("./Master-Kern/system-sync.item");
+    CACHE.add(36);
+
+    if (!resSync.ok) {
+      ERROR_ROUTER("system-sync.item", "missing");
+      return;
+    }
+
+    const syncText = await resSync.text();
+
+    const syncOK =
+      syncText.includes("sync.core: ok") &&
+      syncText.includes("sync.lage: ok") &&
+      syncText.includes("sync.respo: ok") &&
+      syncText.includes("sync.root: ok") &&
+      syncText.includes("sync.state: ready") &&
+      syncText.includes("sync.ready: 1");
+
+    if (!syncOK) {
+      ERROR_ROUTER("system-sync.item", "sync-failed");
+      return;
+    }
+
+    console.log("SYSTEM-CHECK: OK (36E)");
+
+  } catch {
+    ERROR_ROUTER("system-check.item", "exception");
+  }
+
+});
