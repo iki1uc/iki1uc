@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RESPO · MOTOR · PIPELINE9 · MIND</title>
+
+<style>
+:root {
+    --bg: #0a0a12;
+    --fg: #0ff;
+    --gold: #ffd700;
+    --respo: #ffd93d;
+    --mind: #ff66ff;
+    --pipe: #4f4;
+    --field: #6f6;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Consolas', monospace;
+    min-height: 100vh;
+    padding: 20px;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 12px;
+}
+
+header {
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+header h1 { color: var(--gold); font-size: 20px; letter-spacing: 3px; }
+header h1 .respo { color: var(--respo); }
+header h1 .pipe { color: var(--pipe); }
+header h1 .mind { color: var(--mind); }
+#clock { font-size: 12px; color: #666; }
+
+main {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 12px;
+}
+
+#motor {
+    background: #0a0a0f;
+    border: 1px solid #1a1a2a;
+    border-radius: 12px;
+    padding: 16px;
+    min-height: 400px;
+}
+
+#panel {
+    background: #0a0a0f;
+    border: 1px solid #1a1a2a;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.metric-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 6px;
+}
+.metric {
+    background: #0e0e1a;
+    border: 1px solid #1a1a2a;
+    border-radius: 6px;
+    padding: 8px;
+    text-align: center;
+}
+.metric .label { color: #666; font-size: 8px; text-transform: uppercase; }
+.metric .value { font-size: 16px; font-weight: bold; }
+.metric.respo .value { color: var(--respo); }
+.metric.mind .value { color: var(--mind); }
+.metric.pipe .value { color: var(--pipe); }
+.metric.field .value { color: var(--field); }
+
+#log {
+    background: #06060a;
+    border-radius: 6px;
+    padding: 8px;
+    max-height: 150px;
+    overflow-y: auto;
+    font-size: 9px;
+    color: #6a6a8a;
+    line-height: 1.4;
+    flex: 1;
+}
+
+#pipeline-status {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4px;
+    font-size: 9px;
+}
+.pipe-step {
+    background: #0e0e1a;
+    border: 1px solid #1a1a2a;
+    border-radius: 4px;
+    padding: 4px;
+    text-align: center;
+}
+.pipe-step .level { color: var(--gold); font-weight: bold; }
+.pipe-step .label { color: #666; font-size: 7px; }
+.pipe-step.active { border-color: var(--pipe); background: rgba(0,255,0,0.05); }
+
+button {
+    background: #111;
+    color: var(--fg);
+    border: 1px solid #333;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 10px;
+    transition: all 0.2s;
+}
+button:hover { border-color: var(--gold); background: #1a1a2a; }
+button.primary { border-color: var(--gold); color: var(--gold); }
+button.primary:hover { background: var(--gold); color: #000; }
+button.respo { border-color: var(--respo); color: var(--respo); }
+button.respo:hover { background: var(--respo); color: #000; }
+button.mind { border-color: var(--mind); color: var(--mind); }
+button.mind:hover { background: var(--mind); color: #000; }
+button.danger { border-color: #f44; color: #f44; }
+button.danger:hover { background: #f44; color: #000; }
+
+@media (max-width: 800px) {
+    main { grid-template-columns: 1fr; }
+    .metric-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+    <h1>
+        <span class="respo">◈ RESPO</span>
+        <span style="color:#666;">·</span>
+        <span class="pipe">⛭ PIPELINE9</span>
+        <span style="color:#666;">·</span>
+        <span class="mind">🧠 MIND</span>
+    </h1>
+    <div id="clock">⏱️ --:--:--</div>
+</header>
+
+<main>
+    <div id="motor">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+            <span style="color:#666;">🌀 RESPO-MOTOR · PIPELINE9 · MIND</span>
+            <span id="status-display" style="color:var(--gold);">● bereit</span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;height:calc(100% - 30px);">
+            <div style="background:#0e0e1a;border:1px solid #1a1a2a;border-radius:6px;padding:12px;text-align:center;">
+                <div style="font-size:9px;color:#666;">RESPO · φ</div>
+                <div style="font-size:28px;color:var(--respo);" id="respo-display">0.00</div>
+            </div>
+            <div style="background:#0e0e1a;border:1px solid #1a1a2a;border-radius:6px;padding:12px;text-align:center;">
+                <div style="font-size:9px;color:#666;">🧠 MIND</div>
+                <div style="font-size:28px;color:var(--mind);" id="mind-display">0.00</div>
+            </div>
+            <div style="background:#0e0e1a;border:1px solid #1a1a2a;border-radius:6px;padding:12px;text-align:center;grid-column:1/3;">
+                <div style="font-size:9px;color:#666;">PIPELINE9 · 3 → 9 → 27 → 81</div>
+                <div style="font-size:18px;color:var(--pipe);" id="pipeline-display">⛭ 3 → 9 → 27 → 81</div>
+            </div>
+        </div>
+
+        <div id="pipeline-status">
+            <div class="pipe-step active"><div class="level">3</div><div class="label">Grund</div></div>
+            <div class="pipe-step"><div class="level">9</div><div class="label">Erweiterung</div></div>
+            <div class="pipe-step"><div class="level">27</div><div class="label">Motor</div></div>
+        </div>
+    </div>
+
+    <div id="panel">
+        <div class="metric-grid">
+            <div class="metric respo"><div class="label">◈ RESPO</div><div class="value" id="respo-value">0.00</div></div>
+            <div class="metric mind"><div class="label">🧠 MIND</div><div class="value" id="mind-value">0.00</div></div>
+            <div class="metric pipe"><div class="label">⛭ PIPE</div><div class="value" id="pipe-value">3</div></div>
+            <div class="metric field"><div class="label">🌿 FIELD</div><div class="value" id="field-value">—</div></div>
+        </div>
+
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button class="primary" id="btn-start">▶ START</button>
+            <button class="respo" id="btn-respo">◈ RESPO</button>
+            <button class="mind" id="btn-mind">🧠 MIND</button>
+            <button id="btn-pipe">⛭ PIPE STEP</button>
+            <button class="danger" id="btn-reset">⟲ RESET</button>
+        </div>
+
+        <div id="log">
+            <div class="entry">[INIT] ◈ RESPO · PIPELINE9 · MIND</div>
+        </div>
+    </div>
+</main>
+
+<script type="module">
+// ============================================================
+// RESPO · MOTOR · PIPELINE9 · MIND
+// ============================================================
+
+// ─── KONSTANTEN ──────────────────────────────────────────────
+const PHI = 1.61803398875;
+
+// ─── MIND (versteckt, aber aktiv) ──────────────────────────
+const MIND = {
+    qi: 50,
+    iqq: 0.5,
+    flow: 0.5,
+    stabilität: 0.5,
+
+    absorb(vektoren) {
+        const sum = Object.values(vektoren).reduce((a, b) => a + b, 0);
+        this.qi = Math.min(100, this.qi + sum * 2);
+        this.iqq = Math.min(1, this.iqq + sum * 0.01);
+        this.flow = Math.min(1, this.flow + sum * 0.02);
+        this.stabilität = 1 - Math.abs(this.flow - this.iqq);
+        return this.status();
+    },
+
+    status() {
+        return { qi: this.qi, iqq: this.iqq, flow: this.flow, stabilität: this.stabilität };
+    }
+};
+
+// ─── STATE ────────────────────────────────────────────────────
+const state = {
+    running: false,
+    cycle: 0,
+    respo: 0.5,
+    mind: MIND,
+    pipeLevel: 3,
+    field: { status: 'inaktiv' }
+};
+
+// ─── DOM ──────────────────────────────────────────────────────
+const logDiv = document.getElementById('log');
+const respoDisplay = document.getElementById('respo-display');
+const mindDisplay = document.getElementById('mind-display');
+const pipelineDisplay = document.getElementById('pipeline-display');
+const respoValue = document.getElementById('respo-value');
+const mindValue = document.getElementById('mind-value');
+const pipeValue = document.getElementById('pipe-value');
+const fieldValue = document.getElementById('field-value');
+const statusDisplay = document.getElementById('status-display');
+
+// ─── LOG ──────────────────────────────────────────────────────
+function log(msg) {
+    const entry = document.createElement('div');
+    entry.className = 'entry';
+    const zeit = new Date().toLocaleTimeString();
+    entry.innerHTML = `<span style="color:#444;">[${zeit}]</span> ${msg}`;
+    logDiv.appendChild(entry);
+    logDiv.scrollTop = logDiv.scrollHeight;
+    while (logDiv.children.length > 30) logDiv.removeChild(logDiv.firstChild);
+}
+
+// ─── RESPO BERECHNEN ─────────────────────────────────────────
+function computeRespo() {
+    const mindStatus = MIND.status();
+    const raw = (mindStatus.qi / 100 + mindStatus.iqq) / PHI;
+    return Math.min(1, Math.max(0, raw * 1.618));
+}
+
+// ─── UPDATE ──────────────────────────────────────────────────
+function updateUI() {
+    state.respo = computeRespo();
+    const mindStatus = MIND.status();
+
+    respoDisplay.textContent = state.respo.toFixed(3);
+    mindDisplay.textContent = mindStatus.qi.toFixed(0);
+    pipelineDisplay.textContent = `⛭ ${state.pipeLevel} → ${state.pipeLevel * 3} → ${state.pipeLevel * 9}`;
+    respoValue.textContent = state.respo.toFixed(3);
+    mindValue.textContent = mindStatus.qi.toFixed(0);
+    pipeValue.textContent = state.pipeLevel;
+    fieldValue.textContent = state.field.status;
+
+    statusDisplay.textContent = state.running ? '● läuft' : '● bereit';
+    statusDisplay.style.color = state.running ? 'var(--gold)' : '#666';
+
+    // Pipeline-Status
+    const steps = document.querySelectorAll('.pipe-step');
+    const level = state.pipeLevel;
+    steps.forEach((step, i) => {
+        const stepLevel = [3, 9, 27][i];
+        step.classList.toggle('active', level >= stepLevel);
+    });
+}
+
+// ─── PIPELINE STEP ──────────────────────────────────────────
+function pipeStep() {
+    const levels = [3, 9, 27, 81];
+    const currentIndex = levels.indexOf(state.pipeLevel);
+    const nextIndex = (currentIndex + 1) % levels.length;
+    state.pipeLevel = levels[nextIndex];
+    log(`⛭ PIPELINE: Level ${state.pipeLevel}`);
+    updateUI();
+}
+
+// ─── MIND ABSORBIEREN ──────────────────────────────────────
+function mindAbsorb() {
+    const vektoren = {
+        tiefe: 0.5 + Math.random() * 0.2,
+        energie: 0.5 + Math.random() * 0.2,
+        flow: 0.5 + Math.random() * 0.2,
+        pover: 0.5 + Math.random() * 0.2,
+        schlag: 0.5 + Math.random() * 0.2,
+        ankunft: 0.5 + Math.random() * 0.2
+    };
+    const result = MIND.absorb(vektoren);
+    log(`🧠 MIND: QI=${result.qi.toFixed(0)} IQQ=${result.iqq.toFixed(2)} Flow=${result.flow.toFixed(2)} Stab=${result.stabilität.toFixed(2)}`);
+    updateUI();
+}
+
+// ─── RESET ──────────────────────────────────────────────────
+function resetSystem() {
+    state.running = false;
+    state.cycle = 0;
+    state.pipeLevel = 3;
+    MIND.qi = 50;
+    MIND.iqq = 0.5;
+    MIND.flow = 0.5;
+    MIND.stabilität = 0.5;
+    state.field.status = 'inaktiv';
+    document.getElementById('btn-start').textContent = '▶ START';
+    log('⟲ RESET: System zurückgesetzt');
+    updateUI();
+}
+
+// ─── EVENTS ──────────────────────────────────────────────────
+document.getElementById('btn-start').addEventListener('click', function() {
+    state.running = !state.running;
+    this.textContent = state.running ? '⏸ STOP' : '▶ START';
+    log(state.running ? '▶ RESPO-MOTOR gestartet' : '⏸ RESPO-MOTOR gestoppt');
+    if (state.running) {
+        state.cycle++;
+        state.field.status = 'aktiv (C81)';
+        log(`🌀 Zyklus ${state.cycle} · FIELD aktiv`);
+        mindAbsorb();
+    }
+    updateUI();
+});
+
+document.getElementById('btn-respo').addEventListener('click', function() {
+    state.respo = computeRespo();
+    log(`◈ RESPO = ${state.respo.toFixed(3)}`);
+    updateUI();
+});
+
+document.getElementById('btn-mind').addEventListener('click', mindAbsorb);
+
+document.getElementById('btn-pipe').addEventListener('click', pipeStep);
+
+document.getElementById('btn-reset').addEventListener('click', resetSystem);
+
+// ─── UHR ──────────────────────────────────────────────────────
+function updateClock() {
+    document.getElementById('clock').textContent = `⏱️ ${new Date().toLocaleTimeString()}`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ─── INIT ────────────────────────────────────────────────────
+log('◈ RESPO · PIPELINE9 · MIND geladen');
+log('🧠 MIND versteckt, aber aktiv');
+log('⛭ PIPELINE: 3 → 9 → 27 → 81');
+log('🌿 FIELD: C81 bereit');
+updateUI();
+
+console.log('◈ RESPO · PIPELINE9 · MIND');
+console.log('🧠 MIND:', MIND.status());
+</script>
+</body>
+</html>
