@@ -3,155 +3,84 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🔺 243 + iki1uc · Narrativ-Maschine</title>
+<title>iki1uc · Cockpit · Admin‑0 · 243 · Narrativ</title>
 
 <style>
-/* dein kompletter Style bleibt unverändert */
+  body { background:#000; color:#eee; font-family:Consolas; padding:20px; }
+  h1 { text-align:center; color:#ffdd00; }
+  .card {
+    background:#111; border:1px solid #333;
+    padding:15px; margin:15px 0; border-radius:8px;
+  }
+  .output {
+    background:#000; border:1px solid #444;
+    padding:10px; margin-top:10px; white-space:pre;
+    font-size:14px; color:#9cf;
+  }
+  .btn {
+    padding:8px 14px; background:#00eaff; color:#000;
+    border-radius:6px; border:none; cursor:pointer;
+    margin-right:6px; margin-top:6px; font-weight:bold;
+  }
+  .btn:hover { background:#00bcd4; }
 </style>
 </head>
+
 <body>
 
-<header>
-    <h1>
-        <span class="two43">243</span>
-        <span style="color:#666;"> + </span>
-        <span class="iki">iki1uc</span>
-        <span style="color:#666;"> → NARRATIV</span>
-    </h1>
-</header>
-<div class="card" id="admin0-card">
-  <h3>🟥 ADMIN‑0 · Cockpit</h3>
+<h1>iki1uc · Admin‑0 Cockpit</h1>
+
+<!-- ADMIN‑0 -->
+<div class="card">
+  <h3>🟥 ADMIN‑0</h3>
+  <button class="btn" id="btn-admin0">ADMIN‑0 anzeigen</button>
   <div id="output-admin0" class="output">⏳ Admin‑0 bereit…</div>
-  <button id="btn-admin0" class="primary">ADMIN‑0 anzeigen</button>
 </div>
 
-<div id="dashboard">
-    <!-- deine Cards bleiben unverändert -->
+<!-- 243 -->
+<div class="card">
+  <h3>🔺 243 · Engine</h3>
+  <button class="btn" id="btn-243">243 starten</button>
+  <div id="output-243" class="output">⏳ 243 wartet…</div>
+</div>
+
+<!-- iki1uc -->
+<div class="card">
+  <h3>📊 iki1uc · Sortierung</h3>
+  <button class="btn" id="btn-iki">iki1uc starten</button>
+  <div id="output-iki" class="output">⏳ iki1uc wartet…</div>
+</div>
+
+<!-- Narrativ -->
+<div class="card">
+  <h3>📖 Narrativ</h3>
+  <button class="btn" id="btn-narrativ">Narrativ erzeugen</button>
+  <div id="output-narrativ" class="output">⏳ Narrativ wartet…</div>
+</div>
+
+<!-- Energie‑Richter -->
+<div class="card">
+  <h3>⚡ Energie‑Richter</h3>
+  <button class="btn" id="btn-richter">Richter starten</button>
+  <div id="output-richter" class="output">⏳ Richter wartet…</div>
 </div>
 
 <script type="module">
-import { NarrativMaschine } from './core/243-iki1uc-verbindung.js';
 
-// --- Kandidaten ---
-const kandidaten = [
-  'a','b','c','y','x','z','q','d','f',
-  'OS','BOOT','iki1uc','243',
-  'DOOR','DOO','RESPO','NC.engine',
-  'SCORE','WETTE','SLIDE','AXIOM'
-];
-
-// --- Maschine ---
-const maschine = new NarrativMaschine();
-maschine.addKandidaten(kandidaten);
-
-// --- Log ---
-function log(msg, type='ok') {
-    const logDiv = document.getElementById('log');
-    const entry = document.createElement('div');
-    entry.className = 'entry';
-    const time = new Date().toLocaleTimeString();
-    const cls = type === 'two43' ? 'two43' : type === 'iki' ? 'iki' : 'ok';
-    entry.innerHTML = `<span class="time">[${time}]</span> <span class="msg ${cls}">${msg}</span>`;
-    logDiv.appendChild(entry);
-    logDiv.scrollTop = logDiv.scrollHeight;
-    while (logDiv.children.length > 30) logDiv.removeChild(logDiv.firstChild);
-}
-
-// --- Ausgabe 243 ---
-function zeige243() {
-    const out = document.getElementById('output-243');
-    const narrative = maschine.engine243.zeigeNarrative();
-    if (!narrative.length) {
-        out.innerHTML = '⏳ Keine Triolets erzeugt.';
-        return;
-    }
-    let text = `📐 ${narrative.length} Triolets erzeugt\n\n`;
-    narrative.forEach((t, i) => {
-        if (t.status === 'triolet') {
-            text += `${i+1}. ${t.ecke1} ↔ ${t.ecke2} ↔ ${t.ecke3}\n`;
-            text += `   Gewicht: ${t.gewicht}\n`;
-        }
-    });
-    out.innerHTML = text;
-}
-
-// --- Ausgabe iki1uc ---
-function zeigeIki() {
-    const out = document.getElementById('output-iki');
-    const sortierung = maschine.master.sortierung;
-
-    if (!Object.keys(sortierung).length) {
-        out.innerHTML = '⏳ Keine Sortierung vorhanden.';
-        return;
-    }
-
-    let text = `📊 Sortierung:\n`;
-    text += `  🔴 Schwer: ${sortierung.schwer?.length || 0}\n`;
-    text += `  🟡 Mittel: ${sortierung.mittel?.length || 0}\n`;
-    text += `  🟢 Leicht: ${sortierung.leicht?.length || 0}\n\n`;
-
-    for (const [kategorie, items] of Object.entries(sortierung)) {
-        if (items?.length) {
-            text += `\n${kategorie}:\n`;
-            items.forEach(item => {
-                text += `  - ${item.ecke1} ↔ ${item.ecke2} ↔ ${item.ecke3}\n`;
-            });
-        }
-    }
-    out.innerHTML = text;
-}
-
-// --- Ausgabe Narrativ ---
-function zeigeNarrativ() {
-    const out = document.getElementById('output-narrativ');
-    out.innerHTML = maschine.textNarrativ();
-    log('📖 Narrativ erzeugt');
-}
-
-// --- Buttons ---
-document.getElementById('btn-243').onclick = () => {
-    const narrativ = maschine.verarbeiteAlle();
-    log(`🔺 243: ${narrativ.triolets.length} Triolets erzeugt`, 'two43');
-    zeige243();
-};
-
-document.getElementById('btn-iki').onclick = () => {
-    const n = maschine.zeigeNarrativ();
-    if (n.status === 'kein_narrativ') {
-        log('⚠️ Bitte zuerst 243 verarbeiten');
-        return;
-    }
-    maschine.master.sortiereNarrative(n.triolets);
-    log('📊 iki1uc: Narrative sortiert', 'iki');
-    zeigeIki();
-};
-
-document.getElementById('btn-narrativ').onclick = () => {
-    const n = maschine.zeigeNarrativ();
-    if (n.status === 'kein_narrativ') {
-        log('⚠️ Bitte zuerst 243 verarbeiten');
-        return;
-    }
-    zeigeNarrativ();
-};
-
-// --- Auto ---
-log(`🔺 ${kandidaten.length} Kandidaten geladen`);
-log(`📐 ${Math.floor(kandidaten.length / 3)} Dreiecke möglich`);
-
-setTimeout(() => {
-    document.getElementById('btn-243').click();
-    setTimeout(() => document.getElementById('btn-iki').click(), 500);
-    setTimeout(() => document.getElementById('btn-narrativ').click(), 1000);
-}, 500);
-// ============================================================
-// ADMIN‑0 · COCKPIT · ROOT
-// ============================================================
-
+// READY + ADMIN‑0
+import { READY } from './ready.js';
 import { MXU } from './engine/mxu.js';
 import { AXINXA } from './engine/AXINXA.js';
 import { SLI } from './engine/SLI.js';
 
+// 243 + iki1uc
+import { NarrativMaschine } from './core/243-iki1uc-verbindung.js';
+
+// VECTOR
+import { VECTOR_SYSTEM } from './vector-system.js';
+VECTOR_SYSTEM.init?.();
+
+// ADMIN‑0 erzeugen
 const ADMIN0 = MXU.init();
 AXINXA.attach(ADMIN0);
 SLI.attach(ADMIN0);
@@ -171,25 +100,72 @@ ADMIN0.cockpit = {
   decision: null
 };
 
-function showAdmin0(){
-  document.getElementById('output-admin0').innerText =
-    JSON.stringify(ADMIN0, null, 2);
-  log("🟥 ADMIN‑0 Cockpit geöffnet");
-}
+// Maschine
+const maschine = new NarrativMaschine();
+maschine.addKandidaten([
+  'a','b','c','y','x','z','q','d','f',
+  'OS','BOOT','iki1uc','243',
+  'DOOR','DOO','RESPO','NC.engine',
+  'SCORE','WETTE','SLIDE','AXIOM'
+]);
 
-document.getElementById('btn-admin0').onclick = showAdmin0;
+// Energie‑Richter
+const RICHTER = {
+  energie: 0,
+  zustand: 'idle',
+  entscheidung: null,
+
+  bewerte(t){
+    const e = t.gewicht * 0.618;
+    this.energie += e;
+    this.zustand = e > 1.5 ? 'hoch' : 'niedrig';
+  },
+
+  entscheide(){
+    if(this.energie > 20) this.entscheidung = "GÜLTIG";
+    else if(this.energie > 10) this.entscheidung = "MÖGLICH";
+    else this.entscheidung = "UNSICHER";
+
+    ADMIN0.cockpit.energy = this.energie;
+    ADMIN0.cockpit.decision = this.entscheidung;
+    ADMIN0.score.eval = this.energie;
+    ADMIN0.sli_addScore(this.energie);
+  }
+};
+
+// Buttons
 document.getElementById('btn-admin0').onclick = () => {
   document.getElementById('output-admin0').innerText =
     JSON.stringify(ADMIN0, null, 2);
-  log("🟥 ADMIN‑0 Cockpit geöffnet");
 };
 
+document.getElementById('btn-243').onclick = () => {
+  const n = maschine.verarbeiteAlle();
+  document.getElementById('output-243').innerText =
+    JSON.stringify(n.triolets, null, 2);
+};
 
-</script>
+document.getElementById('btn-iki').onclick = () => {
+  const n = maschine.zeigeNarrativ();
+  maschine.master.sortiereNarrative(n.triolets);
+  document.getElementById('output-iki').innerText =
+    JSON.stringify(maschine.master.sortierung, null, 2);
+};
 
-<script type="module">
-import { VECTOR_SYSTEM } from './vector-system.js';
-VECTOR_SYSTEM.init?.();
+document.getElementById('btn-narrativ').onclick = () => {
+  document.getElementById('output-narrativ').innerText =
+    maschine.textNarrativ();
+};
+
+document.getElementById('btn-richter').onclick = () => {
+  const n = maschine.zeigeNarrativ();
+  RICHTER.energie = 0;
+  for(const t of n.triolets) RICHTER.bewerte(t);
+  RICHTER.entscheide();
+  document.getElementById('output-richter').innerText =
+    JSON.stringify(RICHTER, null, 2);
+};
+
 </script>
 
 </body>
