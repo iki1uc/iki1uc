@@ -3,170 +3,638 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>iki1uc · Cockpit · Admin‑0 · 243 · Narrativ</title>
+<title>🧲 MAGNETO · PILOT · ADMIN-0 · DEEP SPACE NINE</title>
 
 <style>
-  body { background:#000; color:#eee; font-family:Consolas; padding:20px; }
-  h1 { text-align:center; color:#ffdd00; }
-  .card {
-    background:#111; border:1px solid #333;
-    padding:15px; margin:15px 0; border-radius:8px;
-  }
-  .output {
-    background:#000; border:1px solid #444;
-    padding:10px; margin-top:10px; white-space:pre;
-    font-size:14px; color:#9cf;
-  }
-  .btn {
-    padding:8px 14px; background:#00eaff; color:#000;
-    border-radius:6px; border:none; cursor:pointer;
-    margin-right:6px; margin-top:6px; font-weight:bold;
-  }
-  .btn:hover { background:#00bcd4; }
+:root {
+    --bg: #0a0a12;
+    --fg: #0ff;
+    --gold: #ffd700;
+    --step1: #f44;
+    --step2: #4f4;
+    --step3: #4ff;
+    --step4: #f4f;
+    --step5: #ff4;
+    --step6: #44f;
+    --orbit: #6b6bff;
+    --suite: #ff66ff;
+    --commander: #ff8c00;
+    --admin0: #ff0044;
+    --magneto: #ff00ff;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Consolas', monospace;
+    min-height: 100vh;
+    padding: 10px;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 8px;
+}
+
+header {
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+header h1 {
+    font-size: 20px;
+    color: var(--gold);
+    letter-spacing: 3px;
+}
+header h1 .magneto { color: var(--magneto); }
+header h1 .pilot { color: var(--commander); }
+header h1 .admin0 { color: var(--admin0); }
+#clock { font-size: 12px; color: #666; }
+
+main {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 8px;
+    height: 100%;
+    min-height: 400px;
+}
+
+#cockpit {
+    background: #0a0a0f;
+    border: 1px solid #1a1a2a;
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+#orbit-suite {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+.orbit-card {
+    background: #0e0e1a;
+    border: 1px solid #1a1a2a;
+    border-radius: 6px;
+    padding: 8px;
+    text-align: center;
+}
+.orbit-card .symbol { font-size: 20px; display: block; }
+.orbit-card .name { color: var(--gold); font-size: 9px; margin: 2px 0; }
+.orbit-card .wert { color: var(--fg); font-size: 14px; font-weight: bold; }
+.orbit-card.orbit .wert { color: var(--orbit); }
+.orbit-card.suite .wert { color: var(--suite); }
+.orbit-card.commander .wert { color: var(--commander); }
+.orbit-card.admin0 .wert { color: var(--admin0); }
+
+#pipeline-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 4px;
+    margin-bottom: 6px;
+}
+.pipe-step {
+    background: #0e0e1a;
+    border: 1px solid #1a1a2a;
+    border-radius: 4px;
+    padding: 4px;
+    text-align: center;
+    font-size: 8px;
+    color: #666;
+}
+.pipe-step .level { color: var(--gold); font-weight: bold; font-size: 12px; }
+.pipe-step.active { border-color: var(--fg); background: #0f1a1a; }
+.pipe-step.active .level { color: var(--fg); }
+
+#narrativ-box {
+    background: #0e0e1a;
+    border: 1px solid #1a1a2a;
+    border-radius: 4px;
+    padding: 6px;
+    text-align: center;
+    font-size: 9px;
+    color: #666;
+}
+#narrativ-box .title { color: var(--gold); font-weight: bold; }
+#narrativ-box .content { color: var(--fg); font-size: 11px; margin-top: 2px; }
+
+#controls {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+button {
+    background: #111;
+    color: var(--fg);
+    border: 1px solid #333;
+    padding: 4px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 9px;
+    transition: all 0.2s;
+}
+button:hover { border-color: var(--gold); background: #1a1a2a; }
+button.primary { border-color: var(--gold); color: var(--gold); }
+button.primary:hover { background: var(--gold); color: #000; }
+button.speed { border-color: var(--commander); color: var(--commander); }
+button.speed:hover { background: var(--commander); color: #000; }
+button.orbit { border-color: var(--orbit); color: var(--orbit); }
+button.orbit:hover { background: var(--orbit); color: #000; }
+button.suite { border-color: var(--suite); color: var(--suite); }
+button.suite:hover { background: var(--suite); color: #000; }
+button.admin0 { border-color: var(--admin0); color: var(--admin0); }
+button.admin0:hover { background: var(--admin0); color: #000; }
+button.magneto { border-color: var(--magneto); color: var(--magneto); }
+button.magneto:hover { background: var(--magneto); color: #000; }
+button.danger { border-color: #f44; color: #f44; }
+button.danger:hover { background: #f44; color: #000; }
+
+#log {
+    flex: 1;
+    overflow-y: auto;
+    font-size: 8px;
+    color: #6a6a8a;
+    line-height: 1.3;
+    min-height: 60px;
+    max-height: 120px;
+    background: #06060a;
+    border-radius: 4px;
+    padding: 4px 6px;
+    margin-top: 4px;
+}
+#log .entry { padding: 1px 0; border-bottom: 1px solid #0a0a12; }
+#log .time { color: #444; }
+#log .msg.ok { color: #4f4; }
+#log .msg.speed { color: var(--commander); }
+#log .msg.orbit { color: var(--orbit); }
+#log .msg.suite { color: var(--suite); }
+#log .msg.admin0 { color: var(--admin0); }
+#log .msg.magneto { color: var(--magneto); }
+#log .msg.narrativ { color: var(--gold); }
+
+#panel {
+    background: #0a0a0f;
+    border: 1px solid #1a1a2a;
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+#panel h3 { font-size: 10px; color: #666; border-bottom: 1px solid #1a1a2a; padding-bottom: 4px; }
+
+.status-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    font-size: 9px;
+    color: #666;
+}
+.status-grid .wert { color: var(--fg); }
+.status-grid .gold { color: var(--gold); }
+
+.console {
+    background: #111;
+    border: 1px solid #333;
+    padding: 8px;
+    font-size: 9px;
+    white-space: pre-wrap;
+    min-height: 80px;
+    border-radius: 4px;
+    color: #0f0;
+    margin-top: 4px;
+    overflow-y: auto;
+    max-height: 150px;
+}
+
+#admin0-status {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4px;
+    font-size: 8px;
+}
+.admin0-item {
+    background: #0e0e1a;
+    border: 1px solid #1a1a2a;
+    border-radius: 4px;
+    padding: 4px;
+    text-align: center;
+}
+.admin0-item .label { color: #666; }
+.admin0-item .value { color: var(--gold); font-weight: bold; }
+
+@media (max-width: 800px) {
+    main { grid-template-columns: 1fr; }
+    #orbit-suite { grid-template-columns: 1fr 1fr; }
+    #pipeline-grid { grid-template-columns: 1fr 1fr; }
+}
 </style>
 </head>
-
 <body>
 
-<h1>iki1uc · Admin‑0 Cockpit</h1>
+<header>
+    <h1>
+        <span class="magneto">🧲 MAGNETO</span>
+        <span style="color:#666;">·</span>
+        <span class="pilot">🚀 PILOT</span>
+        <span style="color:#666;">·</span>
+        <span class="admin0">🟥 ADMIN-0</span>
+        <span style="color:#666;">·</span>
+        <span style="color:var(--step3);">DEEP SPACE NINE</span>
+    </h1>
+    <div>
+        <span id="clock">⏱️ --:--:--</span>
+        <span style="margin-left:12px;color:#666;" id="cycle-count">CYC 0</span>
+    </div>
+</header>
 
-<!-- ADMIN‑0 -->
-<div class="card">
-  <h3>🟥 ADMIN‑0</h3>
-  <button class="btn" id="btn-admin0">ADMIN‑0 anzeigen</button>
-  <div id="output-admin0" class="output">⏳ Admin‑0 bereit…</div>
-</div>
+<main>
+    <div id="cockpit">
+        <h2 style="color:var(--commander);font-size:13px;margin-bottom:4px;">🧲 MAGNETO · PILOT · ADMIN-0 · COCKPIT</h2>
 
-<!-- 243 -->
-<div class="card">
-  <h3>🔺 243 · Engine</h3>
-  <button class="btn" id="btn-243">243 starten</button>
-  <div id="output-243" class="output">⏳ 243 wartet…</div>
-</div>
+        <!-- Orbit · Suite · Commander · Admin0 -->
+        <div id="orbit-suite">
+            <div class="orbit-card orbit">
+                <span class="symbol">🔄</span>
+                <div class="name">ORBIT</div>
+                <div class="wert" id="orbit-wert">0.00</div>
+            </div>
+            <div class="orbit-card suite">
+                <span class="symbol">🎭</span>
+                <div class="name">SUITE</div>
+                <div class="wert" id="suite-wert">0.00</div>
+            </div>
+            <div class="orbit-card commander">
+                <span class="symbol">⚡</span>
+                <div class="name">COMMANDER</div>
+                <div class="wert" id="commander-wert">0.00</div>
+            </div>
+            <div class="orbit-card admin0">
+                <span class="symbol">🟥</span>
+                <div class="name">ADMIN-0</div>
+                <div class="wert" id="admin0-wert">0.00</div>
+            </div>
+        </div>
 
-<!-- iki1uc -->
-<div class="card">
-  <h3>📊 iki1uc · Sortierung</h3>
-  <button class="btn" id="btn-iki">iki1uc starten</button>
-  <div id="output-iki" class="output">⏳ iki1uc wartet…</div>
-</div>
+        <!-- Pipeline -->
+        <div id="pipeline-grid">
+            <div class="pipe-step active"><div class="level">3</div>Grund</div>
+            <div class="pipe-step"><div class="level">9</div>Erweiterung</div>
+            <div class="pipe-step"><div class="level">27</div>Motor</div>
+            <div class="pipe-step"><div class="level">81</div>Vollendung</div>
+        </div>
 
-<!-- Narrativ -->
-<div class="card">
-  <h3>📖 Narrativ</h3>
-  <button class="btn" id="btn-narrativ">Narrativ erzeugen</button>
-  <div id="output-narrativ" class="output">⏳ Narrativ wartet…</div>
-</div>
+        <!-- Narrativ Box -->
+        <div id="narrativ-box">
+            <div class="title">📖 NARRATIV</div>
+            <div class="content" id="narrativ-content">⏳ Narrativ wird erzeugt…</div>
+        </div>
 
-<!-- Energie‑Richter -->
-<div class="card">
-  <h3>⚡ Energie‑Richter</h3>
-  <button class="btn" id="btn-richter">Richter starten</button>
-  <div id="output-richter" class="output">⏳ Richter wartet…</div>
-</div>
+        <!-- Controls -->
+        <div id="controls">
+            <button class="speed" id="btn-speed">⚡ SPEED</button>
+            <button class="orbit" id="btn-orbit">🔄 ORBIT</button>
+            <button class="suite" id="btn-suite">🎭 SUITE</button>
+            <button class="admin0" id="btn-admin0">🟥 ADMIN-0</button>
+            <button class="magneto" id="btn-magneto">🧲 MAGNETO</button>
+            <button class="primary" id="btn-narrativ">📖 NARRATIV</button>
+            <button class="primary" id="btn-pulse">▶ PULSE</button>
+            <button class="danger" id="btn-reset">⟲ RESET</button>
+        </div>
 
-<script type="module">
+        <!-- Log -->
+        <div id="log">
+            <div class="entry"><span class="time">[INIT]</span> <span class="msg ok">🧲 MAGNETO · PILOT · ADMIN-0 · DEEP SPACE NINE</span></div>
+            <div class="entry"><span class="time">[INIT]</span> <span class="msg speed">🚀 PILOT aktiv</span></div>
+            <div class="entry"><span class="time">[INIT]</span> <span class="msg admin0">🟥 ADMIN-0 bereit</span></div>
+        </div>
 
-// READY + ADMIN‑0
-import { READY } from './ready.js';
-import { MXU } from './engine/mxu.js';
-import { AXINXA } from './engine/AXINXA.js';
-import { SLI } from './engine/SLI.js';
+        <div class="console" id="commander-out">🧲 MAGNETO · Bereit für Deep-Space-Nine-Lösungen…</div>
+    </div>
 
-// 243 + iki1uc
-import { NarrativMaschine } from './core/243-iki1uc-verbindung.js';
+    <div id="panel">
+        <h3>📊 STATUS · ADMIN-0</h3>
+        <div class="status-grid">
+            <div>Orbit: <span class="gold" id="orbit-status">0.00</span></div>
+            <div>Suite: <span class="gold" id="suite-status">0.00</span></div>
+            <div>Commander: <span class="gold" id="cmd-status">0.00</span></div>
+            <div>Admin-0: <span class="gold" id="admin0-status-value">0.00</span></div>
+            <div>Pipeline: <span class="gold" id="pipe-status">3</span></div>
+            <div>Energie: <span class="gold" id="energy-status">0.00</span></div>
+        </div>
 
-// VECTOR
-import { VECTOR_SYSTEM } from './vector-system.js';
-VECTOR_SYSTEM.init?.();
+        <div id="admin0-status">
+            <div class="admin0-item"><div class="label">AXIOM</div><div class="value" id="axiom-status">—</div></div>
+            <div class="admin0-item"><div class="label">SCORE</div><div class="value" id="score-status">0</div></div>
+            <div class="admin0-item"><div class="label">DECISION</div><div class="value" id="decision-status">—</div></div>
+        </div>
 
-// ADMIN‑0 erzeugen
-const ADMIN0 = MXU.init();
-AXINXA.attach(ADMIN0);
-SLI.attach(ADMIN0);
+        <div style="display:flex;gap:6px;font-size:8px;color:#666;border-top:1px solid #1a1a2a;padding-top:4px;">
+            <span>🔴 <span id="status-led" style="color:#4f4;">●</span> aktiv</span>
+            <span>⚡ <span id="speed-count">0</span> Befehle</span>
+            <span>🧲 <span id="magneto-status">●</span></span>
+        </div>
+    </div>
+</main>
 
-ADMIN0.cockpit = {
-  control: "ACTIVE",
-  industry: "6.0",
-  economy: "IDLE",
-  market: "IDLE",
-  axis: ADMIN0.axis,
-  height: 81,
-  width: 9,
-  depth: 3,
-  axiom: "allxall · ANKER-Tech · Energie-Kugel",
-  score: 0,
-  energy: 0,
-  decision: null
+<script>
+// ============================================================
+// MAGNETO · PILOT · ADMIN-0 · DEEP SPACE NINE
+// ============================================================
+
+// ─── STATE ────────────────────────────────────────────────────
+const state = {
+    orbit: 0.5,
+    suite: 0.5,
+    commander: 0.5,
+    admin0: 0.5,
+    pipeline: 3,
+    speedCount: 0,
+    running: false,
+    cycle: 0,
+    energy: 0,
+    axiom: 'allxall · ANKER-Tech',
+    score: 0,
+    decision: null,
+    narrativ: ''
 };
 
-// Maschine
-const maschine = new NarrativMaschine();
-maschine.addKandidaten([
-  'a','b','c','y','x','z','q','d','f',
-  'OS','BOOT','iki1uc','243',
-  'DOOR','DOO','RESPO','NC.engine',
-  'SCORE','WETTE','SLIDE','AXIOM'
-]);
+// ─── DOM ──────────────────────────────────────────────────────
+const logDiv = document.getElementById('log');
+const orbitWert = document.getElementById('orbit-wert');
+const suiteWert = document.getElementById('suite-wert');
+const commanderWert = document.getElementById('commander-wert');
+const admin0Wert = document.getElementById('admin0-wert');
+const orbitStatus = document.getElementById('orbit-status');
+const suiteStatus = document.getElementById('suite-status');
+const cmdStatus = document.getElementById('cmd-status');
+const admin0Status = document.getElementById('admin0-status-value');
+const pipeStatus = document.getElementById('pipe-status');
+const energyStatus = document.getElementById('energy-status');
+const axiomStatus = document.getElementById('axiom-status');
+const scoreStatus = document.getElementById('score-status');
+const decisionStatus = document.getElementById('decision-status');
+const statusLed = document.getElementById('status-led');
+const speedCount = document.getElementById('speed-count');
+const commanderOut = document.getElementById('commander-out');
+const cycleCountEl = document.getElementById('cycle-count');
+const narrativContent = document.getElementById('narrativ-content');
+const magnetoStatus = document.getElementById('magneto-status');
 
-// Energie‑Richter
-const RICHTER = {
-  energie: 0,
-  zustand: 'idle',
-  entscheidung: null,
+// ─── LOG ──────────────────────────────────────────────────────
+function log(msg, type = 'ok') {
+    const entry = document.createElement('div');
+    entry.className = 'entry';
+    const time = new Date().toLocaleTimeString();
+    const cls = type === 'ok' ? 'ok' : type === 'speed' ? 'speed' : type === 'orbit' ? 'orbit' : type === 'suite' ? 'suite' : type === 'admin0' ? 'admin0' : type === 'magneto' ? 'magneto' : type === 'narrativ' ? 'narrativ' : '';
+    entry.innerHTML = `<span class="time">[${time}]</span> <span class="msg ${cls}">${msg}</span>`;
+    logDiv.appendChild(entry);
+    logDiv.scrollTop = logDiv.scrollHeight;
+    while (logDiv.children.length > 30) logDiv.removeChild(logDiv.firstChild);
+}
 
-  bewerte(t){
-    const e = t.gewicht * 0.618;
-    this.energie += e;
-    this.zustand = e > 1.5 ? 'hoch' : 'niedrig';
-  },
+// ─── UPDATE UI ──────────────────────────────────────────────
+function updateUI() {
+    orbitWert.textContent = state.orbit.toFixed(2);
+    suiteWert.textContent = state.suite.toFixed(2);
+    commanderWert.textContent = state.commander.toFixed(2);
+    admin0Wert.textContent = state.admin0.toFixed(2);
+    orbitStatus.textContent = state.orbit.toFixed(2);
+    suiteStatus.textContent = state.suite.toFixed(2);
+    cmdStatus.textContent = state.commander.toFixed(2);
+    admin0Status.textContent = state.admin0.toFixed(2);
+    pipeStatus.textContent = state.pipeline;
+    energyStatus.textContent = state.energy.toFixed(2);
+    axiomStatus.textContent = state.axiom;
+    scoreStatus.textContent = state.score.toFixed(0);
+    decisionStatus.textContent = state.decision || '—';
+    speedCount.textContent = state.speedCount;
+    statusLed.style.color = state.running ? '#4f4' : '#f44';
+    magnetoStatus.textContent = state.running ? '● aktiv' : '○ bereit';
+    magnetoStatus.style.color = state.running ? '#ff00ff' : '#666';
 
-  entscheide(){
-    if(this.energie > 20) this.entscheidung = "GÜLTIG";
-    else if(this.energie > 10) this.entscheidung = "MÖGLICH";
-    else this.entscheidung = "UNSICHER";
+    // Pipeline-Status
+    const steps = document.querySelectorAll('.pipe-step');
+    const levels = [3, 9, 27, 81];
+    steps.forEach((step, i) => {
+        step.classList.toggle('active', state.pipeline >= levels[i]);
+    });
+}
 
-    ADMIN0.cockpit.energy = this.energie;
-    ADMIN0.cockpit.decision = this.entscheidung;
-    ADMIN0.score.eval = this.energie;
-    ADMIN0.sli_addScore(this.energie);
-  }
-};
+// ─── MAGNETO · PILOT ──────────────────────────────────────────
+function magnetoCommand() {
+    state.speedCount++;
+    state.orbit = Math.min(1, state.orbit + 0.05 + Math.random() * 0.1);
+    state.suite = Math.min(1, state.suite + 0.05 + Math.random() * 0.1);
+    state.commander = Math.min(1, state.commander + 0.05 + Math.random() * 0.1);
+    state.admin0 = Math.min(1, state.admin0 + 0.05 + Math.random() * 0.1);
+    state.energy = Math.min(100, state.energy + 2 + Math.random() * 5);
+    state.score = state.energy * 0.618;
 
-// Buttons
-document.getElementById('btn-admin0').onclick = () => {
-  document.getElementById('output-admin0').innerText =
-    JSON.stringify(ADMIN0, null, 2);
-};
+    // Pipeline weiter
+    const levels = [3, 9, 27, 81];
+    const idx = levels.indexOf(state.pipeline);
+    state.pipeline = levels[(idx + 1) % levels.length];
 
-document.getElementById('btn-243').onclick = () => {
-  const n = maschine.verarbeiteAlle();
-  document.getElementById('output-243').innerText =
-    JSON.stringify(n.triolets, null, 2);
-};
+    state.cycle++;
+    cycleCountEl.textContent = `CYC ${state.cycle}`;
 
-document.getElementById('btn-iki').onclick = () => {
-  const n = maschine.zeigeNarrativ();
-  maschine.master.sortiereNarrative(n.triolets);
-  document.getElementById('output-iki').innerText =
-    JSON.stringify(maschine.master.sortierung, null, 2);
-};
+    // Entscheidung
+    if (state.energy > 60) state.decision = 'GÜLTIG';
+    else if (state.energy > 30) state.decision = 'MÖGLICH';
+    else state.decision = 'UNSICHER';
 
-document.getElementById('btn-narrativ').onclick = () => {
-  document.getElementById('output-narrativ').innerText =
-    maschine.textNarrativ();
-};
+    updateUI();
+    commanderOut.textContent =
+        `🧲 MAGNETO · PILOT · ADMIN-0\n` +
+        `Orbit: ${state.orbit.toFixed(2)}\n` +
+        `Suite: ${state.suite.toFixed(2)}\n` +
+        `Commander: ${state.commander.toFixed(2)}\n` +
+        `Admin-0: ${state.admin0.toFixed(2)}\n` +
+        `Pipeline: ${state.pipeline}\n` +
+        `Energie: ${state.energy.toFixed(2)}\n` +
+        `Score: ${state.score.toFixed(0)}\n` +
+        `Decision: ${state.decision}`;
+    log(`🧲 MAGNETO #${state.speedCount} · Pipeline ${state.pipeline} · Decision: ${state.decision}`, 'magneto');
 
-document.getElementById('btn-richter').onclick = () => {
-  const n = maschine.zeigeNarrativ();
-  RICHTER.energie = 0;
-  for(const t of n.triolets) RICHTER.bewerte(t);
-  RICHTER.entscheide();
-  document.getElementById('output-richter').innerText =
-    JSON.stringify(RICHTER, null, 2);
-};
+    // Admin-0: Axiom-Update
+    if (state.speedCount % 3 === 0) {
+        const axioms = ['allxall · ANKER-Tech', '3-9-27-81 · Matrix', 'Orbit · Suite · Commander', 'Deep Space Nine · Continuum'];
+        state.axiom = axioms[state.speedCount % 4];
+        log(`🟥 ADMIN-0: ${state.axiom}`, 'admin0');
+    }
 
+    // Narrativ-Update
+    if (state.speedCount % 5 === 0) {
+        const narrative = generateNarrativ();
+        state.narrativ = narrative;
+        narrativContent.textContent = narrative;
+        log(`📖 NARRATIV: ${narrative.substring(0, 40)}...`, 'narrativ');
+    }
+
+    updateUI();
+}
+
+// ─── NARRATIV GENERIEREN ─────────────────────────────────────
+function generateNarrativ() {
+    const kandidaten = ['OS', 'BOOT', 'iki1uc', '243', 'DOOR', 'DOO', 'RESPO', 'NC.engine', 'SCORE', 'WETTE', 'SLIDE', 'AXIOM'];
+    const shuffled = kandidaten.sort(() => Math.random() - 0.5);
+    const trio = shuffled.slice(0, 3);
+    const gewicht = (state.energy / 100 * 3 + 1).toFixed(1);
+    return `🌀 Triolet: ${trio.join(' ↔ ')} · Gewicht: ${gewicht} · Energie: ${state.energy.toFixed(0)}`;
+}
+
+// ─── ORBIT ────────────────────────────────────────────────────
+function orbitCommand() {
+    state.orbit = Math.min(1, state.orbit + 0.1);
+    updateUI();
+    commanderOut.textContent = `🔄 ORBIT: ${state.orbit.toFixed(2)}`;
+    log(`🔄 ORBIT = ${state.orbit.toFixed(2)}`, 'orbit');
+}
+
+// ─── SUITE ────────────────────────────────────────────────────
+function suiteCommand() {
+    state.suite = Math.min(1, state.suite + 0.1);
+    updateUI();
+    commanderOut.textContent = `🎭 SUITE: ${state.suite.toFixed(2)}`;
+    log(`🎭 SUITE = ${state.suite.toFixed(2)}`, 'suite');
+}
+
+// ─── ADMIN-0 ──────────────────────────────────────────────────
+function admin0Command() {
+    state.admin0 = Math.min(1, state.admin0 + 0.1);
+    state.energy = Math.min(100, state.energy + 5);
+    state.score = state.energy * 0.618;
+    if (state.energy > 60) state.decision = 'GÜLTIG';
+    else if (state.energy > 30) state.decision = 'MÖGLICH';
+    else state.decision = 'UNSICHER';
+    updateUI();
+    commanderOut.textContent =
+        `🟥 ADMIN-0: ${state.admin0.toFixed(2)}\n` +
+        `Energie: ${state.energy.toFixed(2)}\n` +
+        `Score: ${state.score.toFixed(0)}\n` +
+        `Decision: ${state.decision}`;
+    log(`🟥 ADMIN-0 = ${state.admin0.toFixed(2)} · Decision: ${state.decision}`, 'admin0');
+}
+
+// ─── NARRATIV ──────────────────────────────────────────────────
+function narrativCommand() {
+    const narrativ = generateNarrativ();
+    state.narrativ = narrativ;
+    narrativContent.textContent = narrativ;
+    commanderOut.textContent = `📖 NARRATIV\n${narrativ}`;
+    log(`📖 NARRATIV erzeugt: ${narrativ}`, 'narrativ');
+}
+
+// ─── PULSE ────────────────────────────────────────────────────
+function pulseCommand() {
+    state.running = !state.running;
+    if (state.running) {
+        log('▶ PULSE aktiviert', 'ok');
+        commanderOut.textContent = '▶ PULSE · System läuft';
+    } else {
+        log('⏸ PULSE pausiert', 'ok');
+        commanderOut.textContent = '⏸ PULSE · System pausiert';
+    }
+    updateUI();
+}
+
+// ─── RESET ────────────────────────────────────────────────────
+function resetAll() {
+    state.orbit = 0.5;
+    state.suite = 0.5;
+    state.commander = 0.5;
+    state.admin0 = 0.5;
+    state.pipeline = 3;
+    state.speedCount = 0;
+    state.cycle = 0;
+    state.energy = 0;
+    state.score = 0;
+    state.decision = null;
+    state.narrativ = '';
+    state.running = false;
+    narrativContent.textContent = '⏳ Narrativ wird erzeugt…';
+    updateUI();
+    commanderOut.textContent = '⟲ RESET · System bereit';
+    cycleCountEl.textContent = 'CYC 0';
+    log('⟲ RESET — Alles zurückgesetzt', 'ok');
+}
+
+// ─── AUTO ────────────────────────────────────────────────────
+let autoTimer = null;
+function toggleAuto() {
+    if (autoTimer) {
+        clearInterval(autoTimer);
+        autoTimer = null;
+        log('⏸ AUTO pausiert', 'ok');
+        return;
+    }
+    autoTimer = setInterval(() => {
+        if (state.running) {
+            magnetoCommand();
+        }
+    }, 2000);
+    log('▶ AUTO gestartet', 'ok');
+}
+
+// ─── EVENTS ──────────────────────────────────────────────────
+document.getElementById('btn-speed').addEventListener('click', magnetoCommand);
+document.getElementById('btn-orbit').addEventListener('click', orbitCommand);
+document.getElementById('btn-suite').addEventListener('click', suiteCommand);
+document.getElementById('btn-admin0').addEventListener('click', admin0Command);
+document.getElementById('btn-magneto').addEventListener('click', magnetoCommand);
+document.getElementById('btn-narrativ').addEventListener('click', narrativCommand);
+document.getElementById('btn-pulse').addEventListener('click', pulseCommand);
+document.getElementById('btn-reset').addEventListener('click', resetAll);
+
+// ─── TASTATUR ──────────────────────────────────────────────────
+document.addEventListener('keydown', (e) => {
+    if (e.key === ' ') { e.preventDefault(); magnetoCommand(); }
+    if (e.key === 'o' || e.key === 'O') orbitCommand();
+    if (e.key === 's' || e.key === 'S') suiteCommand();
+    if (e.key === 'a' || e.key === 'A') admin0Command();
+    if (e.key === 'm' || e.key === 'M') magnetoCommand();
+    if (e.key === 'n' || e.key === 'N') narrativCommand();
+    if (e.key === 'p' || e.key === 'P') pulseCommand();
+    if (e.key === 'x' || e.key === 'X') resetAll();
+});
+
+// ─── UHR ──────────────────────────────────────────────────────
+function updateClock() {
+    document.getElementById('clock').textContent = `⏱️ ${new Date().toLocaleTimeString()}`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ─── INIT ────────────────────────────────────────────────────
+log('🧲 MAGNETO · PILOT · ADMIN-0 · DEEP SPACE NINE geladen', 'ok');
+log('🚀 PILOT aktiv', 'speed');
+log('🟥 ADMIN-0 bereit', 'admin0');
+log('⌨️  space=Magneto  o=Orbit  s=Suite  a=Admin0  n=Narrativ  p=Pulse  x=Reset', 'ok');
+
+// Initiales Narrativ
+narrativContent.textContent = '🌀 Deep Space Nine · Continuum offen · Energie-Kugel aktiv';
+
+updateUI();
+commanderOut.textContent = '🧲 MAGNETO · Pilot · Admin-0 · Deep-Space-Nine-Lösungen bereit';
+
+console.log('🧲 MAGNETO · PILOT · ADMIN-0 · DEEP SPACE NINE');
+console.log('⌨️  space=Magneto  o=Orbit  s=Suite  a=Admin0  n=Narrativ  p=Pulse  x=Reset');
+
+// Auto-Start nach 1 Sekunde
+setTimeout(() => {
+    state.running = true;
+    updateUI();
+    log('▶ AUTO-START · System aktiv', 'ok');
+    toggleAuto();
+}, 1000);
 </script>
-
 </body>
 </html>
