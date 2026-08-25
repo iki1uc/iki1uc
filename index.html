@@ -19,6 +19,11 @@
         <span style="color:#666;"> → NARRATIV</span>
     </h1>
 </header>
+<div class="card" id="admin0-card">
+  <h3>🟥 ADMIN‑0 · Cockpit</h3>
+  <div id="output-admin0" class="output">⏳ Admin‑0 bereit…</div>
+  <button id="btn-admin0" class="primary">ADMIN‑0 anzeigen</button>
+</div>
 
 <div id="dashboard">
     <!-- deine Cards bleiben unverändert -->
@@ -139,6 +144,47 @@ setTimeout(() => {
     setTimeout(() => document.getElementById('btn-iki').click(), 500);
     setTimeout(() => document.getElementById('btn-narrativ').click(), 1000);
 }, 500);
+// ============================================================
+// ADMIN‑0 · COCKPIT · ROOT
+// ============================================================
+
+import { MXU } from './engine/mxu.js';
+import { AXINXA } from './engine/AXINXA.js';
+import { SLI } from './engine/SLI.js';
+
+const ADMIN0 = MXU.init();
+AXINXA.attach(ADMIN0);
+SLI.attach(ADMIN0);
+
+ADMIN0.cockpit = {
+  control: "ACTIVE",
+  industry: "6.0",
+  economy: "IDLE",
+  market: "IDLE",
+  axis: ADMIN0.axis,
+  height: 81,
+  width: 9,
+  depth: 3,
+  axiom: "allxall · ANKER-Tech · Energie-Kugel",
+  score: 0,
+  energy: 0,
+  decision: null
+};
+
+function showAdmin0(){
+  document.getElementById('output-admin0').innerText =
+    JSON.stringify(ADMIN0, null, 2);
+  log("🟥 ADMIN‑0 Cockpit geöffnet");
+}
+
+document.getElementById('btn-admin0').onclick = showAdmin0;
+document.getElementById('btn-admin0').onclick = () => {
+  document.getElementById('output-admin0').innerText =
+    JSON.stringify(ADMIN0, null, 2);
+  log("🟥 ADMIN‑0 Cockpit geöffnet");
+};
+
+
 </script>
 
 <script type="module">
