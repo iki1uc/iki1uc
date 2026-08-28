@@ -1,17 +1,35 @@
-class ULTRA_KERNEL {
+class CUBIK_KERNEL {
 
-    build(){
+    constructor(){
+        this.gpu = window.GPU_MAP || {};
+        this.tmp = window.TMP || {};
+    }
+
+    buildCubik(){
         const raw = window.NC9X9 || [];
         const out = [];
 
         for(let r=0; r<9; r++){
             const row = [];
             for(let c=0; c<9; c++){
-                const val = raw[r][c];
+
+                const base = raw[r][c];
+
+                const gpuStage = this.gpu.STAGE[(r % 4) + 1];
+                const tmpAxisX = this.tmp.a[r];
+                const tmpAxisY = this.tmp.d[c];
+                const tmpAxisZ = this.tmp.e[(r+c) % 9];
 
                 row.push({
                     r, c,
-                    val,
+                    base,
+                    gpuStage,
+                    cubik: {
+                        x: tmpAxisX,
+                        y: tmpAxisY,
+                        z: tmpAxisZ,
+                        fusion: tmpAxisX + tmpAxisY + tmpAxisZ
+                    },
                     qi: AXES.qi(r,c),
                     iqq: AXES.iqq(r,c),
                     octa: AXES.octa(r,c),
@@ -28,24 +46,18 @@ class ULTRA_KERNEL {
         return out;
     }
 
-    sendToVector(matrix){
-        if(window.VECTOR){
-            VECTOR.receive9hoch9(matrix);
-        }
-    }
-
-    sendToALL(matrix){
-        if(window.ALL){
-            ALL.receive9hoch9(matrix);
-        }
+    send(matrix){
+        VECTOR?.receive9hoch9(matrix);
+        ALL?.receive9hoch9(matrix);
+        GPU?.receiveCubik(matrix);
+        NC?.receiveCubik(matrix);
     }
 
     start(){
-        const matrix = this.build();
-        this.sendToVector(matrix);
-        this.sendToALL(matrix);
+        const matrix = this.buildCubik();
+        this.send(matrix);
         return matrix;
     }
 }
 
-window.ULTRA_KERNEL = new ULTRA_KERNEL();
+window.CUBIK_KERNEL = new CUBIK_KERNEL();
