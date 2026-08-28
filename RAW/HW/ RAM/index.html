@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>GPU ONLINE</title>
+  <style>
+    body {
+      background: #111;
+      color: #0ff;
+      font-family: monospace;
+      padding: 40px;
+      font-size: 22px;
+    }
+    .gpu {
+      border: 2px solid #0ff;
+      padding: 20px;
+      width: 480px;
+    }
+    .stat {
+      margin-top: 20px;
+      color: #0f0;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="gpu">
+  <div>GPU ONLINE</div>
+  <div>System: GPU-4Q</div>
+  <div>Status: aktiv</div>
+
+  <!-- 81-Würfel -->
+  <div class="stat">Cube gesamt: 81</div>
+  <div class="stat">Cube aktiv: 9</div>
+  <div class="stat">Cube frei: 72</div>
+
+  <!-- Quadranten -->
+  <div class="stat">Quadranten: 4</div>
+  <div class="stat">Q1: FRONT (Render)</div>
+  <div class="stat">Q2: FLOW (Motion)</div>
+  <div class="stat">Q3: DEPTH (State)</div>
+  <div class="stat">Q4: CORE (Compute)</div>
+
+  <!-- EVO -->
+  <div class="stat">EVO: bereit</div>
+</div>
+
+</body>
+</html>

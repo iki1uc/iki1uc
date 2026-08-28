@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>GPU Main</title>
+</head>
+
+<body>
+
+<h1>GPU Main Console</h1>
+<input id="txt" placeholder="GPU Input">
+<button id="run">RUN</button>
+<pre id="out"></pre>
+
+<script type="module">
+  import { fromGPU } from "./gpu.js";
+
+  document.getElementById("run").addEventListener("click", async () => {
+    const msg = document.getElementById("txt").value || "GPU TEST";
+    const out = await fromGPU({ msg });
+    document.getElementById("out").textContent =
+      JSON.stringify(out, null, 2);
+  });
+</script>
+
+</body>
+</html>
+
