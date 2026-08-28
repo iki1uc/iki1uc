@@ -1,0 +1,60 @@
+export const ROOM_81 = {
+
+  emotion: [
+    "Zorn","Freude","Trauer","Angst","Liebe",
+    "Hass","Ekel","Überraschung","Vertrauen"
+  ],
+
+  body: [
+    "Hunger","Durst","Schlaf","Wärme","Kälte",
+    "Schmerz","Erschöpfung","Kraft","Gesundheit"
+  ],
+
+  drive: [
+    "Wille","Mut","Neugier","Fokus","Geduld",
+    "Disziplin","Leidenschaft","Hoffnung","Entschlossenheit"
+  ],
+
+  space: [
+    "Ort","Raum","Position","Lage","Richtung",
+    "Zentrum","Peripherie","Höhe","Tiefe"
+  ],
+
+  time: [
+    "Tag","Nacht","Tempo","Pause","Start",
+    "Ende","Dauer","Moment","Zyklus"
+  ],
+
+  thinking: [
+    "Gedanke","Erinnerung","Plan","Analyse","Logik",
+    "Intuition","Bewusstsein","Traum","Vision"
+  ],
+
+  action: [
+    "Gehen","Stehen","Sitzen","Laufen","Greifen",
+    "Halten","Werfen","Öffnen","Schließen"
+  ],
+
+  quality: [
+    "Hell","Dunkel","Warm","Kalt","Weich",
+    "Hart","Schnell","Langsam","Stark"
+  ]
+};
+// In deiner index.html oder 81.room
+import { RESPO_81_FINDER } from "./RESPO_81_FINDER.js";
+
+window.run243 = function(){
+    const station = {
+        name: "GEO-Station-1",
+        uptime: 0.92,
+        signal: 0.88,
+        response: 0.95,
+        sync: 0.78,
+        load: 0.35,
+        errors: 2
+    };
+
+    const result = RESPO_81_FINDER.evaluate(243, station);
+    console.log(result);
+    document.getElementById("out").textContent = JSON.stringify(result, null, 2);
+};

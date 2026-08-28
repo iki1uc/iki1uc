@@ -1,0 +1,46 @@
+export const X_ROOM_IN = {
+
+  // deine Basis
+  id: "-_O0",
+  mode: "ABS",
+  port: "ZERO-IN",
+
+  // meine System-Infos
+  axis: "B°",
+  symbol: "→",
+  respo: "O0",
+  real: "X",
+  virtual: "X°",
+  meta: "META²³",
+
+  // 1) WETTE — vergleicht zwei Werte
+  wette(a, b){
+    if(a > b) return { win: a, lose: b, result: "A gewinnt" };
+    if(b > a) return { win: b, lose: a, result: "B gewinnt" };
+    return { win: a, lose: b, result: "Unentschieden" };
+  },
+
+  // 2) SLIDE — verschiebt die Axis
+  slide(axis, amount){
+    return {
+      old: axis,
+      new: axis + amount,
+      symbol: "→",
+      mode: "SLIDE"
+    };
+  },
+
+  // 3) SCORE — berechnet Punktzahl aus PQ-Root + Axis
+  score(root, axis){
+    const base = root / 3;        // PQ‑Root‑Gewichtung
+    const axisBoost = axis * 2;   // Axis‑Boost
+    const total = Math.round(base + axisBoost);
+
+    return {
+      root,
+      axis,
+      total,
+      level: total > 200 ? "HIGH" : "LOW"
+    };
+  }
+};

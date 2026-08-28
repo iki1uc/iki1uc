@@ -1,0 +1,70 @@
+export const X_ROOM_OUT = {
+
+  // deine Basis
+  id: "-_O0",
+  mode: "ABS",
+  port: "ZERO-OUT",
+
+  // System-Infos
+  axis: "B°",
+  symbol: "→",
+  respo: "O0",
+  real: "X",
+  virtual: "X°",
+  meta: "META²³",
+
+  // 1) OUT-Limiter — verhindert Überlauf
+  limiter(value, max = 999){
+    const safe = Math.min(value, max);
+    return {
+      in: value,
+      out: safe,
+      limited: value !== safe
+    };
+  },
+
+  // 2) OUT-Filter — filtert negative, leere oder unbrauchbare Werte
+  filter(value){
+    if(value === null || value === undefined) return { ok: false, out: 0 };
+    if(typeof value === "string" && value.trim() === "") return { ok: false, out: 0 };
+    if(typeof value === "number" && isNaN(value)) return { ok: false, out: 0 };
+    return { ok: true, out: value };
+  },
+
+  // 3) OUT-Slide — verschiebt den Output kontrolliert
+  slide(value, shift){
+    return {
+      old: value,
+      new: value + shift,
+      symbol: "→",
+      mode: "SLIDE-OUT"
+    };
+  },
+
+  // 4) OUT-Score — bewertet Output nach PQ-Root + Axis
+  score(root, axis){
+    const base = root / 3;
+    const axisBoost = axis * 1.5;
+    const total = Math.round(base + axisBoost);
+
+    return {
+      root,
+      axis,
+      total,
+      level: total > 150 ? "HIGH" : "LOW"
+    };
+  },
+
+  // 5) OUT-Safe — finaler, sicherer Output
+  safe(value){
+    const f = this.filter(value);
+    if(!f.ok) return { out: 0, safe: true };
+
+    const l = this.limiter(f.out);
+    return {
+      out: l.out,
+      safe: true,
+      limited: l.limited
+    };
+  }
+};

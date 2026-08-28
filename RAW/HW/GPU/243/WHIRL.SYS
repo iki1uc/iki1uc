@@ -1,0 +1,21 @@
+export const WHIRL_SYS = {
+
+  mode(root){
+    if(root >= 200 && root <= 229) return "WHIRL_SYS";
+    if(root >= 230 && root <= 259) return "WHIRL_PQ";
+    if(root >= 260) return "WHIRL_HYPER";
+    return "WHIRL_CORE";
+  },
+
+  build(truth){
+    const root = truth.pqVector.D0;
+
+    return {
+      mode: this.mode(root),
+      root,
+      vec: truth.pqVector,
+      time: truth.time6d.vector,
+      seq: truth.seq || 9706.8
+    };
+  }
+};

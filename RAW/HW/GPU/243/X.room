@@ -1,0 +1,11 @@
+export const X_ROOM = {
+  axis: "B°",
+  symbol: "→",
+  respo: "O0",
+  real: "X",
+  virtual: "X°",
+  matrix: "9x9",
+  operator: "9x9-Operator.me",
+  meta: "META²³",
+  prefetch: "ACTIVE"
+};

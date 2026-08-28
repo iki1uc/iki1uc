@@ -1,0 +1,13 @@
+AXIS: B°
+SYMBOL: →
+RESPO: O0
+
+REAL: +X / -X
+VIRTUAL: DOM-Spread
+
+MATRIX: 9×9
+OPERATOR: 9×9-Operator.me
+
+META: META²³
+PREFETCH: ACTIVE
+
