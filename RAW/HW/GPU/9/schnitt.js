@@ -1,38 +1,77 @@
-export const Cubik4D = {
-    P: null,
-    A: null,
-    M: null,
-    O: null,
-    S: null,   // Score-Dimension
-
-    update(position, axes, movement, orbit, score) {
-        this.P = position;
-        this.A = axes;
-        this.M = movement;
-        this.O = orbit;
-        this.S = score;
-    }
-};
-function scoreRespo(respo){
-  const confs = respo.confs || [0.5,0.5,0.5];
-  const e = evalRespo(confs, respo.QI || defaultQI, respo.IQQ || defaultIQQ);
-  const axis = axisCoverage(respo.text||'');
-  const geom = { theta: 2*Math.PI*e.arg3te, rho: 50 + 150*axis };
-  const final = 0.6*e.arg3te + 0.4*axis;
-  return Object.assign({}, respo, e, { axis, geom, final });
-}
+import { RUN3_Movement } from "./run3.js";
+import { ghost5E } from "./ghost.js";
+import { DirectV } from "./directV.js";
+import { GPU_MATRIX_692_TENSOR } from "./gpu.matrix692.tensor.js";
+import { FUSION9 } from "./fusion9.js";
 import { scoreRespo } from "./respo.js";
-sendToCubik(matrix){
-    const pos = matrix[4][4];
-    const axes = AXES.fullMatrix();
-    const movement = FLOW.vector();
-    const orbit = ORBIT.state();
 
+sendToCubik(matrix){
+
+    // 1. Position aus Matrix
+    const pos = matrix[4][4];
+
+    // 2. Achsen
+    const axes = AXES.fullMatrix();
+
+    // 3. Orbit (ghost5E)
+    const ghost = ghost5E(pos.Phi, pos.phi, pos.phi2, pos.phiinfty);
+
+    // 4. RUN‑3 Movement
+    const movement = RUN3_Movement(
+        axes.bewegung,
+        ghost.orbit,
+        ghost.operatoren
+    );
+
+    // 5. DirectV Routing
+    DirectV.routeRUN3(movement);
+
+    // 6. Score
     const respo = scoreRespo({
-        confs: [pos.val, movement.mag, orbit.level],
+        confs: [pos.val, movement.fusion.stabil, ghost.orbit.evo],
         text: JSON.stringify(pos)
     });
 
-    updateTmp(pos, axes, movement, orbit);
-    Cubik4D.update(pos, axes, movement, orbit, respo.final);
+    // 7. GPU‑Tensor aktualisieren
+    GPU_MATRIX_692_TENSOR.update(
+        pos,
+        axes,
+        movement,
+        ghost.orbit,
+        respo.final,
+        {
+            orbit: ghost.orbit,
+            operatoren: ghost.operatoren,
+            status: ghost.status,
+            erinnerung: ghost.erinnerung,
+            movement: movement
+        }
+    );
+
+    // 8. tmp aktualisieren
+    updateTmp(pos, axes, movement, ghost.orbit);
+
+    // 9. FUSION9 erzeugen
+    const fusion = FUSION9.fuse(matrix, movement, GPU_MATRIX_692_TENSOR);
+
+    // 10. Cubik4D aktualisieren
+    Cubik4D.update(
+        pos,
+        axes,
+        movement,
+        ghost.orbit,
+        respo.final,
+        GPU_MATRIX_692_TENSOR
+    );
+
+    return {
+        pos,
+        axes,
+        movement,
+        orbit: ghost.orbit,
+        score: respo.final,
+        gpu: GPU_MATRIX_692_TENSOR,
+        fusion,
+        directV: DirectV.state
+    };
 }
