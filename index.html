@@ -1,202 +1,450 @@
-// ==========================================
-// NC FOUNDER SYSTEM (STEUERUNG)
-// ==========================================
-const NC = {
-    mode: "ROOT",
-    attackPower: 0,     // Basiswert
-    multiplier: 1.0     // Der Multiplikator (Standard: 1)
-};
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AXIOM · NC FOUNDER · 6D PREFETCH · COSMONAUT</title>
 
-// ── BEFEHLE (Präzise Steuerung mit Multiplikation) ──
-function triggerAttack() {
-    NC.attackPower = 1.0;
-    NC.multiplier = 1.0; // Attack setzt Multiplikator auf 1
-    NC.mode = "NC6-ATTACK";
-    document.getElementById('mode').innerText = NC.mode;
-    document.getElementById('statusLine').innerText = "⚡ 6D ATTACK: SATS STEIGEN · ENGINE STEIGT";
-}
-
-function triggerPipeline() {
-    // ⭐ DAS MULTIPLIZIEREN: 
-    // Wenn AttackPower bereits 0.5 ist, wird sie auf 1.0 multipliziert (x2).
-    // Wenn sie 0 ist, springt sie auf 0.5 (x0.5), was wie ein Verstärker wirkt.
-    if (NC.attackPower > 0) {
-        NC.attackPower = Math.min(1.0, NC.attackPower * 1.5); // Multiplikation mit 1.5
-        NC.multiplier = 1.5;
-    } else {
-        NC.attackPower = 0.5; // Sanfter Start
-        NC.multiplier = 0.5;
-    }
-    NC.mode = "PIPELINEBLITZ";
-    document.getElementById('mode').innerText = "PIPELINEBLITZ (x" + NC.multiplier.toFixed(1) + ")";
-}
-
-// ... (TriggerRun3 und TriggerBeam bleiben gleich wie in deinem Code)
-
-function triggerReset() {
-    NC.attackPower = 0;
-    NC.multiplier = 1.0; // Multiplikator zurücksetzen
-    NC.mode = "ROOT";
-    document.getElementById('mode').innerText = "ROOT RETURN";
-    document.getElementById('statusLine').innerText = "756 ACHSEN AKTIV · 729 SUPER · 81 ORBIT · 9 KERN · 3 UR";
-    // Partikel physikalisch komplett zurücksetzen
-    particles.forEach(p => {
-        p.x = (Math.random() - 0.5) * 2;
-        p.y = (Math.random() - 0.5) * 2;
-        p.z = (Math.random() - 0.5) * 2;
-        p.vx = (Math.random() - 0.5) * 0.002;
-        p.vy = (Math.random() - 0.5) * 0.002;
-        p.vz = (Math.random() - 0.5) * 0.002;
-        p.color = 'rgba(0, 255, 255,'; 
-    });
-    // Tiefe neutralisieren
-    DEPTH.focusZ = 0;
-    document.getElementById('auraVal').innerText = "Neutral";
-}
-
-// ==========================================
-// DRAW NEBULA (MULTIPLIKATION IN DER PHYSIK)
-// ==========================================
-function drawNebula() {
-    ctx.clearRect(0, 0, width, height);
-
-    // Natürliches Abklingen der Attack Power, aber der Multiplikator bleibt
-    if(NC.attackPower > 0) NC.attackPower *= 0.995;
-    if(NC.attackPower < 0.01) NC.attackPower = 0;
-
-    // Atmung
-    DEPTH.focusZ += Math.sin(Date.now() * DEPTH.zDrift) * 0.0006;
-
-    // ⭐ PHYSIK: Effektive Kraft = Basis-Gravitation * (Attack Power * Multiplikator)
-    // Beachte: Ein negativer Wert stößt ab, ein positiver zieht an.
-    let effectiveForce = (0.0005 * Math.sin(Date.now() * 0.001)) + (NC.attackPower * NC.multiplier * 0.003 * -1);
-
-    // Hintergrund (Farbwechsel je nach Multiplikator)
-    let gradColor = effectiveForce < -0.001 ? 'rgba(100, 20, 50, 0.8)' : 'rgba(0, 80, 120, 0.6)';
-    let gradient = ctx.createRadialGradient(nucleus.x, nucleus.y, 0, nucleus.x, nucleus.y, 600);
-    gradient.addColorStop(0, gradColor);
-    gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, width, height);
-
-    let zSum = 0, zSqSum = 0, inFocusCount = 0;
-    const sorted = [...particles].sort((a, b) => b.z - a.z);
-
-    sorted.forEach(p => {
-        p.x += p.vx;
-        p.y += p.vy;
-        p.z += p.vz;
-
-        const dx = p.x - nucleus.x;
-        const dy = p.y - nucleus.y;
-        const dz = p.z - nucleus.z;
-        const dist3D = Math.sqrt(dx * dx + dy * dy + dz * dz) || 0.0001;
-
-        // Anwendung der effektiven Kraft
-        p.vx -= (dx / dist3D) * effectiveForce;
-        p.vy -= (dy / dist3D) * effectiveForce;
-        p.vz -= (dz / dist3D) * effectiveForce;
-
-        const dzFocus = p.z - DEPTH.focusZ;
-        p.vz -= dzFocus * DEPTH.zPull;
-
-        const scale = 400 / (400 + p.z * 200);
-        const screenX = nucleus.x + p.x * scale * 200;
-        const screenY = nucleus.y + p.y * scale * 200;
-
-        if (dist3D > 3 || Math.abs(p.z) > DEPTH.bounds) {
-            p.x = (Math.random() - 0.5) * 2;
-            p.y = (Math.random() - 0.5) * 2;
-            p.z = (Math.random() - 0.5) * 2;
+    <style>
+        body {
+            margin: 0; padding: 0;
+            background-color: #020208;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
         }
 
-        // Farben
-        let color = p.color;
-        if (effectiveForce < -0.001) {
-            if(p.layer === "UR") color = 'rgba(255, 255, 255,';
-            else if(p.layer === "KERN") color = 'rgba(0, 255, 255,';
-            else if(p.layer === "ORBIT") color = 'rgba(255, 204, 0,';
-            else if(p.layer === "SUPER") color = 'rgba(255, 102, 255,';
+        #hud {
+            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+            text-align: center; z-index: 10;
+            text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+            letter-spacing: 4px; pointer-events: none;
+        }
+        #hud h1 { font-size: 24px; margin: 0; color: #ffcc00; border-bottom: 2px solid #ffcc00; padding-bottom: 10px; }
+        #hud p { font-size: 12px; margin-top: 5px; color: #00ffff; opacity: 0.8; }
+
+        canvas { display: block; width: 100vw; height: 100vh; }
+
+        #sidebar {
+            position: absolute; top: 20px; left: 20px;
+            background: rgba(0, 15, 15, 0.8); border: 1px solid #ff66ff;
+            padding: 15px; font-size: 12px; width: 280px; max-height: 92vh; overflow-y: auto;
+            box-shadow: 0 0 20px rgba(255, 102, 255, 0.3);
+            backdrop-filter: blur(5px); z-index: 10;
+            color: #ff66ff;
+        }
+        #sidebar h3 { margin-top: 0; color: #ff66ff; border-bottom: 1px solid #ff66ff; padding-bottom: 5px; }
+        
+        .stat-row { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dashed rgba(255, 102, 255, 0.2); padding-bottom: 4px; }
+        .stat-label { color: #aaa; }
+        .stat-value { color: #00ffff; }
+
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 10px; }
+        .btn {
+            background: rgba(255, 102, 255, 0.1); border: 1px solid #ff66ff; color: #fff;
+            padding: 5px; font-family: inherit; cursor: pointer; transition: 0.2s;
+        }
+        .btn:hover { background: rgba(255, 102, 255, 0.3); box-shadow: 0 0 10px #ff66ff; }
+        .btn:active { transform: scale(0.95); }
+        .btn-attack { grid-column: span 2; background: rgba(255, 0, 0, 0.2); border-color: #ff0000; color: #ff5555; }
+
+        .aura-text { color: #ffcc00; font-style: italic; margin-top: 15px; font-size: 11px; text-align: justify; animation: pulseText 3s infinite; }
+        @keyframes pulseText { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+        
+        #depthbar-wrap { margin-top: 8px; }
+        #depthbar-track { background: rgba(255,102,255,0.1); border: 1px solid rgba(255,102,255,0.3); border-radius: 4px; height: 8px; position: relative; overflow: hidden; }
+        #depthbar-fill { background: linear-gradient(90deg, #ff66ff, #00ffff); height: 100%; width: 50%; transition: width 0.1s linear; }
+        #depthbar-label { font-size: 9px; color: #ff66ff; margin-top: 2px; display:flex; justify-content:space-between; }
+
+        /* PREFETCH STYLES */
+        h3.prefetch { color: #00ffff; border-bottom-color: #00ffff; margin-top: 15px; }
+        .prefetch-row { display:flex; justify-content:space-between; font-size:10px; margin-bottom:2px; color:#8ab8e6;}
+        .prefetch-row span:first-child { color:#aaa; }
+        .motion-switches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; margin-top: 5px;}
+        .motion-btn {
+            background: rgba(0, 255, 255, 0.05); border: 1px solid rgba(0, 255, 255, 0.2);
+            color: #aaa; font-size: 9px; padding: 3px; cursor: pointer;
+        }
+        .motion-btn.active { background: rgba(0, 255, 255, 0.4); color: #fff; border-color: #00ffff; box-shadow: 0 0 5px #00ffff;}
+    </style>
+</head>
+<body>
+
+    <div id="hud">
+        <h1>NC6 FOUNDER · COSMONAUT</h1>
+        <p id="statusLine">PREFETCH_3 AKTIV · 756 ACHSEN · 729 SUPER · 81 ORBIT · 9 KERN · 3 UR</p>
+    </div>
+
+    <div id="sidebar">
+        <h3>FOUNDER STATUS</h3>
+        <div class="stat-row">
+            <span class="stat-label">Mode:</span>
+            <span class="stat-value" id="mode">ROOT</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Attack Power:</span>
+            <span class="stat-value" id="attackPower">0.00</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Multiplikator:</span>
+            <span class="stat-value" id="mult">x1</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Aura (Z):</span>
+            <span class="stat-value" id="auraVal">Neutral</span>
+        </div>
+
+        <h3 style="margin-top: 15px;">NC BEFEHLE</h3>
+        <div class="btn-grid">
+            <button class="btn btn-attack" onclick="triggerAttack()">⚡ 6D ATTACK</button>
+            <button class="btn" onclick="triggerRun3()">▶ RUN3</button>
+            <button class="btn" onclick="triggerPipeline()">⚡ PIPELINEBLITZ</button>
+            <button class="btn" onclick="triggerBeam()">⚡ BEAM</button>
+            <button class="btn" onclick="triggerReset()" style="color:red; border-color:red;">⟲ RESET</button>
+        </div>
+
+        <h3 style="margin-top: 15px;">MULTIPLIKATOR</h3>
+        <div class="btn-grid">
+            <button class="btn" onclick="setMultiplier('x1')">x1</button>
+            <button class="btn" onclick="setMultiplier('x1.5')">x1.5</button>
+            <button class="btn" onclick="setMultiplier('x2')">x2</button>
+            <button class="btn" onclick="setMultiplier('x3')">x3</button>
+        </div>
+
+        <h3 class="depth" style="margin-top: 15px; color: #ff66ff;">TIEFENMODUL (Z)</h3>
+        <div class="stat-row">
+            <span class="stat-label">Fokusebene:</span>
+            <span class="stat-value" id="focusZ">0.00</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Streuung σz:</span>
+            <span class="stat-value" id="spreadZ">0.00</span>
+        </div>
+        <div id="depthbar-wrap">
+            <div id="depthbar-track"><div id="depthbar-fill"></div></div>
+            <div id="depthbar-label"><span>nah</span><span>Fokusebene</span><span>fern</span></div>
+        </div>
+
+        <!-- NEU: PREFETCH_3 Panel -->
+        <h3 class="prefetch">PREFETCH_3 · ENGINE</h3>
+        <div class="prefetch-row"><span>POS MODE:</span><span>ULTRA-U</span></div>
+        <div class="prefetch-row"><span>KERNEL:</span><span>ULTRA-KERNEL</span></div>
+        <div class="prefetch-row"><span>SYNC:</span><span>ALL GATES OPEN</span></div>
+        
+        <h3 class="prefetch">3x3 MOTION SWITCHES (NC)</h3>
+        <div class="motion-switches" id="motion-switches"></div>
+
+        <div class="aura-text">
+            "Der Cosmonaut verbindet PREFETCH_3 mit der 6D Struktur. SYN interpretiert die Quantenfluktuationen des Kerns. Bei 6D ATTACK steigen die Satelliten und die Tiefe kollabiert in die Magenta-Zone. Die 9 Motion-Switches simulieren die 3x3 Bewegung."
+        </div>
+    </div>
+
+    <div id="focusHint" style="position:absolute; bottom:16px; left:50%; transform:translateX(-50%); font-size:10px; color:#ff66ff; opacity:0.7; z-index:10; letter-spacing:2px;">🖱 Mausrad / ↑↓ = Fokusebene verschieben</div>
+
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let particles = [];
+        let nucleus = { x: 0, y: 0, z: 0 };
+
+        // ==========================================
+        // NC FOUNDER SYSTEM (STEUERUNG)
+        // ==========================================
+        const NC = {
+            mode: "ROOT",
+            attackPower: 0,
+            multiplier: 1.0,
+            multipliers: { x1: 1.0, x15: 1.5, x2: 2.0, x3: 3.0 }
+        };
+
+        // ==========================================
+        // PREFETCH_3 MOTION (3x3 Sim)
+        // ==========================================
+        const PREFETCH = {
+            motion: [false, false, false, false, false, false, false, false, false] // 9 Switches für 3x3
+        };
+
+        // ==========================================
+        // TIEFENMODUL
+        // ==========================================
+        const DEPTH = {
+            focusZ: 0,
+            focusRange: 0.35,
+            zPull: 0.00045,
+            zDrift: 0.0006,
+            bounds: 2.2
+        };
+
+        // UI Motion Switches erzeugen
+        const switchContainer = document.getElementById('motion-switches');
+        for (let i = 0; i < 9; i++) {
+            const btn = document.createElement('button');
+            btn.className = 'motion-btn';
+            btn.innerText = 'M' + (i + 1);
+            btn.onclick = () => {
+                PREFETCH.motion[i] = !PREFETCH.motion[i];
+                btn.classList.toggle('active', PREFETCH.motion[i]);
+                
+                // Physik: Jeder Schalter beeinflusst die Geschwindigkeit leicht
+                if (PREFETCH.motion[i]) {
+                    particles.forEach(p => {
+                        p.vx += (i % 3 - 1) * 0.0005;
+                        p.vy += (Math.floor(i / 3) - 1) * 0.0005;
+                    });
+                }
+            };
+            switchContainer.appendChild(btn);
         }
 
-        const distFromFocus = Math.abs(p.z - DEPTH.focusZ);
-        const inFocus = distFromFocus < DEPTH.focusRange;
-        if (inFocus) inFocusCount++;
-        const focusFactor = Math.max(0.15, 1 - distFromFocus / 1.8);
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            nucleus.x = width / 2;
+            nucleus.y = height / 2;
+        }
+        window.addEventListener('resize', resize);
+        resize();
 
-        zSum += p.z; zSqSum += p.z * p.z;
+        // Partikel erstellen
+        const PARTICLE_COUNT = 3000;
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+            particles.push({
+                layer: i < 100 ? "UR" : (i < 500 ? "KERN" : (i < 1500 ? "ORBIT" : "SUPER")),
+                x: (Math.random() - 0.5) * 4,
+                y: (Math.random() - 0.5) * 4,
+                z: (Math.random() - 0.5) * 4,
+                vx: (Math.random() - 0.5) * 0.002,
+                vy: (Math.random() - 0.5) * 0.002,
+                vz: (Math.random() - 0.5) * 0.002,
+                size: Math.random() * 2 + 0.5,
+                color: 'rgba(0, 255, 255,' 
+            });
+        }
 
-        const alpha = (0.15 + 0.75 * focusFactor) * Math.max(0.2, scale);
-        const renderSize = p.size * scale * (inFocus ? 1 : 1 + distFromFocus * 0.8);
+        // ── BEFEHLE ──
+        function triggerAttack() {
+            NC.attackPower = 1.0;
+            NC.multiplier = 1.0;
+            NC.mode = "NC6-ATTACK";
+            document.getElementById('mode').innerText = NC.mode;
+            document.getElementById('statusLine').innerText = "⚡ 6D ATTACK: PREFETCH AKTIV · SATS STEIGEN";
+        }
 
-        ctx.fillStyle = color + alpha.toFixed(3) + ')';
-        ctx.beginPath();
-        ctx.arc(screenX, screenY, Math.max(0.3, renderSize), 0, Math.PI * 2);
-        ctx.fill();
-    });
+        function triggerRun3() {
+            NC.mode = "ROLLE";
+            document.getElementById('mode').innerText = "RUN3 AKTIV";
+            particles.forEach(p => p.vx += 0.01);
+        }
 
-    // Telemetrie
-    const n = particles.length;
-    const meanZ = zSum / n;
-    const varZ = zSqSum / n - meanZ * meanZ;
-    const sigmaZ = Math.sqrt(Math.max(0, varZ));
-    document.getElementById('focusZ').textContent = DEPTH.focusZ.toFixed(2);
-    document.getElementById('spreadZ').textContent = sigmaZ.toFixed(2);
-    document.getElementById('attackPower').textContent = NC.attackPower.toFixed(2);
+        function setMultiplier(level) {
+            const key = level.replace('.', '');
+            NC.multiplier = NC.multipliers[key] || 1.0;
+            document.getElementById('mult').innerText = level;
+            NC.mode = "MULTI " + level;
+            document.getElementById('mode').innerText = NC.mode;
+            
+            // Bei x1.5 soll die Aura explodieren
+            if (NC.multiplier >= 1.5) {
+                document.getElementById('statusLine').innerText = "⚡ AURA EXPLOSION BEI x" + level;
+            }
+        }
 
-    const pct = ((DEPTH.focusZ + 1.5) / 3) * 100;
-    document.getElementById('depthbar-fill').style.width = pct.toFixed(1) + '%';
+        function triggerPipeline() {
+            if (NC.attackPower > 0) {
+                NC.attackPower = Math.min(1.0, NC.attackPower * 1.5); 
+                NC.multiplier = 1.5;
+            } else {
+                NC.attackPower = 0.5;
+                NC.multiplier = 0.5;
+            }
+            NC.mode = "PIPELINEBLITZ";
+            document.getElementById('mode').innerText = "PIPELINEBLITZ";
+        }
 
-    // ==========================================
-    // MANA-AURA (Dichte + Z + Multiplikator)
-    // ==========================================
-    const density = inFocusCount / particles.length;
-    const zOffset = DEPTH.focusZ;
-    const zFactor = Math.max(0, 1 - Math.abs(zOffset) / DEPTH.bounds);
+        function triggerBeam() {
+            NC.mode = "BEAM 729";
+            document.getElementById('mode').innerText = "BEAM 729";
+            particles.forEach(p => {
+                if(p.layer === "SUPER") p.z += 1.5;
+            });
+        }
 
-    const goldFactor = Math.max(0, zFactor * density) + (NC.attackPower * NC.multiplier);
-    const magentaFactor = Math.max(0, (1 - zFactor)) + (NC.attackPower * NC.multiplier);
+        function triggerReset() {
+            NC.attackPower = 0;
+            NC.multiplier = 1.0;
+            NC.mode = "ROOT";
+            document.getElementById('mode').innerText = "ROOT RETURN";
+            document.getElementById('statusLine').innerText = "PREFETCH_3 AKTIV · 756 ACHSEN · 729 SUPER · 81 ORBIT · 9 KERN · 3 UR";
+            document.getElementById('mult').innerText = "x1";
+            particles.forEach(p => {
+                p.x = (Math.random() - 0.5) * 2;
+                p.y = (Math.random() - 0.5) * 2;
+                p.z = (Math.random() - 0.5) * 2;
+                p.vx = (Math.random() - 0.5) * 0.002;
+                p.vy = (Math.random() - 0.5) * 0.002;
+                p.vz = (Math.random() - 0.5) * 0.002;
+                p.color = 'rgba(0, 255, 255,'; 
+            });
+            // Motion Schalter zurücksetzen
+            PREFETCH.motion.fill(false);
+            document.querySelectorAll('.motion-btn').forEach(b => b.classList.remove('active'));
+            DEPTH.focusZ = 0;
+            document.getElementById('auraVal').innerText = "Neutral";
+        }
 
-    const auraColor = `rgba(
-        ${Math.min(255, 255 * goldFactor + 255 * magentaFactor)},
-        ${Math.min(255, 204 * goldFactor)},
-        ${Math.min(255, 255 * magentaFactor)},
-        ${0.25 + 0.5 * density}
-    )`;
+        window.addEventListener('wheel', e => {
+            DEPTH.focusZ += Math.sign(e.deltaY) * 0.05;
+            DEPTH.focusZ = Math.max(-1.5, Math.min(1.5, DEPTH.focusZ));
+        });
+        window.addEventListener('keydown', e => {
+            if (e.key === 'ArrowUp')   DEPTH.focusZ = Math.max(-1.5, DEPTH.focusZ - 0.05);
+            if (e.key === 'ArrowDown') DEPTH.focusZ = Math.min(1.5, DEPTH.focusZ + 0.05);
+        });
 
-    ctx.strokeStyle = auraColor;
-    ctx.lineWidth = 1.5 + (NC.attackPower * NC.multiplier) * 2;
-    for (let i = 0; i < 3 + Math.floor((NC.attackPower * NC.multiplier) * 2); i++) {
-        ctx.beginPath();
-        let radius = 150 + i * 50 + Math.sin(Date.now() * (0.002 + (NC.attackPower * NC.multiplier) * 0.01) + i) * 20;
-        ctx.arc(nucleus.x, nucleus.y, radius, 0, Math.PI * 2);
-        ctx.stroke();
-    }
+        // ==========================================
+        // DRAW NEBULA
+        // ==========================================
+        function drawNebula() {
+            ctx.clearRect(0, 0, width, height);
 
-    // Fokusring
-    const focusRingR = 180 + DEPTH.focusZ * 60;
-    ctx.strokeStyle = 'rgba(255, 102, 255, 0.35)';
-    ctx.lineWidth = 1.5;
-    ctx.setLineDash([3, 6]);
-    ctx.beginPath();
-    ctx.arc(nucleus.x, nucleus.y, Math.max(10, focusRingR), 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.setLineDash([]);
+            if(NC.attackPower > 0) NC.attackPower *= 0.995;
+            if(NC.attackPower < 0.01) NC.attackPower = 0;
 
-    // Kern
-    ctx.shadowBlur = 20 + ((NC.attackPower * NC.multiplier) * 40);
-    ctx.shadowColor = (NC.attackPower * NC.multiplier) > 0.1 ? "magenta" : "cyan";
-    ctx.fillStyle = (NC.attackPower * NC.multiplier) > 0.1 ? "rgba(255, 102, 255, 0.8)" : "rgba(0, 255, 255, 0.8)";
-    ctx.beginPath();
-    ctx.arc(nucleus.x, nucleus.y, 5 + Math.sin(Date.now() * 0.01) * 2 + (NC.attackPower * NC.multiplier), 0, Math.PI * 2);
-    ctx.fill();
-    ctx.shadowBlur = 0;
-}
+            DEPTH.focusZ += Math.sin(Date.now() * DEPTH.zDrift) * 0.0006;
 
-function animate() {
-    drawNebula();
-    updateStats();
-    requestAnimationFrame(animate);
-}
+            // PHYSIK: Multiplikator anwenden
+            let effectiveForce = (0.0005 * Math.sin(Date.now() * 0.001)) + (NC.attackPower * NC.multiplier * 0.003 * -1);
 
-animate();
+            let gradColor = effectiveForce < -0.001 ? 'rgba(100, 20, 50, 0.8)' : 'rgba(0, 80, 120, 0.6)';
+            let gradient = ctx.createRadialGradient(nucleus.x, nucleus.y, 0, nucleus.x, nucleus.y, 600);
+            gradient.addColorStop(0, gradColor);
+            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, width, height);
+
+            let zSum = 0, zSqSum = 0, inFocusCount = 0;
+            const sorted = [...particles].sort((a, b) => b.z - a.z);
+
+            sorted.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.z += p.vz;
+
+                const dx = p.x - nucleus.x;
+                const dy = p.y - nucleus.y;
+                const dz = p.z - nucleus.z;
+                const dist3D = Math.sqrt(dx * dx + dy * dy + dz * dz) || 0.0001;
+
+                p.vx -= (dx / dist3D) * effectiveForce;
+                p.vy -= (dy / dist3D) * effectiveForce;
+                p.vz -= (dz / dist3D) * effectiveForce;
+
+                const dzFocus = p.z - DEPTH.focusZ;
+                p.vz -= dzFocus * DEPTH.zPull;
+
+                const scale = 400 / (400 + p.z * 200);
+                const screenX = nucleus.x + p.x * scale * 200;
+                const screenY = nucleus.y + p.y * scale * 200;
+
+                if (dist3D > 3 || Math.abs(p.z) > DEPTH.bounds) {
+                    p.x = (Math.random() - 0.5) * 2;
+                    p.y = (Math.random() - 0.5) * 2;
+                    p.z = (Math.random() - 0.5) * 2;
+                }
+
+                let color = p.color;
+                if (effectiveForce < -0.001) {
+                    if(p.layer === "UR") color = 'rgba(255, 255, 255,';
+                    else if(p.layer === "KERN") color = 'rgba(0, 255, 255,';
+                    else if(p.layer === "ORBIT") color = 'rgba(255, 204, 0,';
+                    else if(p.layer === "SUPER") color = 'rgba(255, 102, 255,';
+                }
+
+                const distFromFocus = Math.abs(p.z - DEPTH.focusZ);
+                const inFocus = distFromFocus < DEPTH.focusRange;
+                if (inFocus) inFocusCount++;
+                const focusFactor = Math.max(0.15, 1 - distFromFocus / 1.8);
+
+                zSum += p.z; zSqSum += p.z * p.z;
+
+                const alpha = (0.15 + 0.75 * focusFactor) * Math.max(0.2, scale);
+                const renderSize = p.size * scale * (inFocus ? 1 : 1 + distFromFocus * 0.8);
+
+                ctx.fillStyle = color + alpha.toFixed(3) + ')';
+                ctx.beginPath();
+                ctx.arc(screenX, screenY, Math.max(0.3, renderSize), 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            const n = particles.length;
+            const meanZ = zSum / n;
+            const varZ = zSqSum / n - meanZ * meanZ;
+            const sigmaZ = Math.sqrt(Math.max(0, varZ));
+            document.getElementById('focusZ').textContent = DEPTH.focusZ.toFixed(2);
+            document.getElementById('spreadZ').textContent = sigmaZ.toFixed(2);
+            document.getElementById('attackPower').textContent = NC.attackPower.toFixed(2);
+
+            const pct = ((DEPTH.focusZ + 1.5) / 3) * 100;
+            document.getElementById('depthbar-fill').style.width = pct.toFixed(1) + '%';
+
+            const density = inFocusCount / particles.length;
+            const zOffset = DEPTH.focusZ;
+            const zFactor = Math.max(0, 1 - Math.abs(zOffset) / DEPTH.bounds);
+
+            const goldFactor = Math.max(0, zFactor * density) + (NC.attackPower * NC.multiplier);
+            const magentaFactor = Math.max(0, (1 - zFactor)) + (NC.attackPower * NC.multiplier);
+
+            const auraColor = `rgba(
+                ${Math.min(255, 255 * goldFactor + 255 * magentaFactor)},
+                ${Math.min(255, 204 * goldFactor)},
+                ${Math.min(255, 255 * magentaFactor)},
+                ${0.25 + 0.5 * density}
+            )`;
+
+            ctx.strokeStyle = auraColor;
+            ctx.lineWidth = 1.5 + (NC.attackPower * NC.multiplier) * 2;
+            for (let i = 0; i < 3 + Math.floor((NC.attackPower * NC.multiplier) * 2); i++) {
+                ctx.beginPath();
+                let radius = 150 + i * 50 + Math.sin(Date.now() * (0.002 + (NC.attackPower * NC.multiplier) * 0.01) + i) * 20;
+                ctx.arc(nucleus.x, nucleus.y, radius, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
+            const focusRingR = 180 + DEPTH.focusZ * 60;
+            ctx.strokeStyle = 'rgba(255, 102, 255, 0.35)';
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([3, 6]);
+            ctx.beginPath();
+            ctx.arc(nucleus.x, nucleus.y, Math.max(10, focusRingR), 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Kern
+            ctx.shadowBlur = 20 + ((NC.attackPower * NC.multiplier) * 40);
+            ctx.shadowColor = (NC.attackPower * NC.multiplier) > 0.1 ? "magenta" : "cyan";
+            ctx.fillStyle = (NC.attackPower * NC.multiplier) > 0.1 ? "rgba(255, 102, 255, 0.8)" : "rgba(0, 255, 255, 0.8)";
+            ctx.beginPath();
+            ctx.arc(nucleus.x, nucleus.y, 5 + Math.sin(Date.now() * 0.01) * 2 + (NC.attackPower * NC.multiplier), 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        }
+
+        function updateStats() {
+            document.getElementById('auraVal').innerText = (NC.attackPower * NC.multiplier) > 0.1 ? "VERDICHTET" : "Neutral";
+        }
+
+        function animate() {
+            drawNebula();
+            updateStats();
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+
+</body>
+</html>
