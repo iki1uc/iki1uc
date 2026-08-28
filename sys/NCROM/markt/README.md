@@ -1,27 +1,43 @@
-# AXIOMIAT · Ursprung
+export const AXIOMIAT_ORIGIN = {
 
-kein Anfang  
-kein Ende  
-aber wir streben.
+    // µ0 – Ursprung
+    origin: "iki1uc",
+    note: "vorläufige Station",
 
-AXIOMIAT trägt die universelle Achs-Orientierung.
-Mehr als sechs. Mehr als acht.
-Ein Orbit. Ein Ursprung.
+    // µ3 – Bewegungsachsen
+    movement: {
+        up: true,
+        down: true,
+        left: true,
+        right: true,
+        main: true,
+        back: true
+    },
 
-Bewegung:
-up · down  
-left · right  
-main · back
+    // µ3.meta – Metaachsen
+    meta: {
+        in: true,
+        out: true,
+        echo: true,
+        impulse: true
+    },
 
-Meta:
-in · out  
-echo · impulse
+    // µ9.orbit – Orbitachsen
+    orbit: {
+        inner: true,
+        outer: true,
+        cross: true,
+        roundabout: true
+    },
 
-Orbit:
-inner · outer  
-cross · roundabout
+    // µ1 – Gesetz
+    law: "axiom",
 
-Ein Gesetz.
-Eine Mitte.
-Ein Ursprung.
-Fluid. Offen. Bereit.
+    // µ2 – Mitte
+    center: "NC",
+
+    // µ3 – Ursprung
+    state: "fluid",
+    passage: "open",
+    active: true
+};
