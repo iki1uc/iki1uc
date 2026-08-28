@@ -1,0 +1,11 @@
+NAME: VEC.VirtualMarketplace
+ID: VM01
+TYPE: Station
+ROLE: Market-Exchange
+MODE: active
+STATE: dynamic
+VECTOR: enabled
+GENIE: linked
+CONTROL: DOO/IT
+PASSAGE: DOOR
+API: required
