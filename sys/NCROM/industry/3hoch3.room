@@ -1,11 +1,18 @@
 {
   "station": "3hoch3",
-  "value": 27,
+  "dimension": 27,
+  "layer": "NCROM-INDUSTRY",
   "type": "energy-matrix",
+
   "links": {
-    "root": "ULTRA-NC3×3.room",
-    "tensor": "ULTRA-NC9×9.room",
+    "root": "ULTRA-NC3x3.room",
+    "tensor": "ULTRA-NC9x9.room",
     "nc": "81.room"
   },
-  "use": "6E-optimization"
+
+  "pipeline": "3 → 9 → 27 → 81",
+  "mode": "ULTRA-U",
+  "use": "6E-optimization",
+
+  "raw": true
 }
