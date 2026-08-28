@@ -1,1 +1,41 @@
+// NCROM · Industry · i.mode (iki1uc)
+
+export const I_MODE = {
+
+  axis: "INDUSTRY",
+
+  // µ1 – Aktivität
+  active: true,
+
+  // µ2 – Zustand
+  state: "fluid",
+
+  // µ3 – Passage
+  passage: false,
+
+  // µ9 – Industry-Funktionsmatrix
+  kernel: "ULTRA-KERNEL",
+  vector: true,
+  bind: ["1x3", "3x3", "3e3D"],
+  pulse: 0,
+  orbit: 0,
+  drift: 0,
+
+  // µ81 – Industry-Cluster
+  cluster: Array(81).fill(null),
+
+  // AXIOMIAT-Anbindung
+  axiom: {
+    origin: "iki1uc",
+    sync: true,
+    ultra: true
+  },
+
+  // PREFETCH_3-Anbindung
+  prefetch: {
+    mode: "ULTRA-U",
+    relation: "1x3 → 3e3D → 3x3",
+    zoom: "3 → 6 → 9"
+  }
+};
 
