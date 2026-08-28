@@ -1,20 +1,63 @@
-NCROM.origin = true
-NCROM.state = "unraum"
-NCROM.orbit = "none"
-NCROM.pulse = "none"
-NCROM.expand = "9q9q9"
+# ============================
+# NCROM – Ursprungsschicht
+# ============================
 
-core.axes = 3
-core.pulse = 9
-core.orbitLinks = 9
-core.matrix.symbol = "dqeqi"
-core.matrix.fractal = "9q9q9"
+NCROM.origin      = true
+NCROM.state       = "unraum"
+NCROM.orbit       = "none"
+NCROM.pulse       = "none"
 
-meta.fractal = "9y9y9"
-meta.source = "9q9q9"
+# NCROM expandiert IMMER in den Kern
+NCROM.expand      = "9q9q9"
+
+# Echo-Hall: synaptische Rückkopplung
+NCROM.echo        = "hall"
+NCROM.synapse     = "follow"
+NCROM.cycle       = "origin→core→meta→space→origin"
+
+# ============================
+# 9q9q9 – Kernwürfel
+# ============================
+
+core.axes         = 3
+core.pulse        = 9
+core.orbitLinks   = 9
+
+# dqeqi = deine interne Miniwürfel-Signatur
+core.matrix       = "dqeqi"
+
+# X/Y Cache als Kernquelle
+core.cache.x      = "D:/tmp/x/"
+core.cache.y      = "D:/tmp/y/"
+
+# ============================
+# 9y9y9 – Meta-Fraktal
+# ============================
+
+meta.fractal      = "9y9y9"
+meta.source       = "9q9q9"
+meta.echo         = "hall"
+meta.synapse      = "follow"
+
+# ============================
+# 9x9x9 – Raum-Fraktal
+# ============================
 
 space.matrix.symbol = "nxoxr"
 space.source.symbol = "syuyw"
 
-space.matrix.cache = "9x(d:/tmp/x/)x9"
-space.source.cache = "9y(d:/tmp/y/)y9"
+# Funktionale Matrix aus X/Y Cache
+space.matrix.cache  = "9x(D:/tmp/x/)x9"
+space.source.cache  = "9y(D:/tmp/y/)y9"
+
+# Echo-Hall auch im Raum
+space.echo          = "hall"
+space.synapse       = "follow"
+
+# ============================
+# Endpunkt
+# ============================
+
+NCROM.ready       = true
+NCROM.mode        = "rom"
+NCROM.version     = "iki1uc-core"
