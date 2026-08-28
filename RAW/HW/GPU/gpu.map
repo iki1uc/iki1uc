@@ -1,19 +1,16 @@
-# GPU: MASTER-KERN MAP
+import GPU_MAP from "./RAW/HW/GPU/gpu.map";
+import TMP from "./tmp.js";
 
-GPU.STAGE.1 = CACHE.STAGE.3        # AXIOM-SPACE
-GPU.STAGE.2 = CACHE.STAGE.4        # MULTILAR-ZONE
-GPU.STAGE.3 = RAM-ACCESS
-GPU.STAGE.4 = EXEC-UNIT
+export const CubikGPU = {
+  X: GPU_MAP.STAGE,   // 1–4
+  Y: GPU_MAP.HW,      // CACHE, RAM, ROM, SYCL
+  Z: GPU_MAP.OP,      // AXIOM, MATRIX, SYNC, ERROR
 
-GPU.MODE   = dynamic
-GPU.STATE  = ready
-GPU.LEVEL  = SYCL-CORE
+  compute(x, y, z) {
+    const stage = this.X[x];
+    const hw    = this.Y[y];
+    const op    = this.Z[z];
 
-# GPU-LINKS
-GPU.CACHE  = CACHE: MASTER-KERN 4-STAGE
-GPU.RAM    = RAM: MULTILAR_ZONES
-GPU.ROM    = ROM: MASTER-KERN MAP
-GPU.AXIOM  = AXIOM.SPACE.LEVEL = 692
-GPU.MATRIX = MATRIX-692
-GPU.SYNC   = SYSTEM-SYNC
-GPU.ERROR  = ERROR-ROUTER
+    return TMP.transform(stage + hw + op);
+  }
+};
