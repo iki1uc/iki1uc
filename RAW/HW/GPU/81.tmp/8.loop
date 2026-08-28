@@ -1,0 +1,5 @@
+LOOP:8
+ROLE:orbit
+STATE:rotate
+NEXT:9.loop
+

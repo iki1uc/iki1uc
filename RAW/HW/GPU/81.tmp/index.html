@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>81.tmp · NC-System</title>
+<style>
+body{background:#000;color:#0f0;font-family:monospace;padding:40px;}
+pre{background:#111;border-left:3px solid #6cf;padding:12px;}
+button{background:#111;color:#0f0;border:1px solid #333;padding:8px 16px;margin-bottom:10px;}
+</style>
+</head>
+<body>
+
+<h1>81.tmp · NC-System</h1>
+
+<button onclick="runNC()">NC prüfen</button>
+<pre id="out">Bereit…</pre>
+
+<script>
+function runNC(){
+    const nc = {
+        core: "NC",
+        state: "active",
+        loops: ["1.loop","2.loop","3.loop","4.loop","8.loop","9.loop"],
+        axes: ["tmp.a","tmp.d","tmp.e","tmp.i","tmp.o","tmp.r","tmp.s","tmp.w"],
+        modules: ["arg.tmp","in.tmp","fit.tmp","help.tmp","up.tmp"],
+        zone: "c.zone",
+        timestamp: Date.now()
+    };
+    out.textContent = JSON.stringify(nc, null, 2);
+}
+</script>
+
+</body>
+</html>

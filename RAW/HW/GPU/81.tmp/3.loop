@@ -1,0 +1,5 @@
+LOOP:3
+ROLE:check
+STATE:verify
+NEXT:4.loop
+

@@ -1,0 +1,4 @@
+FIT:alignment
+STATE:active
+TARGET:tmp.*
+MODE:auto

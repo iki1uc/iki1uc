@@ -1,0 +1,4 @@
+AXIS:W
+ROLE:wave
+STATE:active
+VALUE:8

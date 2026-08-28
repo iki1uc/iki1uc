@@ -1,0 +1,4 @@
+IN:signal
+TYPE:core
+STATE:accepted
+FLOW:to arg.tmp
