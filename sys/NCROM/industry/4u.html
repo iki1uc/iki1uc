@@ -1,9 +1,17 @@
-export const respo = {
-  OK: "OK",          // klare Zustimmung
-  NOK: "NOK",        // klare Ablehnung
-  FLOW: "FLOW",      // System fließt
-  BREAK: "BREAK",    // System bricht
-  ECHO: "ECHO",      // Rückmeldung / Spiegel
-  VOID: "VOID",      // Leere / Neutral
-  ROOT: "ROOT"       // Rückkehr zum Ursprung
+export const RESPO = {
+
+  // Affirmation / Negation
+  OK:   { code: "OK",   axis: 1, type: "affirm" },
+  NOK:  { code: "NOK",  axis: -1, type: "negate" },
+
+  // Systemfluss / Systembruch
+  FLOW:  { code: "FLOW",  axis: 3, type: "orbit" },
+  BREAK: { code: "BREAK", axis: -3, type: "collapse" },
+
+  // Spiegel / Neutral
+  ECHO: { code: "ECHO", axis: 0, type: "reflect" },
+  VOID: { code: "VOID", axis: 0, type: "neutral" },
+
+  // Ursprung / Reset
+  ROOT: { code: "ROOT", axis: "NC", type: "origin" }
 };
