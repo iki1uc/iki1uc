@@ -1,1 +1,20 @@
+export const DUO_MODE = {
+    boot() {
+        return {
+            mode: "minimal",
+            os: "chromium",
+            ram: true,
 
+            NCROM: {
+                origin: true,
+                state: "boot",
+                expand: "runtime"
+            },
+
+            load: [
+                "sli/core",
+                "sli/runtime"
+            ]
+        };
+    }
+};
