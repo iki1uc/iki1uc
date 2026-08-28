@@ -1,34 +1,49 @@
-const orbit = {
-    speed: Phi * 2,
-    radius: phi * 3,
-    evo: phi2 * phiinfty
+DirectV.routeRUN3 = function(run3){
+    this.run3 = run3;
+
+    // Speed = Orbit-Speed + Operator-Bewegung
+    this.state.speed = 
+        run3.orbital.speed +
+        run3.operator.bewegung;
+
+    // Stabilität = Operator-Stabilität + Orbit-Evo
+    this.state.stabil = 
+        run3.operator.stabilitaet +
+        run3.orbital.evo;
+
+    // Quantisierung = Raster
+    this.state.quant = run3.operator.raster;
+
+    // Boost aktivieren wenn Speed + Stabil > Schwellwert
+    this.state.boost = (this.state.speed + this.state.stabil) > 10;
+
+    return this.state;
 };
-const operatoren = {
-    bewegung: Phi + phi,
-    stabilitaet: phi2 - phi,
-    raster: Phi * phi2
+DirectV.route = function(data){
+
+    // 1. USB Cache
+    if(this.usb){
+        this.usb.write(data);
+    }
+
+    // 2. TMP/HDF
+    if(this.hdf){
+        this.hdf.store(this.run3.fusion);
+    }
+
+    // 3. SSD Boost
+    if(this.state.boost && this.ssd){
+        this.ssd.accel(data);
+    }
+
+    return {
+        routed: true,
+        speed: this.state.speed,
+        stabil: this.state.stabil,
+        boost: this.state.boost,
+        quant: this.state.quant
+    };
 };
-const status = (Phi + phi + phi2 + phiinfty) > 2 ? "aktiv" : "ruhig";
-const erinnerung = {
-    lastPhi: Phi,
-    lastPhi2: phi2,
-    lastOrbit: orbit.evo
-};
-const ghost = ghost5E(Phi, phi, phi2, phiinfty);
-updateTmp(lage.mini, axes, axes.bewegung, ghost.orbit);
-GPU_MATRIX_692_TENSOR.update(
-    lage.mini,
-    lage.maxi,
-    { mini: lage.mini.stabil, maxi: lage.maxi.stabil },
-    692,
-    respo.final,
-    ghost.orbit
-);
-Cubik4D.update(
-    lage.mini,
-    axes,
-    axes.bewegung,
-    ghost.orbit,
-    respo.final,
-    GPU_MATRIX_692_TENSOR
-);
+const movement = RUN3_Movement(axes.bewegung, ghost.orbit, ghost.operatoren);
+
+DirectV.routeRUN3(movement);
