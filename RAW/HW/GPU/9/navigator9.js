@@ -1,7 +1,6 @@
 class NAV9 {
 
     build(){
-        // 9×9 JSON laden
         const raw = window.NC9X9 || [];
 
         return raw.map((row,r)=> 
