@@ -1,23 +1,27 @@
-PREFETCH_3 = {
+export const PREFETCH_3 = {
+
   POS: {
     MODE: "ULTRA-U",
-    LAYER: "1 / 2 / 3",
+    LAYER: "µ1 / µ2 / µ3",
     RELATION: "1x3 → 3e3D → 3x3"
   },
 
   ENGINE: {
     MODE: "ULTRA-KERNEL",
     CTRL: true,
-    BIND: "3x3 + 1x3 + 3e3D"
+    BIND: ["1x3", "3x3", "3e3D"]
+  },
+
+  "1x3": {
+    AXIS: ["cause", "vector", "impulse"]
   },
 
   "3x3": {
     IN: "horizontal",
-    OUT: "vertikal",
+    OUT: "vertical",
     BREITE: 3,
     TIEFE: 3,
     MYSTER: "aktiv",
-
     AXIOM: ["DA", "NE", "BEN"],
     ZOOM: "1 → 3"
   },
