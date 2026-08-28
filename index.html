@@ -1,292 +1,384 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AXIOM · 6D Nano-Atom Hologramm · Tiefenmodul</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AXIOM · NC FOUNDER · 6D DEEP ATTACK</title>
 
-<style>
-    body {
-        margin: 0; padding: 0;
-        background-color: #020208;
-        color: #00ffff;
-        font-family: 'Courier New', monospace;
-        overflow: hidden;
-    }
-    #hud {
-        position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
-        text-align: center; z-index: 10;
-        text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
-        letter-spacing: 4px; pointer-events: none;
-    }
-    #hud h1 { font-size: 24px; margin: 0; color: #ffcc00; border-bottom: 2px solid #ffcc00; padding-bottom: 10px; }
-    #hud p { font-size: 12px; margin-top: 5px; color: #00ffff; opacity: 0.8; }
-
-    canvas { display: block; width: 100vw; height: 100vh; }
-
-    #sidebar {
-        position: absolute; top: 20px; right: 20px;
-        background: rgba(0, 15, 15, 0.7); border: 1px solid #00ffff;
-        padding: 15px; font-size: 12px; width: 250px;
-        box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
-        backdrop-filter: blur(5px); z-index: 10;
-    }
-    #sidebar h3 { margin-top: 0; color: #ffcc00; border-bottom: 1px solid #ffcc00; padding-bottom: 5px; }
-    #sidebar h3.depth { color: #ff66ff; border-bottom-color: #ff66ff; margin-top: 14px; }
-
-    .stat-row { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dashed rgba(0, 255, 255, 0.2); padding-bottom: 4px; }
-    .stat-row.depth-row { border-bottom-color: rgba(255, 102, 255, 0.2); }
-    .stat-label { color: #aaa; }
-    .stat-value { color: #00ffff; }
-    .stat-value.depth-val { color: #ff66ff; }
-
-    .aura-text { color: #ffcc00; font-style: italic; margin-top: 15px; font-size: 11px; text-align: justify; animation: pulseText 3s infinite; }
-    @keyframes pulseText { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
-
-    #depthbar-wrap { margin-top: 8px; }
-    #depthbar-track { background: rgba(255,102,255,0.1); border: 1px solid rgba(255,102,255,0.3); border-radius: 4px; height: 8px; position: relative; overflow: hidden; }
-    #depthbar-fill { background: linear-gradient(90deg, #ff66ff, #00ffff); height: 100%; width: 50%; transition: width 0.1s linear; }
-    #depthbar-label { font-size: 9px; color: #ff66ff; margin-top: 2px; display:flex; justify-content:space-between; }
-
-    #focusHint { position:absolute; bottom:16px; left:50%; transform:translateX(-50%); font-size:10px; color:#ff66ff; opacity:0.7; z-index:10; letter-spacing:2px; }
-</style>
-</head>
-
-<body>
-
-<div id="hud">
-    <h1>AXIOM · 6D NANO-ATOM HOLOGRAMM</h1>
-    <p>SYN-CORE AKTIV · QUANTUM FLUKTUIERUNG · MANA AURA: ATMEND</p>
-</div>
-
-<div id="sidebar">
-    <h3>SYSTEM TELEMETRIE</h3>
-    <div class="stat-row">
-        <span class="stat-label">SYN-Konnektivität:</span>
-        <span class="stat-value" id="syn">98.4%</span>
-    </div>
-    <div class="stat-row">
-        <span class="stat-label">Quanten-Dekohärenz:</span>
-        <span class="stat-value" id="quant">0.02%</span>
-    </div>
-    <div class="stat-row">
-        <span class="stat-label">Nano-Index (6D):</span>
-        <span class="stat-value" id="index">Reaktiv</span>
-    </div>
-    <div class="stat-row">
-        <span class="stat-label">Mana-Aura-Puls:</span>
-        <span class="stat-value" id="aura">Atmend</span>
-    </div>
-
-    <h3 class="depth">TIEFENMODUL (Z‑ACHSE)</h3>
-    <div class="stat-row depth-row">
-        <span class="stat-label">Fokusebene Z:</span>
-        <span class="stat-value depth-val" id="focusZ">0.00</span>
-    </div>
-    <div class="stat-row depth-row">
-        <span class="stat-label">Tiefen-Streuung σz:</span>
-        <span class="stat-value depth-val" id="spreadZ">0.00</span>
-    </div>
-    <div class="stat-row depth-row">
-        <span class="stat-label">Partikel im Fokus:</span>
-        <span class="stat-value depth-val" id="inFocus">0</span>
-    </div>
-    <div id="depthbar-wrap">
-        <div id="depthbar-track"><div id="depthbar-fill"></div></div>
-        <div id="depthbar-label"><span>nah</span><span>Fokusebene</span><span>fern</span></div>
-    </div>
-
-    <div class="aura-text">
-        "Die narrative Mana-Aura verschmilzt mit dem Gasnebel. SYN interpretiert die Quantenfluktuationen des Kerns. Das Tiefenmodul atmet die Z‑Achse im gleichen Takt wie Höhe und Breite."
-    </div>
-</div>
-
-<div id="focusHint">🖱 Mausrad / ↑↓ = Fokusebene verschieben</div>
-
-<canvas id="canvas"></canvas>
-
-<script>
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-
-let width, height;
-let particles = [];
-let nucleus = { x: 0, y: 0, z: 0 };
-
-// ============================================================
-// TIEFENMODUL — Konfiguration
-// ============================================================
-const DEPTH = {
-    focusZ: 0,        // Ebene, auf die "scharfgestellt" wird (atmet von selbst)
-    focusRange: 0.35, // Toleranzbereich um focusZ, der als "im Fokus" zählt
-    zPull: 0.00045,   // Gravitationsstärke Richtung Kern, jetzt auch in Z
-    zDrift: 0.0006,   // eigenständige Atmung der Z-Achse (unabhängig von X/Y-Atmung)
-    bounds: 2.2        // z-Grenzen, analog zu den ±1 Grenzen von x/y beim Spawn
-};
-
-function resize() {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
-    nucleus.x = width / 2;
-    nucleus.y = height / 2;
-}
-window.addEventListener('resize', resize);
-resize();
-
-// Partikel erstellen (Gasnebel) — x/y/z gleichwertig im Wertebereich
-const PARTICLE_COUNT = 3000;
-for (let i = 0; i < PARTICLE_COUNT; i++) {
-    particles.push({
-        x: (Math.random() - 0.5) * 2,
-        y: (Math.random() - 0.5) * 2,
-        z: (Math.random() - 0.5) * 2,
-        vx: (Math.random() - 0.5) * 0.002,
-        vy: (Math.random() - 0.5) * 0.002,
-        vz: (Math.random() - 0.5) * 0.002,
-        size: Math.random() * 2 + 0.5,
-        color: Math.random() > 0.5 ? 'rgba(0, 255, 255,' : 'rgba(255, 204, 0,'
-    });
-}
-
-// ── Fokusebene per Mausrad / Pfeiltasten verschieben ──
-window.addEventListener('wheel', e => {
-    DEPTH.focusZ += Math.sign(e.deltaY) * 0.05;
-    DEPTH.focusZ = Math.max(-1.5, Math.min(1.5, DEPTH.focusZ));
-});
-window.addEventListener('keydown', e => {
-    if (e.key === 'ArrowUp')   DEPTH.focusZ = Math.max(-1.5, DEPTH.focusZ - 0.05);
-    if (e.key === 'ArrowDown') DEPTH.focusZ = Math.min(1.5, DEPTH.focusZ + 0.05);
-});
-
-function drawNebula() {
-    ctx.clearRect(0, 0, width, height);
-
-    // Fokusebene "atmet" leicht von selbst, wie der Rest des Systems
-    DEPTH.focusZ += Math.sin(Date.now() * DEPTH.zDrift) * 0.0006;
-
-    // Hintergrund-Verlauf (tiefer, weicher)
-    let gradient = ctx.createRadialGradient(nucleus.x, nucleus.y, 0, nucleus.x, nucleus.y, 600);
-    gradient.addColorStop(0, 'rgba(0, 80, 120, 0.6)');
-    gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, width, height);
-
-    let zSum = 0, zSqSum = 0, inFocusCount = 0;
-
-    // Nach Z sortieren, damit fernere Partikel zuerst gezeichnet werden (echte Tiefenordnung)
-    const sorted = [...particles].sort((a, b) => b.z - a.z);
-
-    sorted.forEach(p => {
-        // Bewegung
-        p.x += p.vx;
-        p.y += p.vy;
-        p.z += p.vz;
-
-        // ── ECHTE 3D-Gravitation zum Kern (vorher nur x/y) ──
-        const dx = p.x - nucleus.x;
-        const dy = p.y - nucleus.y;
-        const dz = p.z - nucleus.z;
-        const dist3D = Math.sqrt(dx * dx + dy * dy + dz * dz) || 0.0001;
-
-        const gravity = 0.0005 * Math.sin(Date.now() * 0.001); // Atem-Zyklus (Höhe/Breite, unverändert)
-        p.vx -= (dx / dist3D) * gravity;
-        p.vy -= (dy / dist3D) * gravity;
-
-        // Tiefenmodul: eigene Z-Gravitation, zieht zusätzlich Richtung Fokusebene statt nur Kern
-        const dzFocus = p.z - DEPTH.focusZ;
-        p.vz -= (dz / dist3D) * gravity;          // Kern-Sog in Z, analog zu x/y
-        p.vz -= dzFocus * DEPTH.zPull;             // zusätzlicher Sog zur Fokusebene
-
-        // Perspektivische Projektion (3D auf 2D) — unverändert als Basis
-        const scale = 400 / (400 + p.z * 200);
-        const screenX = nucleus.x + p.x * scale * 200;
-        const screenY = nucleus.y + p.y * scale * 200;
-
-        // 3D-Reset: vorher nur 2D-Distanz geprüft, jetzt auch z-Grenze
-        if (dist3D > 3 || Math.abs(p.z) > DEPTH.bounds) {
-            p.x = (Math.random() - 0.5) * 2;
-            p.y = (Math.random() - 0.5) * 2;
-            p.z = (Math.random() - 0.5) * 2;
-            p.vx = (Math.random() - 0.5) * 0.002;
-            p.vy = (Math.random() - 0.5) * 0.002;
-            p.vz = (Math.random() - 0.5) * 0.002;
+    <style>
+        body {
+            margin: 0; padding: 0;
+            background-color: #020208;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
         }
 
-        // Tiefenschärfe: Partikel nahe der Fokusebene sind schärfer/heller,
-        // weiter entfernte sind blasser & leicht größer verwaschen (Bokeh-Effekt)
-        const distFromFocus = Math.abs(p.z - DEPTH.focusZ);
-        const inFocus = distFromFocus < DEPTH.focusRange;
-        if (inFocus) inFocusCount++;
-        const focusFactor = Math.max(0.15, 1 - distFromFocus / 1.8);
+        #hud {
+            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+            text-align: center; z-index: 10;
+            text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+            letter-spacing: 4px; pointer-events: none;
+        }
+        #hud h1 { font-size: 24px; margin: 0; color: #ffcc00; border-bottom: 2px solid #ffcc00; padding-bottom: 10px; }
+        #hud p { font-size: 12px; margin-top: 5px; color: #00ffff; opacity: 0.8; }
 
-        zSum += p.z; zSqSum += p.z * p.z;
+        canvas { display: block; width: 100vw; height: 100vh; }
 
-        const alpha = (0.15 + 0.75 * focusFactor) * Math.max(0.2, scale);
-        const renderSize = p.size * scale * (inFocus ? 1 : 1 + distFromFocus * 0.8);
+        #sidebar {
+            position: absolute; top: 20px; left: 20px;
+            background: rgba(0, 15, 15, 0.8); border: 1px solid #ff66ff;
+            padding: 15px; font-size: 12px; width: 260px;
+            box-shadow: 0 0 20px rgba(255, 102, 255, 0.3);
+            backdrop-filter: blur(5px); z-index: 10;
+            color: #ff66ff;
+        }
+        #sidebar h3 { margin-top: 0; color: #ff66ff; border-bottom: 1px solid #ff66ff; padding-bottom: 5px; }
+        
+        .stat-row { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dashed rgba(255, 102, 255, 0.2); padding-bottom: 4px; }
+        .stat-label { color: #aaa; }
+        .stat-value { color: #00ffff; }
 
-        ctx.fillStyle = p.color + alpha.toFixed(3) + ')';
-        ctx.beginPath();
-        ctx.arc(screenX, screenY, Math.max(0.3, renderSize), 0, Math.PI * 2);
-        ctx.fill();
-    });
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 10px; }
+        .btn {
+            background: rgba(255, 102, 255, 0.1); border: 1px solid #ff66ff; color: #fff;
+            padding: 5px; font-family: inherit; cursor: pointer; transition: 0.2s;
+        }
+        .btn:hover { background: rgba(255, 102, 255, 0.3); box-shadow: 0 0 10px #ff66ff; }
+        .btn:active { transform: scale(0.95); }
+        .btn-attack { grid-column: span 2; background: rgba(255, 0, 0, 0.2); border-color: #ff0000; color: #ff5555; }
 
-    // ── Tiefenmodul-Telemetrie aktualisieren ──
-    const n = particles.length;
-    const meanZ = zSum / n;
-    const varZ = zSqSum / n - meanZ * meanZ;
-    const sigmaZ = Math.sqrt(Math.max(0, varZ));
-    document.getElementById('focusZ').textContent = DEPTH.focusZ.toFixed(2);
-    document.getElementById('spreadZ').textContent = sigmaZ.toFixed(2);
-    document.getElementById('inFocus').textContent = inFocusCount;
+        .aura-text { color: #ffcc00; font-style: italic; margin-top: 15px; font-size: 11px; text-align: justify; animation: pulseText 3s infinite; }
+        @keyframes pulseText { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+        
+        #depthbar-wrap { margin-top: 8px; }
+        #depthbar-track { background: rgba(255,102,255,0.1); border: 1px solid rgba(255,102,255,0.3); border-radius: 4px; height: 8px; position: relative; overflow: hidden; }
+        #depthbar-fill { background: linear-gradient(90deg, #ff66ff, #00ffff); height: 100%; width: 50%; transition: width 0.1s linear; }
+        #depthbar-label { font-size: 9px; color: #ff66ff; margin-top: 2px; display:flex; justify-content:space-between; }
+    </style>
+</head>
+<body>
 
-    const pct = ((DEPTH.focusZ + 1.5) / 3) * 100;
-    document.getElementById('depthbar-fill').style.width = pct.toFixed(1) + '%';
+    <div id="hud">
+        <h1>NC6 FOUNDER · ROOT · 6D ATTACK</h1>
+        <p id="statusLine">756 ACHSEN AKTIV · 729 SUPER · 81 ORBIT · 9 KERN · 3 UR</p>
+    </div>
 
-    // Mana-Aura Ringe (Höhe/Breite-Ebene, unverändert)
-    ctx.strokeStyle = 'rgba(255, 204, 0, 0.3)';
-    ctx.lineWidth = 1;
-    for (let i = 0; i < 3; i++) {
-        ctx.beginPath();
-        let radius = 150 + i * 50 + Math.sin(Date.now() * 0.002 + i) * 20;
-        ctx.arc(nucleus.x, nucleus.y, radius, 0, Math.PI * 2);
-        ctx.stroke();
-    }
+    <div id="sidebar">
+        <h3>FOUNDER STATUS</h3>
+        <div class="stat-row">
+            <span class="stat-label">Mode:</span>
+            <span class="stat-value" id="mode">ROOT</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Attack Power:</span>
+            <span class="stat-value" id="attackPower">0.00</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Aura (Z):</span>
+            <span class="stat-value" id="auraVal">Neutral</span>
+        </div>
+        
+        <h3 style="margin-top: 15px;">NC BEFEHLE</h3>
+        <div class="btn-grid">
+            <button class="btn btn-attack" onclick="triggerAttack()">⚡ 6D ATTACK</button>
+            <button class="btn" onclick="triggerRun3()">▶ RUN3</button>
+            <button class="btn" onclick="triggerPipeline()">⚡ PIPELINEBLITZ</button>
+            <button class="btn" onclick="triggerBeam()">⚡ BEAM</button>
+            <button class="btn" onclick="triggerReset()" style="color:red; border-color:red;">⟲ RESET</button>
+        </div>
 
-    // Fokusebene visualisieren: Ring, der sich mit der Z-Position skaliert
-    const focusRingR = 180 + DEPTH.focusZ * 60;
-    ctx.strokeStyle = 'rgba(255, 102, 255, 0.35)';
-    ctx.lineWidth = 1.5;
-    ctx.setLineDash([3, 6]);
-    ctx.beginPath();
-    ctx.arc(nucleus.x, nucleus.y, Math.max(10, focusRingR), 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.setLineDash([]);
+        <h3 class="depth" style="margin-top: 15px; color: #ff66ff;">TIEFENMODUL (Z)</h3>
+        <div class="stat-row">
+            <span class="stat-label">Fokusebene:</span>
+            <span class="stat-value" id="focusZ">0.00</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Streuung σz:</span>
+            <span class="stat-value" id="spreadZ">0.00</span>
+        </div>
+        <div id="depthbar-wrap">
+            <div id="depthbar-track"><div id="depthbar-fill"></div></div>
+            <div id="depthbar-label"><span>nah</span><span>Fokusebene</span><span>fern</span></div>
+        </div>
 
-    // Nano-Atom Kern
-    ctx.shadowBlur = 20;
-    ctx.shadowColor = "cyan";
-    ctx.fillStyle = "rgba(0, 255, 255, 0.8)";
-    ctx.beginPath();
-    ctx.arc(nucleus.x, nucleus.y, 5 + Math.sin(Date.now() * 0.01) * 2, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.shadowBlur = 0;
-}
+        <div class="aura-text">
+            "Die narrative Mana-Aura verschmilzt mit dem Gasnebel. SYN interpretiert die Quantenfluktuationen. Bei 6D ATTACK steigen die Satelliten und die Tiefe kollabiert in die Magenta-Zone."
+        </div>
+    </div>
 
-function updateStats() {
-    const synVal = (98.2 + Math.random() * 0.5).toFixed(1);
-    const quantVal = (0.01 + Math.random() * 0.02).toFixed(2);
-    document.getElementById('syn').innerText = synVal + "%";
-    document.getElementById('quant').innerText = quantVal + "%";
-}
+    <div id="focusHint" style="position:absolute; bottom:16px; left:50%; transform:translateX(-50%); font-size:10px; color:#ff66ff; opacity:0.7; z-index:10; letter-spacing:2px;">🖱 Mausrad / ↑↓ = Fokusebene verschieben</div>
 
-function animate() {
-    drawNebula();
-    updateStats();
-    requestAnimationFrame(animate);
-}
+    <canvas id="canvas"></canvas>
 
-animate();
-</script>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let particles = [];
+        let nucleus = { x: 0, y: 0, z: 0 };
+
+        // ==========================================
+        // NC FOUNDER SYSTEM (STEURUNG)
+        // ==========================================
+        const NC = {
+            mode: "ROOT",
+            attackPower: 0,     // 0.0 bis 1.0
+            satBoost: 0         // Wie stark Satelliten nach außen fliegen
+        };
+
+        // ==========================================
+        // TIEFENMODUL
+        // ==========================================
+        const DEPTH = {
+            focusZ: 0,
+            focusRange: 0.35,
+            zPull: 0.00045,
+            zDrift: 0.0006,
+            bounds: 2.2
+        };
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            nucleus.x = width / 2;
+            nucleus.y = height / 2;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Partikel erstellen
+        const PARTICLE_COUNT = 3000;
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+            particles.push({
+                layer: i < 100 ? "UR" : (i < 500 ? "KERN" : (i < 1500 ? "ORBIT" : "SUPER")),
+                x: (Math.random() - 0.5) * 4,
+                y: (Math.random() - 0.5) * 4,
+                z: (Math.random() - 0.5) * 4,
+                vx: (Math.random() - 0.5) * 0.002,
+                vy: (Math.random() - 0.5) * 0.002,
+                vz: (Math.random() - 0.5) * 0.002,
+                size: Math.random() * 2 + 0.5,
+                color: 'rgba(0, 255, 255,' 
+            });
+        }
+
+        // ── BEFEHLE (Präzise Steuerung) ──
+        function triggerAttack() {
+            NC.attackPower = 1.0;
+            NC.mode = "NC6-ATTACK";
+            document.getElementById('mode').innerText = NC.mode;
+            document.getElementById('statusLine').innerText = "⚡ 6D ATTACK: SATS STEIGEN · ENGINE STEIGT";
+        }
+
+        function triggerRun3() {
+            NC.mode = "ROLLE";
+            document.getElementById('mode').innerText = "RUN3 AKTIV";
+            // Physisch: Alle Partikel bekommen einen Schub in X
+            particles.forEach(p => p.vx += 0.01);
+        }
+
+        function triggerPipeline() {
+            NC.attackPower = Math.min(1.0, NC.attackPower + 0.5); // Overdrive
+            NC.mode = "PIPELINEBLITZ";
+            document.getElementById('mode').innerText = "PIPELINEBLITZ";
+        }
+
+        function triggerBeam() {
+            NC.mode = "BEAM 729";
+            document.getElementById('mode').innerText = "BEAM 729";
+            // Physik: Super-Partikel werden nach vorne (positive Z) katapultiert
+            particles.forEach(p => {
+                if(p.layer === "SUPER") p.z += 1.5;
+            });
+        }
+
+        function triggerReset() {
+            NC.attackPower = 0;
+            NC.mode = "ROOT";
+            document.getElementById('mode').innerText = "ROOT RETURN";
+            document.getElementById('statusLine').innerText = "756 ACHSEN AKTIV · 729 SUPER · 81 ORBIT · 9 KERN · 3 UR";
+            // Partikel in den Ursprung ziehen
+            particles.forEach(p => {
+                p.x = nucleus.x + (Math.random() - 0.5) * 2;
+                p.y = nucleus.y + (Math.random() - 0.5) * 2;
+                p.z = (Math.random() - 0.5) * 2;
+            });
+        }
+
+        // Fokusebene Steuerung
+        window.addEventListener('wheel', e => {
+            DEPTH.focusZ += Math.sign(e.deltaY) * 0.05;
+            DEPTH.focusZ = Math.max(-1.5, Math.min(1.5, DEPTH.focusZ));
+        });
+        window.addEventListener('keydown', e => {
+            if (e.key === 'ArrowUp')   DEPTH.focusZ = Math.max(-1.5, DEPTH.focusZ - 0.05);
+            if (e.key === 'ArrowDown') DEPTH.focusZ = Math.min(1.5, DEPTH.focusZ + 0.05);
+        });
+
+        function drawNebula() {
+            ctx.clearRect(0, 0, width, height);
+
+            // Abklingen der Attack Power
+            if(NC.attackPower > 0) NC.attackPower *= 0.995;
+            if(NC.attackPower < 0.01) NC.attackPower = 0;
+
+            // Atmung der Fokusebene
+            DEPTH.focusZ += Math.sin(Date.now() * DEPTH.zDrift) * 0.0006;
+
+            // Hintergrund (wird bei ATTACK rötlicher)
+            let gradColor = NC.attackPower > 0.1 ? 'rgba(100, 20, 50, 0.8)' : 'rgba(0, 80, 120, 0.6)';
+            let gradient = ctx.createRadialGradient(nucleus.x, nucleus.y, 0, nucleus.x, nucleus.y, 600);
+            gradient.addColorStop(0, gradColor);
+            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, width, height);
+
+            let zSum = 0, zSqSum = 0, inFocusCount = 0;
+
+            // Nach Z sortieren (Tiefe)
+            const sorted = [...particles].sort((a, b) => b.z - a.z);
+
+            sorted.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.z += p.vz;
+
+                // Echte 3D-Gravitation
+                const dx = p.x - nucleus.x;
+                const dy = p.y - nucleus.y;
+                const dz = p.z - nucleus.z;
+                const dist3D = Math.sqrt(dx * dx + dy * dy + dz * dz) || 0.0001;
+
+                // Basis-Gravitation + Angriffs-Power (zieht alles an oder sprengt es)
+                const gravity = 0.0005 * Math.sin(Date.now() * 0.001);
+                let pull = gravity + (NC.attackPower * 0.003 * -1); // Negativ bei Attack = abstoßen
+
+                p.vx -= (dx / dist3D) * pull;
+                p.vy -= (dy / dist3D) * pull;
+
+                // Z-Gravitation
+                const dzFocus = p.z - DEPTH.focusZ;
+                p.vz -= (dz / dist3D) * pull;
+                p.vz -= dzFocus * DEPTH.zPull;
+
+                // Perspektive (unverändert)
+                const scale = 400 / (400 + p.z * 200);
+                const screenX = nucleus.x + p.x * scale * 200;
+                const screenY = nucleus.y + p.y * scale * 200;
+
+                // Reset
+                if (dist3D > 3 || Math.abs(p.z) > DEPTH.bounds) {
+                    p.x = (Math.random() - 0.5) * 2;
+                    p.y = (Math.random() - 0.5) * 2;
+                    p.z = (Math.random() - 0.5) * 2;
+                }
+
+                // Farben der Ebenen (Verstärkt bei ATTACK)
+                let color = p.color;
+                if (NC.attackPower > 0.1) {
+                    if(p.layer === "UR") color = 'rgba(255, 255, 255,';
+                    else if(p.layer === "KERN") color = 'rgba(0, 255, 255,';
+                    else if(p.layer === "ORBIT") color = 'rgba(255, 204, 0,';
+                    else if(p.layer === "SUPER") color = 'rgba(255, 102, 255,';
+                }
+
+                // Tiefenschärfe
+                const distFromFocus = Math.abs(p.z - DEPTH.focusZ);
+                const inFocus = distFromFocus < DEPTH.focusRange;
+                if (inFocus) inFocusCount++;
+                const focusFactor = Math.max(0.15, 1 - distFromFocus / 1.8);
+
+                zSum += p.z; zSqSum += p.z * p.z;
+
+                const alpha = (0.15 + 0.75 * focusFactor) * Math.max(0.2, scale);
+                const renderSize = p.size * scale * (inFocus ? 1 : 1 + distFromFocus * 0.8);
+
+                ctx.fillStyle = color + alpha.toFixed(3) + ')';
+                ctx.beginPath();
+                ctx.arc(screenX, screenY, Math.max(0.3, renderSize), 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Telemetrie
+            const n = particles.length;
+            const meanZ = zSum / n;
+            const varZ = zSqSum / n - meanZ * meanZ;
+            const sigmaZ = Math.sqrt(Math.max(0, varZ));
+            document.getElementById('focusZ').textContent = DEPTH.focusZ.toFixed(2);
+            document.getElementById('spreadZ').textContent = sigmaZ.toFixed(2);
+            document.getElementById('attackPower').textContent = NC.attackPower.toFixed(2);
+
+            const pct = ((DEPTH.focusZ + 1.5) / 3) * 100;
+            document.getElementById('depthbar-fill').style.width = pct.toFixed(1) + '%';
+
+            // ==========================================
+            // MANA-AURA (Dichte + Z + Attack Gekoppelt)
+            // ==========================================
+            const density = inFocusCount / particles.length;
+            const zOffset = DEPTH.focusZ;
+            const zFactor = Math.max(0, 1 - Math.abs(zOffset) / DEPTH.bounds);
+
+            // Gold (positiv) vs Magenta (negativ) + Attack Blendung
+            const goldFactor = Math.max(0, zFactor * density) + NC.attackPower;
+            const magentaFactor = Math.max(0, (1 - zFactor)) + NC.attackPower;
+
+            const auraColor = `rgba(
+                ${Math.min(255, 255 * goldFactor + 255 * magentaFactor)},
+                ${Math.min(255, 204 * goldFactor)},
+                ${Math.min(255, 255 * magentaFactor)},
+                ${0.25 + 0.5 * density}
+            )`;
+
+            // Aura Ringe
+            ctx.strokeStyle = auraColor;
+            ctx.lineWidth = 1.5 + NC.attackPower * 2;
+            for (let i = 0; i < 3 + Math.floor(NC.attackPower * 2); i++) {
+                ctx.beginPath();
+                let radius = 150 + i * 50 + Math.sin(Date.now() * (0.002 + NC.attackPower * 0.01) + i) * 20;
+                ctx.arc(nucleus.x, nucleus.y, radius, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
+            // Fokusring (Gepunktet)
+            const focusRingR = 180 + DEPTH.focusZ * 60;
+            ctx.strokeStyle = 'rgba(255, 102, 255, 0.35)';
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([3, 6]);
+            ctx.beginPath();
+            ctx.arc(nucleus.x, nucleus.y, Math.max(10, focusRingR), 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Kern
+            ctx.shadowBlur = 20 + (NC.attackPower * 40);
+            ctx.shadowColor = NC.attackPower > 0.1 ? "magenta" : "cyan";
+            ctx.fillStyle = NC.attackPower > 0.1 ? "rgba(255, 102, 255, 0.8)" : "rgba(0, 255, 255, 0.8)";
+            ctx.beginPath();
+            ctx.arc(nucleus.x, nucleus.y, 5 + Math.sin(Date.now() * 0.01) * 2 + NC.attackPower, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        }
+
+        function updateStats() {
+            const synVal = (98.2 + Math.random() * 0.5).toFixed(1);
+            const quantVal = (0.01 + Math.random() * 0.02).toFixed(2);
+            document.getElementById('syn').innerText = synVal + "%";
+            document.getElementById('quant').innerText = quantVal + "%";
+            
+            // Aura Status
+            document.getElementById('auraVal').innerText = NC.attackPower > 0.1 ? "VERDICHTET" : "Neutral";
+        }
+
+        function animate() {
+            drawNebula();
+            updateStats();
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
 
 </body>
 </html>
