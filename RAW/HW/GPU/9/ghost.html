@@ -1,26 +1,38 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Ghost‑Scan</title>
-<style>
-  body { background:#000; color:#0ff; font-family:Arial; padding:20px; }
-</style>
-</head>
-<body>
+// RAW/HW/NC/help.scan.js
 
-<h1>Ghost‑Scan – NC‑Zeitlagen‑Analyse</h1>
+export function helpScan(run3, directVState, ghost) {
 
-<p>Gestern → Heute</p>
-<p>Produktivität: <span id="prod"></span></p>
+    return {
+        orbit: {
+            speed: run3.orbital.speed,
+            radius: run3.orbital.radius,
+            evo: run3.orbital.evo,
+            status: ghost.status
+        },
 
-<script>
-  const gestern = { x:1, y:0, t:3, h:2, b:1, evo:"upg" };
-  const heute   = { x:2, y:0, t:4, h:4, b:0, evo:"upd" };
+        operatoren: {
+            bewegung: run3.operator.bewegung,
+            stabilitaet: run3.operator.stabilitaet,
+            raster: run3.operator.raster
+        },
 
-  const produktiv = ((heute.x+heute.t+heute.h) - (gestern.x+gestern.t+gestern.h)) * 3.2;
-  document.getElementById("prod").innerText = produktiv.toFixed(2) + "%";
-</script>
+        movementFusion: {
+            x: run3.fusion.x,
+            y: run3.fusion.y,
+            z: run3.fusion.z,
+            stabil: run3.fusion.stabil,
+            quant: run3.fusion.quant
+        },
 
-</body>
-</html>
+        directV: {
+            speed: directVState.speed,
+            stabil: directVState.stabil,
+            quant: directVState.quant,
+            boost: directVState.boost
+        },
+
+        erinnerung: ghost.erinnerung,
+
+        summary: `Orbit ${ghost.status}, Speed ${run3.orbital.speed}, Boost ${directVState.boost}`
+    };
+}
