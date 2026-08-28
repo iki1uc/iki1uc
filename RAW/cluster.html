@@ -1,22 +1,18 @@
-document.addEventListener("DOMContentLoaded", async () => {
-  const cluster = document.getElementById("cluster");
+import * as TMP from "./tmp.js";
+import * as NC from "./NC.math";
+import * as GPU from "./GPU/243.atom.md";
+import * as CPU from "./CPU/SET.js";
 
-  const modules = [
-    "./Master-Kern/system-check.item",
-    "./Master-Kern/system-sync.item",
-    "./RAW/HW/RAM/ram.map",
-    "./RAW/HW/ROM/rom.map",
-    "./RAW/HW/CACHE/cache.map",
-    "./RAW/HW/GPU/gpu.map"
-  ];
+export const Cubik = {
+  X: TMP.a,
+  Y: TMP.d,
+  Z: TMP.e,
 
-  for (const m of modules) {
-    try {
-      const res = await fetch(m);
-      const ok = res.ok ? "ok" : "missing";
-      cluster.innerHTML += `<div class="cluster-item">${m}: ${ok}</div>`;
-    } catch {
-      cluster.innerHTML += `<div class="cluster-item">${m}: error</div>`;
-    }
+  compute(x, y, z) {
+    const base = this.X[x] + this.Y[y] + this.Z[z];
+    const nc = NC.apply(base);
+    const gpu = GPU.accel(nc);
+    const cpu = CPU.stabilize(gpu);
+    return cpu;
   }
-});
+};
