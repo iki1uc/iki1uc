@@ -2,10 +2,22 @@ NAME: VEC.VirtualMarketplace
 ID: VM01
 TYPE: Station
 ROLE: Market-Exchange
-MODE: active
-STATE: dynamic
-VECTOR: enabled
-GENIE: linked
-CONTROL: DOO/IT
-PASSAGE: DOOR
-API: required
+
+# µ1 / µ2 / µ3 – Atomare Systemachsen
+µ1_ACTIVE: true
+µ2_STATE: idle
+µ3_PASSAGE: false
+
+# µ9 – Funktionsmatrix
+µ9_VECTOR: enabled
+µ9_GENIE: enabled
+µ9_CONTROL: DOO/IT
+µ9_PULSE: 0
+µ9_ORBIT: 0
+µ9_DRIFT: 0
+µ9_RATING: 0
+µ9_ROUTE: null
+µ9_TRADE: null
+
+# µ81 – Cluster-Matrix
+µ81_TRADES: 81
