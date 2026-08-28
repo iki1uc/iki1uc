@@ -1,1 +1,29 @@
+// m.mode – Marktmodus (NCROM / iki1uc)
+
+export const M_MODE = {
+    axis: "MARKT",
+
+    // µ1 – Aktivität
+    active: true,
+
+    // µ2 – Zustand
+    state: "dynamic",
+
+    // µ3 – Passage (über DOOR/DOO)
+    passage: false,
+
+    // µ9 – Funktionsmatrix
+    vector: true,
+    genie: true,
+    control: false,
+    pulse: 0,
+    orbit: 0,
+    drift: 0,
+    rating: 0,
+    route: null,
+    trade: null,
+
+    // µ81 – Cluster
+    cluster: Array(81).fill(null)
+};
 
