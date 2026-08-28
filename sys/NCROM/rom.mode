@@ -1,1 +1,20 @@
+NCROM.origin = true
+NCROM.state = "unraum"
+NCROM.orbit = "none"
+NCROM.pulse = "none"
+NCROM.expand = "9q9q9"
 
+core.axes = 3
+core.pulse = 9
+core.orbitLinks = 9
+core.matrix.symbol = "dqeqi"
+core.matrix.fractal = "9q9q9"
+
+meta.fractal = "9y9y9"
+meta.source = "9q9q9"
+
+space.matrix.symbol = "nxoxr"
+space.source.symbol = "syuyw"
+
+space.matrix.cache = "9x(d:/tmp/x/)x9"
+space.source.cache = "9y(d:/tmp/y/)y9"
