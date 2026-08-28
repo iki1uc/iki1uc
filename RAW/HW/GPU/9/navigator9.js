@@ -36,3 +36,48 @@ class NAV9 {
 }
 
 window.NAV9 = new NAV9();
+<span class="navCell">
+    <b>${cell.value}</b><br>
+    QI:${cell.qi} | IQQ:${cell.iqq} | O:${cell.octa}
+</span>
+movement: MOVEMENT.map(r,c)
+gpu: GPU_MATRIX_692_TENSOR.tensor[r][c]
+class NAV9 {
+
+    build(){
+        const raw = window.NC9X9 || [];
+
+        return raw.map((row,r)=> 
+            row.map((cell,c)=> ({
+                r, c,
+                qi: AXES.qi(r,c),
+                iqq: AXES.iqq(r,c),
+                octa: AXES.octa(r,c),
+                ghost: GHOST.status(r,c),
+                core: XCORE.map(r,c),
+                in: XIN.map(r,c),
+                out: XOUT.map(r,c),
+                value: cell
+            }))
+        );
+    }
+
+    render(matrix){
+        const out = document.getElementById("nav9");
+        out.innerHTML = "<h2>9×9 Hyperraum-Navigator</h2>";
+
+        out.innerHTML += matrix.map(row =>
+            row.map(cell =>
+                `<span class="navCell">
+                    ${cell.value}<br>
+                    QI:${cell.qi}<br>
+                    IQQ:${cell.iqq}<br>
+                    O:${cell.octa}
+                </span>`
+            ).join("")
+        ).join("<br>");
+    }
+}
+
+window.NAV9 = new NAV9();
+so
