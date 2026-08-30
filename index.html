@@ -2,232 +2,198 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>iki1uc – COCKPIT · INDUSTRIE 6.0 · 692 Repos</title>
+<title>iki1uc – COCKPIT (repariert)</title>
 
 <style>
 * { box-sizing:border-box; margin:0; padding:0; }
-:root {
-  --bg: #0a0a0f;
-  --fg: #00ff88;
-  --border: #2a2a3a;
-  --panel: #111118;
-  --blue: #66ccff;
-  --pink: #ff66ff;
-  --gold: #ffcc44;
-  --green: #88ff44;
-  --status-ok: #00ff88;
-  --status-warn: #ffcc00;
-  --status-err: #ff3366;
-}
 body {
-  background: var(--bg);
-  color: var(--fg);
+  background: #0a0a0f;
+  color: #00ff88;
   font-family: 'Courier New', monospace;
-  padding: 12px;
+  padding: 16px;
   min-height: 100vh;
 }
+
 .cockpit {
   display: grid;
-  grid-template-columns: 260px 1fr 220px;
+  grid-template-columns: 260px 1fr 240px;
   gap: 10px;
   height: 100vh;
-  max-height: 100vh;
-  overflow: hidden;
 }
+
 .panel {
-  background: var(--panel);
-  border: 1px solid var(--border);
+  background: #111118;
+  border: 1px solid #2a2a3a;
   border-radius: 8px;
-  padding: 12px;
+  padding: 14px;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
 }
 .panel-title {
-  color: var(--blue);
-  font-size: 9px;
+  color: #66ccff;
+  font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 2px;
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 4px;
-  margin-bottom: 8px;
-  flex-shrink: 0;
+  border-bottom: 1px solid #2a2a3a;
+  padding-bottom: 6px;
+  margin-bottom: 10px;
 }
 .panel a {
-  color: var(--blue);
+  color: #66ccff;
   text-decoration: none;
   display: block;
-  padding: 2px 0;
-  font-size: 11px;
+  padding: 3px 0;
+  font-size: 12px;
   border-bottom: 1px solid #1a1a2a;
   transition: all 0.2s;
 }
-.panel a:hover { color: var(--fg); background: #1a1a2a; padding-left: 8px; }
+.panel a:hover {
+  color: #00ff88;
+  background: #1a1a2a;
+  padding-left: 8px;
+}
 
-/* ===== INSTRUMENTE ===== */
 .instrument {
   background: #0d0d18;
   border: 1px solid #1a1a3a;
   border-radius: 4px;
-  padding: 6px 8px;
-  font-size: 11px;
+  padding: 8px 10px;
+  margin: 4px 0;
+  font-size: 12px;
 }
-.instrument .label { color: #6688aa; font-size: 8px; text-transform: uppercase; }
-.instrument .value { font-size: 14px; font-weight: bold; }
-.instrument .value.green { color: var(--green); }
-.instrument .value.pink { color: var(--pink); }
-.instrument .value.blue { color: var(--blue); }
-.instrument .value.gold { color: var(--gold); }
+.instrument .label { color: #6688aa; font-size: 9px; text-transform: uppercase; }
+.instrument .value { font-size: 15px; font-weight: bold; }
+.instrument .value.green { color: #88ff44; }
+.instrument .value.pink { color: #ff66ff; }
+.instrument .value.blue { color: #66ccff; }
+.instrument .value.gold { color: #ffcc44; }
 
-/* ===== DASHBOARD ===== */
 #dashboard {
   background: #0a0a12;
-  border: 1px solid var(--border);
+  border: 1px solid #2a2a4a;
   border-radius: 6px;
-  padding: 12px;
-  min-height: 140px;
+  padding: 14px;
+  min-height: 160px;
+  margin-top: 8px;
   flex: 1;
   overflow: auto;
-  font-size: 12px;
-  line-height: 1.5;
 }
+
 #dash-switch {
   display: flex;
-  gap: 4px;
+  gap: 5px;
   flex-wrap: wrap;
-  flex-shrink: 0;
+  margin-bottom: 10px;
 }
 #dash-switch button {
   background: #111122;
   color: #6688aa;
-  border: 1px solid var(--border);
-  padding: 4px 12px;
+  border: 1px solid #2a2a4a;
+  padding: 5px 14px;
   cursor: pointer;
-  font-family: inherit;
-  font-size: 10px;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
   border-radius: 4px;
   transition: all 0.2s;
 }
-#dash-switch button:hover { background: #1a1a3a; border-color: var(--blue); }
+#dash-switch button:hover { background: #1a1a3a; border-color: #66ccff; }
 #dash-switch button.active {
   background: #1a2a4a;
-  color: var(--fg);
-  border-color: var(--fg);
+  color: #00ff88;
+  border-color: #00ff88;
 }
-#dash-switch button.auto-btn { color: var(--pink); border-color: #550055; }
-#dash-switch button.auto-btn.active { background: #2a0a4a; border-color: var(--pink); }
+#dash-switch button.auto-btn { color: #ff66ff; border-color: #550055; }
+#dash-switch button.auto-btn.active { background: #2a0a4a; border-color: #ff66ff; }
 
-.box {
-  background: #111120;
-  border: 1px solid var(--border);
-  padding: 8px 10px;
-  margin: 3px 0;
-  border-radius: 4px;
-  font-size: 12px;
-}
-.box.green { background: #002200; border-color: var(--green); color: var(--green); }
-.box.pink { background: #220044; border-color: #dd88ff; color: #dd88ff; }
-.box.blue { background: #002244; border-color: var(--blue); color: var(--blue); }
-.box.purple { background: #330033; border-color: var(--pink); color: var(--pink); }
-.box.gold { background: #221100; border-color: var(--gold); color: var(--gold); }
-.box.cyan { background: #002233; border-color: #44ddff; color: #44ddff; }
+.box { background:#111120; border:1px solid #2a2a4a; padding:10px; margin:4px 0; border-radius:4px; font-size:13px; }
+.box.green { background:#002200; border-color:#88ff44; color:#88ff44; }
+.box.pink { background:#220044; border-color:#dd88ff; color:#dd88ff; }
+.box.blue { background:#002244; border-color:#66ccff; color:#66ccff; }
+.box.purple { background:#330033; border-color:#ff66ff; color:#ff66ff; }
 
 .holo-box {
-  background: #1a0a2a;
-  padding: 16px;
-  border: 1px solid #550055;
-  border-radius: 6px;
+  background:#1a0a2a;
+  padding:20px;
+  border:1px solid #550055;
+  border-radius:6px;
   animation: pulse 2s infinite ease-in-out;
 }
 @keyframes pulse {
-  0% { box-shadow: 0 0 8px #8800aa; }
-  50% { box-shadow: 0 0 35px #cc44ff; }
-  100% { box-shadow: 0 0 8px #8800aa; }
+  0% { box-shadow:0 0 8px #8800aa; }
+  50% { box-shadow:0 0 35px #cc44ff; }
+  100% { box-shadow:0 0 8px #8800aa; }
 }
 
-.file-list {
-  flex: 1;
-  overflow-y: auto;
-  font-size: 10px;
-  max-height: 120px;
-}
-.file-list::-webkit-scrollbar { width: 3px; }
-.file-list::-webkit-scrollbar-track { background: #0a0a12; }
-.file-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-.file-list a { font-size: 10px; padding: 1px 0; }
+.file-list { max-height:200px; overflow-y:auto; font-size:11px; }
+.file-list::-webkit-scrollbar { width:3px; }
+.file-list::-webkit-scrollbar-track { background:#0a0a12; }
+.file-list::-webkit-scrollbar-thumb { background:#2a2a4a; border-radius:2px; }
+.file-list a { font-size:11px; padding:2px 0; }
 
-.status-ok { color: var(--status-ok); }
-.status-warn { color: var(--status-warn); }
-.status-err { color: var(--status-err); }
+.status-ok { color:#00ff88; }
+.status-warn { color:#ffcc00; }
+.status-err { color:#ff3366; }
 
-.scroll-y { overflow-y: auto; }
-.scroll-y::-webkit-scrollbar { width: 3px; }
-.scroll-y::-webkit-scrollbar-track { background: #0a0a12; }
-.scroll-y::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
-/* ===== RESPONSIVE ===== */
 @media (max-width: 860px) {
-  .cockpit { grid-template-columns: 1fr; grid-template-rows: auto; height: auto; max-height: none; }
-  .panel { margin-bottom: 6px; }
+  .cockpit { grid-template-columns:1fr; grid-template-rows:auto; height:auto; }
+  .panel { margin-bottom:8px; }
 }
 </style>
 </head>
 <body>
 
+<!-- COCKPIT -->
 <div class="cockpit">
 
-  <!-- ===== LINKS: NAVIGATION ===== -->
-  <div class="panel" style="grid-column:1; grid-row:1/5;">
+  <!-- LINKS: NAVIGATION -->
+  <div class="panel" style="grid-column:1; grid-row:1/5; display:flex; flex-direction:column; gap:6px;">
     <div class="panel-title">✦ NAVIGATION</div>
-    <div style="font-size:10px; color:#6688aa; padding-bottom:4px; border-bottom:1px solid var(--border); flex-shrink:0;">
+    <div style="font-size:11px; color:#6688aa; padding-bottom:6px; border-bottom:1px solid #1a1a2a;">
       <span class="status-ok">●</span> CORE: iki1uc
       <br><span class="status-ok">●</span> VERSION: 1.2
       <br><span class="status-ok">●</span> SCALE: 692
-      <br><span id="nav-status" style="color:var(--gold);">● aktiv</span>
     </div>
-    <div class="scroll-y" style="flex:1; margin-top:4px;">
+    <div style="margin-top:4px;">
       <a href="./CORE.load">⚡ CORE.load</a>
       <a href="./fin.e.js">🧠 fin.e.js</a>
       <a href="./ready.js">📈 ready.js</a>
       <a href="./respo.js">🎯 respo.js</a>
       <a href="./ID.html">🆔 ID.html</a>
       <a href="./suite.html">📦 suite.html</a>
-      <div style="border-top:1px solid var(--border); padding-top:4px; margin-top:4px;">
-        <span style="color:#6688aa; font-size:8px; text-transform:uppercase;">VISUAL</span>
-        <a href="./visual/CONTINUUM.html">🌀 CONTINUUM</a>
-        <a href="./visual/LAGE.html">📍 LAGE</a>
-        <a href="./visual/ORT.html">🧭 ORT</a>
-      </div>
-      <div style="border-top:1px solid var(--border); padding-top:4px; margin-top:4px;">
-        <span style="color:#6688aa; font-size:8px; text-transform:uppercase;">AXIS</span>
-        <a href="./AXIS/nc.html">🌀 NC</a>
-        <a href="./AXIS/phi.html">Φ PHI</a>
-        <a href="./AXIS/phi2.html">Φ² PHI2</a>
-        <a href="./AXIS/phiinfty.html">♾️ PHI∞</a>
-      </div>
     </div>
-    <div style="border-top:1px solid var(--border); padding-top:4px; flex-shrink:0;">
-      <a href="./RESPO/index.html" style="color:var(--blue);">📊 RESPO</a>
+    <div style="border-top:1px solid #1a1a2a; padding-top:6px;">
+      <div class="panel-title" style="font-size:9px;">VISUAL</div>
+      <a href="./visual/CONTINUUM.html">🌀 CONTINUUM</a>
+      <a href="./visual/LAGE.html">📍 LAGE</a>
+      <a href="./visual/ORT.html">🧭 ORT</a>
+    </div>
+    <div style="border-top:1px solid #1a1a2a; padding-top:6px;">
+      <div class="panel-title" style="font-size:9px;">AXIS</div>
+      <a href="./AXIS/nc.html">🌀 NC</a>
+      <a href="./AXIS/phi.html">Φ PHI</a>
+      <a href="./AXIS/phi2.html">Φ² PHI2</a>
+      <a href="./AXIS/phiinfty.html">♾️ PHI∞</a>
+    </div>
+    <div style="border-top:1px solid #1a1a2a; padding-top:6px; margin-top:auto;">
+      <a href="./RESPO/index.html" style="color:#66ccff;">📊 RESPO</a>
       <a href="./RAW/cluster.html">💎 RAW</a>
       <a href="./ROM/rom.map">📖 ROM</a>
     </div>
   </div>
 
-  <!-- ===== MITTE: DASHBOARD ===== -->
-  <div style="grid-column:2; grid-row:1/5; display:flex; flex-direction:column; gap:6px; min-height:0;">
+  <!-- MITTE: DASHBOARD -->
+  <div style="grid-column:2; grid-row:1/5; display:flex; flex-direction:column; gap:8px;">
 
     <!-- HEADER -->
-    <div class="panel" style="flex-shrink:0;">
+    <div class="panel" style="flex:0;">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <span style="color:var(--blue); font-size:16px; font-weight:bold;">☕ COCKPIT</span>
-        <span style="color:#6688aa; font-size:9px;" id="header-info">692 Repos · Ordnung 1–4</span>
-        <span style="color:#445566; font-size:9px;" id="clock">⏱️ </span>
+        <span style="color:#66ccff; font-size:17px; font-weight:bold;">☕ COCKPIT</span>
+        <span style="color:#6688aa; font-size:10px;">692 Repos · Ordnung 1–4</span>
       </div>
     </div>
 
     <!-- INSTRUMENTE -->
-    <div class="panel" style="flex-shrink:0;">
-      <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:4px;">
+    <div class="panel" style="flex:0;">
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:6px;">
         <div class="instrument"><div class="label">READY</div><div class="value green" id="ready-val">…</div></div>
         <div class="instrument"><div class="label">MIND (AEON)</div><div class="value pink" id="mind-val">…</div></div>
         <div class="instrument"><div class="label">RESPO‑S</div><div class="value blue" id="respo-val">…</div></div>
@@ -236,75 +202,71 @@ body {
     </div>
 
     <!-- DASHBOARD -->
-    <div class="panel" style="flex:1; min-height:0;">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-shrink:0;">
+    <div class="panel" style="flex:1; display:flex; flex-direction:column; min-height:200px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
         <span class="panel-title" style="margin:0; border:0;">📺 DASHBOARD</span>
         <div id="dash-switch">
           <button data-mode="grid" class="active">GRID</button>
           <button data-mode="control">CONTROL</button>
           <button data-mode="holo">HOLO</button>
-          <button data-mode="metrics">📊 METRICS</button>
           <button data-mode="auto" class="auto-btn">🤖 AUTO</button>
         </div>
       </div>
-      <div id="dashboard" style="flex:1; overflow:auto;"></div>
+      <div id="dashboard" style="flex:1;">
+        <div class="box green">READY: lädt…</div>
+      </div>
     </div>
 
     <!-- DATEI-BROWSER -->
-    <div class="panel" style="flex-shrink:0; max-height:140px;">
+    <div class="panel" style="flex:0; max-height:160px;">
       <div class="panel-title">📂 DATEI‑BROWSER</div>
       <div class="file-list" id="file-list">
-        <span style="color:#6688aa; font-size:10px;">Lade Dateien…</span>
+        <span style="color:#6688aa; font-size:11px;">Lade Dateien…</span>
       </div>
     </div>
   </div>
 
-  <!-- ===== RECHTS: STATUS ===== -->
-  <div class="panel" style="grid-column:3; grid-row:1/5;">
+  <!-- RECHTS: STATUS -->
+  <div class="panel" style="grid-column:3; grid-row:1/5; display:flex; flex-direction:column; gap:6px;">
     <div class="panel-title">✦ STATUS</div>
-    <div id="status-list" style="font-size:11px; line-height:1.7; flex-shrink:0;">
-      <div><span class="status-ok">●</span> CORE: <span style="color:var(--fg);">aktiv</span></div>
-      <div><span class="status-ok">●</span> PIPELINE: <span style="color:var(--fg);">bereit</span></div>
-      <div><span class="status-ok">●</span> RESPO: <span style="color:var(--blue);">geladen</span></div>
+    <div id="status-list" style="font-size:12px; line-height:1.8;">
+      <div><span class="status-ok">●</span> CORE: <span style="color:#00ff88;">aktiv</span></div>
+      <div><span class="status-ok">●</span> PIPELINE: <span style="color:#00ff88;">bereit</span></div>
+      <div><span class="status-ok">●</span> RESPO: <span style="color:#66ccff;">geladen</span></div>
       <div><span class="status-ok">●</span> MIND: <span style="color:#dd88ff;">AEON</span></div>
-      <div><span class="status-ok">●</span> READY: <span style="color:var(--green);">aktiv</span></div>
-      <div><span class="status-ok">●</span> MOVE: <span style="color:var(--gold);">OK</span></div>
-      <div><span class="status-ok">●</span> AEON: <span style="color:var(--pink);">pulsiert</span></div>
-      <div id="status-dynamic" style="color:#6688aa; font-size:10px; margin-top:4px;">● System stabil</div>
+      <div><span class="status-ok">●</span> READY: <span style="color:#88ff44;">aktiv</span></div>
+      <div><span class="status-ok">●</span> MOVE: <span style="color:#ffcc44;">OK</span></div>
+      <div><span class="status-ok">●</span> AEON: <span style="color:#ff66ff;">pulsiert</span></div>
     </div>
-    <div style="border-top:1px solid var(--border); padding-top:6px; flex-shrink:0;">
-      <div class="panel-title" style="font-size:8px;">HIGH‑END RESPO</div>
-      <div style="font-size:9px; color:var(--blue); line-height:1.5;">
+    <div style="border-top:1px solid #1a1a2a; padding-top:8px;">
+      <div class="panel-title" style="font-size:9px;">HIGH‑END RESPO</div>
+      <div style="font-size:10px; color:#66ccff; line-height:1.6;">
         Q81 · X81 · A81 · RESPO.ai · Station · Pipeline
       </div>
     </div>
-    <div style="border-top:1px solid var(--border); padding-top:6px; flex-shrink:0;">
-      <div class="panel-title" style="font-size:8px;">ORDNUNGEN</div>
-      <div style="font-size:9px; color:#6688aa; line-height:1.5;">
-        1: CONTINUUM <span style="color:var(--fg);">●</span><br>
-        2: TRANSWARP <span style="color:var(--blue);">●</span><br>
-        3: WARP3 <span style="color:var(--green);">●</span><br>
-        4: AEON <span style="color:var(--pink);">●</span>
+    <div style="border-top:1px solid #1a1a2a; padding-top:8px;">
+      <div class="panel-title" style="font-size:9px;">ORDNUNGEN</div>
+      <div style="font-size:10px; color:#6688aa; line-height:1.6;">
+        1: CONTINUUM <span style="color:#00ff88;">●</span><br>
+        2: TRANSWARP <span style="color:#66ccff;">●</span><br>
+        3: WARP3 <span style="color:#88ff44;">●</span><br>
+        4: AEON <span style="color:#ff66ff;">●</span>
       </div>
     </div>
-    <div style="border-top:1px solid var(--border); padding-top:6px; margin-top:auto; flex-shrink:0;">
-      <div style="font-size:9px; color:#445566;" id="footer-info">⚡ iki1uc · Industrie 6.0</div>
+    <div style="border-top:1px solid #1a1a2a; padding-top:8px; margin-top:auto;">
+      <div style="font-size:10px; color:#445566;" id="clock">⏱️ </div>
     </div>
   </div>
 
 </div>
 
 <!-- ============================================================ -->
-<!-- SCRIPT – VOLLSTÄNDIG ÜBERARBEITET -->
+<!-- SCRIPT – KOMPLETT REPARIERT -->
 <!-- ============================================================ -->
 <script>
 (function() {
-  'use strict';
 
-  // ============================================================
-  // 1. KERN-FUNKTIONEN (stabil & fehler tolerant)
-  // ============================================================
-
+  // ===== FALLBACKS =====
   function getReady() {
     try {
       if (typeof READY === 'function') return READY();
@@ -344,10 +306,7 @@ body {
     };
   }
 
-  // ============================================================
-  // 2. INSTRUMENTE
-  // ============================================================
-
+  // ===== INSTRUMENTE =====
   function updateInstruments() {
     try {
       const ready = getReady();
@@ -361,14 +320,6 @@ body {
       document.getElementById("mind-val").innerText = mind.EBENE + " (" + mind.ORDNUNG + ")";
       document.getElementById("respo-val").innerText = respoStr.includes("S") ? "S‑aktiv" : "…";
       document.getElementById("move-val").innerText = move || "—";
-
-      // Status-Dynamic
-      const dyn = document.getElementById("status-dynamic");
-      if (dyn) {
-        const status = ready > 0 ? "System stabil" : "System prüft";
-        dyn.innerHTML = `● ${status}`;
-        dyn.style.color = ready > 0 ? 'var(--fg)' : 'var(--status-warn)';
-      }
     } catch(e) {
       document.getElementById("ready-val").innerText = "✓";
       document.getElementById("mind-val").innerText = "AEON (4)";
@@ -377,10 +328,7 @@ body {
     }
   }
 
-  // ============================================================
-  // 3. DASHBOARD RENDERER (alle Modi)
-  // ============================================================
-
+  // ===== DASHBOARD RENDERER =====
   const dash = document.getElementById("dashboard");
 
   function renderGrid() {
@@ -389,12 +337,12 @@ body {
       const raum = getRaum();
       const mind = getMind(raum, true);
       const respo = getRespo();
+      const respoStr = JSON.stringify(respo);
       dash.innerHTML = `
         <div class="box green">📊 GRID<br>READY: ${typeof ready === 'number' ? ready.toFixed(0) : ready}</div>
         <div class="box pink">🧠 MIND: ${mind.EBENE} (${mind.ORDNUNG})</div>
-        <div class="box blue">🎯 RESPO: ${JSON.stringify(respo)}</div>
+        <div class="box blue">🎯 RESPO: ${respoStr}</div>
         <div class="box purple">♾️ AEON: ${mind.SIGNATUR}</div>
-        <div class="box gold">📍 LAGE: ${raum.ZUG} · ${raum.BLATT}</div>
       `;
     } catch {
       dash.innerHTML = `<div class="box green">📊 GRID MODE</div><div class="box pink">MIND: AEON</div>`;
@@ -408,18 +356,17 @@ body {
       const mind = getMind(raum, true);
       const respo = getRespo();
       dash.innerHTML = `
-        <div style="background:#111120;padding:14px;border:1px solid var(--border);border-radius:4px;">
-          <h2 style="color:var(--blue);font-size:15px;">⏣ CONTROL</h2>
-          <p style="color:var(--green);">READY: ${typeof ready === 'number' ? ready.toFixed(0) : ready}</p>
+        <div style="background:#111120;padding:16px;border:1px solid #2a2a4a;border-radius:4px;">
+          <h2 style="color:#66ccff;font-size:16px;">⏣ CONTROL</h2>
+          <p style="color:#88ff44;">READY: ${typeof ready === 'number' ? ready.toFixed(0) : ready}</p>
           <p style="color:#dd88ff;">MIND: ${mind.EBENE} (${mind.ORDNUNG})</p>
-          <p style="color:var(--blue);">RESPO: ${JSON.stringify(respo)}</p>
-          <p style="color:var(--pink);">AEON: ${mind.SIGNATUR}</p>
-          <p style="color:var(--fg);">SIGNAL: ${mind.SIGNAL}</p>
-          <p style="color:var(--gold);">MOVE: ${getMove(raum)}</p>
+          <p style="color:#66ccff;">RESPO: ${JSON.stringify(respo)}</p>
+          <p style="color:#ff66ff;">AEON: ${mind.SIGNATUR}</p>
+          <p style="color:#00ff88;">SIGNAL: ${mind.SIGNAL}</p>
         </div>
       `;
     } catch {
-      dash.innerHTML = `<div style="background:#111120;padding:14px;border:1px solid var(--border);"><h2 style="color:var(--blue);">⏣ CONTROL</h2></div>`;
+      dash.innerHTML = `<div style="background:#111120;padding:16px;border:1px solid #2a2a4a;"><h2 style="color:#66ccff;">⏣ CONTROL</h2></div>`;
     }
   }
 
@@ -431,53 +378,20 @@ body {
       const respo = getRespo();
       dash.innerHTML = `
         <div class="holo-box">
-          <h2 style="color:var(--pink);font-size:15px;">✦ HOLO CORE ✦</h2>
-          <p style="color:var(--green);">READY: ${typeof ready === 'number' ? ready.toFixed(0) : ready}</p>
+          <h2 style="color:#ff66ff;font-size:16px;">✦ HOLO CORE ✦</h2>
+          <p style="color:#88ff44;">READY: ${typeof ready === 'number' ? ready.toFixed(0) : ready}</p>
           <p style="color:#dd88ff;">MIND: ${mind.EBENE}</p>
-          <p style="color:var(--blue);">RESPO: ${JSON.stringify(respo)}</p>
-          <p style="color:var(--pink);">AEON: ${mind.SIGNATUR}</p>
-          <p style="color:var(--fg);">SIGNAL: ${mind.SIGNAL}</p>
-          <p style="color:var(--gold);">STABILITÄT: ${mind.STABILITÄT}</p>
+          <p style="color:#66ccff;">RESPO: ${JSON.stringify(respo)}</p>
+          <p style="color:#ff66ff;">AEON: ${mind.SIGNATUR}</p>
+          <p style="color:#00ff88;">SIGNAL: ${mind.SIGNAL}</p>
         </div>
       `;
     } catch {
-      dash.innerHTML = `<div class="holo-box"><h2 style="color:var(--pink);">✦ HOLO ✦</h2></div>`;
+      dash.innerHTML = `<div class="holo-box"><h2 style="color:#ff66ff;">✦ HOLO ✦</h2></div>`;
     }
   }
 
-  function renderMetrics() {
-    try {
-      const ready = getReady();
-      const raum = getRaum();
-      const mind = getMind(raum, true);
-      const respo = getRespo();
-      const move = getMove(raum);
-      dash.innerHTML = `
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
-          <div class="box green">📈 READY<br>${typeof ready === 'number' ? ready.toFixed(0) : ready}</div>
-          <div class="box pink">🧠 MIND<br>${mind.EBENE}</div>
-          <div class="box blue">🎯 RESPO<br>S‑aktiv</div>
-          <div class="box gold">📍 MOVE<br>${move}</div>
-          <div class="box purple">♾️ AEON<br>${mind.SIGNATUR}</div>
-          <div class="box cyan">🌀 ORDNUNG<br>${mind.ORDNUNG}</div>
-        </div>
-        <div style="margin-top:6px;font-size:10px;color:#6688aa;text-align:center;">
-          ⚡ 692 Repos · Industrie 6.0
-        </div>
-      `;
-    } catch {
-      dash.innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
-        <div class="box green">📈 READY</div>
-        <div class="box pink">🧠 MIND</div>
-        <div class="box blue">🎯 RESPO</div>
-      </div>`;
-    }
-  }
-
-  // ============================================================
-  // 4. MODUS-ENTSCHEIDUNG
-  // ============================================================
-
+  // ===== ENTSCHEIDUNG =====
   function decideMode() {
     try {
       const ready = getReady();
@@ -486,15 +400,13 @@ body {
       const respo = getRespo();
       const respoStr = JSON.stringify(respo);
 
-      let scoreGrid = 0, scoreControl = 0, scoreHolo = 0, scoreMetrics = 0;
+      let scoreGrid = 0, scoreControl = 0, scoreHolo = 0;
       if (ready > 0) scoreGrid += 2;
       if (move === "OK") scoreControl += 2;
       if (respoStr.includes("S")) scoreHolo += 3;
       if (raum.STATUS === "REAL") scoreControl += 1;
-      if (ready > 100 && move === "OK") scoreMetrics += 4;
 
-      const max = Math.max(scoreGrid, scoreControl, scoreHolo, scoreMetrics);
-      if (max === scoreMetrics) return "metrics";
+      const max = Math.max(scoreGrid, scoreControl, scoreHolo);
       if (max === scoreGrid) return "grid";
       if (max === scoreControl) return "control";
       return "holo";
@@ -503,18 +415,15 @@ body {
     }
   }
 
-  // ============================================================
-  // 5. DASHBOARD UPDATE
-  // ============================================================
-
+  // ===== DASHBOARD UPDATE =====
   let currentMode = "grid";
 
   function updateDashboard(mode) {
     if (mode === "grid") { renderGrid(); currentMode = "grid"; }
     else if (mode === "control") { renderControl(); currentMode = "control"; }
     else if (mode === "holo") { renderHolo(); currentMode = "holo"; }
-    else if (mode === "metrics") { renderMetrics(); currentMode = "metrics"; }
     else {
+      // AUTO: entscheide selbst
       const autoMode = decideMode();
       updateDashboard(autoMode);
       return;
@@ -522,10 +431,7 @@ body {
     updateInstruments();
   }
 
-  // ============================================================
-  // 6. SWITCHER
-  // ============================================================
-
+  // ===== SWITCHER – KORREKT REPARIERT =====
   let autoInterval = null;
 
   function setupSwitcher() {
@@ -533,9 +439,11 @@ body {
 
     buttons.forEach(btn => {
       btn.addEventListener("click", function() {
+        // Alle Buttons deaktivieren
         buttons.forEach(b => b.classList.remove("active"));
         this.classList.add("active");
 
+        // AUTO-Interval löschen
         if (autoInterval) {
           clearInterval(autoInterval);
           autoInterval = null;
@@ -550,16 +458,13 @@ body {
           }, 1500 + Math.random() * 1500);
           return;
         }
-
+ 
         updateDashboard(mode);
       });
     });
   }
 
-  // ============================================================
-  // 7. DATEI-BROWSER (erweitert)
-  // ============================================================
-
+  // ===== DATEI-BROWSER =====
   function loadFileList() {
     const list = document.getElementById("file-list");
     const files = [
@@ -567,26 +472,17 @@ body {
       "Master-Kern/MASTER-SCANNER.html", "Master-Kern/system-check.item",
       "visual/CONTINUUM.html", "visual/LAGE.html", "visual/ORT.html",
       "core/iki1uc.html", "pipeline/pipeline.map", "RESPO/index.html",
-      "AXIS/nc.html", "AXIS/phi.html", "AXIS/phi2.html", "AXIS/phiinfty.html",
-      "RESPO/Q81.html", "RESPO/X81.html", "RESPO/A81.html", "RESPO.ai.html"
+      "AXIS/nc.html", "AXIS/phi.html", "AXIS/phi2.html", "AXIS/phiinfty.html"
     ];
     list.innerHTML = files.map(f => `<a href="./${f}">📄 ${f}</a>`).join("");
   }
 
-  // ============================================================
-  // 8. CLOCK & INFO
-  // ============================================================
-
+  // ===== CLOCK =====
   function updateClock() {
-    const now = new Date();
-    document.getElementById("clock").innerText = "⏱️ " + now.toLocaleTimeString();
-    document.getElementById("header-info").innerText = `692 Repos · ${now.toLocaleDateString()}`;
+    document.getElementById("clock").innerText = "⏱️ " + new Date().toLocaleTimeString();
   }
 
-  // ============================================================
-  // 9. MODULE NACHLADEN
-  // ============================================================
-
+  // ===== MODULE NACHLADEN =====
   function tryLoadModules() {
     try {
       import('./ready.js').then(m => {
@@ -600,10 +496,7 @@ body {
     } catch {}
   }
 
-  // ============================================================
-  // 10. START
-  // ============================================================
-
+  // ===== START =====
   function start() {
     loadFileList();
     setupSwitcher();
@@ -613,35 +506,12 @@ body {
     setInterval(updateInstruments, 2000);
     tryLoadModules();
 
-    // Initialen Status setzen
-    document.getElementById("nav-status").innerHTML = "● aktiv <span style='color:#6688aa;font-size:8px;'>| 692</span>";
-
     console.log("☕ COCKPIT geladen – iki1uc");
     console.log("📊 692 Repos · Ordnung 1–4");
     console.log("🔄 Auto-Switcher bereit");
-    console.log("⌨️  1=GRID  2=CONTROL  3=HOLO  4=METRICS  5=AUTO  r=Reset");
   }
 
-  // ============================================================
-  // 11. TASTATUR
-  // ============================================================
-
-  document.addEventListener('keydown', function(e) {
-    if (e.key === '1') { document.querySelector('[data-mode="grid"]')?.click(); }
-    if (e.key === '2') { document.querySelector('[data-mode="control"]')?.click(); }
-    if (e.key === '3') { document.querySelector('[data-mode="holo"]')?.click(); }
-    if (e.key === '4') { document.querySelector('[data-mode="metrics"]')?.click(); }
-    if (e.key === '5') { document.querySelector('[data-mode="auto"]')?.click(); }
-    if (e.key === 'r' || e.key === 'R') {
-      if (autoInterval) { clearInterval(autoInterval); autoInterval = null; }
-      document.querySelector('[data-mode="grid"]')?.click();
-    }
-  });
-
-  // ============================================================
-  // 12. DOM READY
-  // ============================================================
-
+  // Warten bis DOM geladen ist
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', start);
   } else {
