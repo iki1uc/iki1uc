@@ -1,450 +1,717 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AXIOM · NC FOUNDER · 6D PREFETCH · COSMONAUT</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌀 NC6 FOUNDER · 756 ACHSEN · PIPELINEBLITZ · ROOT</title>
 
-    <style>
-        body {
-            margin: 0; padding: 0;
-            background-color: #020208;
-            color: #00ffff;
-            font-family: 'Courier New', monospace;
-            overflow: hidden;
-        }
+<style>
+* { box-sizing:border-box; margin:0; padding:0; }
+body {
+  background: #0a0a0f;
+  color: #c8d0d0;
+  font-family: 'Consolas', monospace;
+  min-height: 100vh;
+  padding: 8px;
+  background: radial-gradient(ellipse at 50% 0%, #0a0a1a, #000000);
+  overflow: hidden;
+}
+.container {
+  max-width: 100vw;
+  width: 100%;
+  height: 100vh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
 
-        #hud {
-            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
-            text-align: center; z-index: 10;
-            text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
-            letter-spacing: 4px; pointer-events: none;
-        }
-        #hud h1 { font-size: 24px; margin: 0; color: #ffcc00; border-bottom: 2px solid #ffcc00; padding-bottom: 10px; }
-        #hud p { font-size: 12px; margin-top: 5px; color: #00ffff; opacity: 0.8; }
+.header {
+  text-align: center;
+  border-bottom: 2px solid rgba(255,215,0,0.1);
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+  flex-shrink: 0;
+}
+.header h1 {
+  font-size: 18px;
+  background: linear-gradient(90deg, #ffd700, #ff6600, #ff44ff, #00ccff, #ffd700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 4px;
+}
+.header .sub {
+  color: #3d5a70;
+  font-size: 8px;
+  letter-spacing: 3px;
+}
+.header .sub .founder { color: #ffd700; }
+.header .sub .attack { color: #ff4444; }
 
-        canvas { display: block; width: 100vw; height: 100vh; }
+.main {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+  min-height: 0;
+}
+@media (max-width:800px){ .main { flex-direction:column; } }
 
-        #sidebar {
-            position: absolute; top: 20px; left: 20px;
-            background: rgba(0, 15, 15, 0.8); border: 1px solid #ff66ff;
-            padding: 15px; font-size: 12px; width: 280px; max-height: 92vh; overflow-y: auto;
-            box-shadow: 0 0 20px rgba(255, 102, 255, 0.3);
-            backdrop-filter: blur(5px); z-index: 10;
-            color: #ff66ff;
-        }
-        #sidebar h3 { margin-top: 0; color: #ff66ff; border-bottom: 1px solid #ff66ff; padding-bottom: 5px; }
-        
-        .stat-row { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dashed rgba(255, 102, 255, 0.2); padding-bottom: 4px; }
-        .stat-label { color: #aaa; }
-        .stat-value { color: #00ffff; }
+.holo {
+  flex: 3;
+  background: rgba(10,14,20,0.2);
+  border: 1px solid rgba(100,200,255,0.03);
+  border-radius: 12px;
+  padding: 6px;
+  position: relative;
+  overflow: hidden;
+}
+.holo h3 {
+  color: #ffd700;
+  font-size: 9px;
+  letter-spacing: 2px;
+  border-bottom: 1px solid rgba(255,215,0,0.06);
+  padding-bottom: 2px;
+  margin-bottom: 4px;
+}
+#holoCanvas {
+  width: 100%;
+  height: calc(100% - 24px);
+  background: #0a0a0f;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.02);
+  display: block;
+}
 
-        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 10px; }
-        .btn {
-            background: rgba(255, 102, 255, 0.1); border: 1px solid #ff66ff; color: #fff;
-            padding: 5px; font-family: inherit; cursor: pointer; transition: 0.2s;
-        }
-        .btn:hover { background: rgba(255, 102, 255, 0.3); box-shadow: 0 0 10px #ff66ff; }
-        .btn:active { transform: scale(0.95); }
-        .btn-attack { grid-column: span 2; background: rgba(255, 0, 0, 0.2); border-color: #ff0000; color: #ff5555; }
+.panel {
+  flex: 1;
+  min-width: 200px;
+  background: rgba(10,14,20,0.3);
+  border: 1px solid rgba(60,120,180,0.03);
+  border-radius: 12px;
+  padding: 8px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.panel h3 {
+  color: #00ccff;
+  font-size: 9px;
+  letter-spacing: 2px;
+  border-bottom: 1px solid rgba(0,204,255,0.06);
+  padding-bottom: 3px;
+}
 
-        .aura-text { color: #ffcc00; font-style: italic; margin-top: 15px; font-size: 11px; text-align: justify; animation: pulseText 3s infinite; }
-        @keyframes pulseText { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
-        
-        #depthbar-wrap { margin-top: 8px; }
-        #depthbar-track { background: rgba(255,102,255,0.1); border: 1px solid rgba(255,102,255,0.3); border-radius: 4px; height: 8px; position: relative; overflow: hidden; }
-        #depthbar-fill { background: linear-gradient(90deg, #ff66ff, #00ffff); height: 100%; width: 50%; transition: width 0.1s linear; }
-        #depthbar-label { font-size: 9px; color: #ff66ff; margin-top: 2px; display:flex; justify-content:space-between; }
+/* STATUS */
+.status-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 3px;
+}
+.status-item {
+  background: rgba(0,0,0,0.2);
+  border-radius: 4px;
+  padding: 2px 4px;
+  text-align: center;
+  font-size: 6px;
+}
+.status-item .val { font-size: 14px; font-weight: bold; }
+.status-item .val.on { color: #00ff88; }
+.status-item .val.off { color: #445555; }
+.status-item .val.pulse { color: #ffd700; animation: pulse 1s infinite; }
+.status-item .val.attack { color: #ff4444; }
+@keyframes pulse { 0%,100%{opacity:0.5} 50%{opacity:1} }
 
-        /* PREFETCH STYLES */
-        h3.prefetch { color: #00ffff; border-bottom-color: #00ffff; margin-top: 15px; }
-        .prefetch-row { display:flex; justify-content:space-between; font-size:10px; margin-bottom:2px; color:#8ab8e6;}
-        .prefetch-row span:first-child { color:#aaa; }
-        .motion-switches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; margin-top: 5px;}
-        .motion-btn {
-            background: rgba(0, 255, 255, 0.05); border: 1px solid rgba(0, 255, 255, 0.2);
-            color: #aaa; font-size: 9px; padding: 3px; cursor: pointer;
-        }
-        .motion-btn.active { background: rgba(0, 255, 255, 0.4); color: #fff; border-color: #00ffff; box-shadow: 0 0 5px #00ffff;}
-    </style>
+/* SATELLITEN */
+.sat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 2px;
+  margin: 3px 0;
+}
+.sat {
+  background: rgba(0,0,0,0.15);
+  border-radius: 3px;
+  padding: 2px 4px;
+  text-align: center;
+  font-size: 5px;
+  border: 1px solid rgba(255,255,255,0.02);
+}
+.sat .num { font-size: 12px; font-weight: bold; }
+.sat .lbl { color: #445555; }
+.sat .val { font-size: 6px; }
+
+/* ENGINE */
+.engine-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:3px; margin:3px 0; }
+.engine-card { background:rgba(0,0,0,0.2); border-radius:4px; padding:3px 6px; text-align:center; border:1px solid rgba(255,255,255,0.02); }
+.engine-card .val { font-size:14px; font-weight:bold; }
+.engine-card .lbl { font-size:5px; color:#445555; text-transform:uppercase; }
+
+/* CONTROLS */
+.controls { display:flex; gap:3px; flex-wrap:wrap; margin:4px 0; }
+.controls button {
+  background:rgba(20,35,45,0.3); color:#8ab8e6; border:1px solid rgba(100,200,255,0.04);
+  padding:3px 8px; border-radius:10px; font-family:inherit; font-size:6px; cursor:pointer; transition:all 0.2s;
+}
+.controls button:hover { background:rgba(40,80,100,0.2); color:#b8e2ff; }
+.controls button.attack { border-color:rgba(255,68,68,0.2); color:#ff4444; }
+.controls button.attack:hover { background:rgba(255,68,68,0.05); }
+.controls button.primary { border-color:rgba(255,215,0,0.2); color:#ffd700; }
+.controls button.primary:hover { background:rgba(255,215,0,0.05); }
+.controls button.blitz { border-color:rgba(0,255,136,0.2); color:#00ff88; }
+.controls button.blitz:hover { background:rgba(0,255,136,0.05); }
+.controls button.danger { border-color:rgba(255,68,68,0.2); color:#f44; }
+.controls button.danger:hover { background:rgba(255,68,68,0.05); }
+
+.log {
+  background:rgba(0,0,0,0.3); border-radius:6px; padding:3px 6px; font-size:6px; color:#3d5a70;
+  max-height:50px; overflow-y:auto; border:1px solid rgba(100,200,255,0.01); margin-top:3px;
+  font-family:monospace; line-height:1.4;
+  flex-shrink:0;
+}
+.log .ok { color:#00ff88; }
+.log .flow { color:#ffaa00; }
+.log .attack { color:#ff4444; }
+.log .blitz { color:#00ff88; }
+.log .founder { color:#ffd700; }
+
+.footer {
+  text-align:center; margin-top:4px; color:#1a1a2a; font-size:5px; letter-spacing:2px; flex-shrink:0;
+}
+.footer .founder { color:#ffd700; }
+</style>
 </head>
 <body>
 
-    <div id="hud">
-        <h1>NC6 FOUNDER · COSMONAUT</h1>
-        <p id="statusLine">PREFETCH_3 AKTIV · 756 ACHSEN · 729 SUPER · 81 ORBIT · 9 KERN · 3 UR</p>
+<div class="container">
+
+<div class="header">
+  <h1>🌀 NC6 FOUNDER · 756 ACHSEN</h1>
+  <div class="sub"><span class="founder">★</span> FOUNDER · <span class="attack">⚡</span> 6D ATTACK · 729/81/9/3 · PIPELINEBLITZ</div>
+</div>
+
+<div class="main">
+
+  <!-- HOLOGRAMM -->
+  <div class="holo">
+    <h3>🌀 756 ACHSEN · SATELLITEN · ATMOSPHÄRE</h3>
+    <canvas id="holoCanvas"></canvas>
+  </div>
+
+  <!-- PANEL -->
+  <div class="panel">
+    <h3>⚙️ FOUNDER · 6D NC ATTACK</h3>
+
+    <!-- STATUS -->
+    <div class="status-grid">
+      <div class="status-item"><div class="val on" id="s6d">●</div>6D</div>
+      <div class="status-item"><div class="val pulse" id="sblitz">◉</div>BLITZ</div>
+      <div class="status-item"><div class="val attack" id="sattack">⚡</div>ATTACK</div>
+      <div class="status-item"><div class="val on" id="srun3">●</div>RUN3</div>
     </div>
 
-    <div id="sidebar">
-        <h3>FOUNDER STATUS</h3>
-        <div class="stat-row">
-            <span class="stat-label">Mode:</span>
-            <span class="stat-value" id="mode">ROOT</span>
-        </div>
-        <div class="stat-row">
-            <span class="stat-label">Attack Power:</span>
-            <span class="stat-value" id="attackPower">0.00</span>
-        </div>
-        <div class="stat-row">
-            <span class="stat-label">Multiplikator:</span>
-            <span class="stat-value" id="mult">x1</span>
-        </div>
-        <div class="stat-row">
-            <span class="stat-label">Aura (Z):</span>
-            <span class="stat-value" id="auraVal">Neutral</span>
-        </div>
-
-        <h3 style="margin-top: 15px;">NC BEFEHLE</h3>
-        <div class="btn-grid">
-            <button class="btn btn-attack" onclick="triggerAttack()">⚡ 6D ATTACK</button>
-            <button class="btn" onclick="triggerRun3()">▶ RUN3</button>
-            <button class="btn" onclick="triggerPipeline()">⚡ PIPELINEBLITZ</button>
-            <button class="btn" onclick="triggerBeam()">⚡ BEAM</button>
-            <button class="btn" onclick="triggerReset()" style="color:red; border-color:red;">⟲ RESET</button>
-        </div>
-
-        <h3 style="margin-top: 15px;">MULTIPLIKATOR</h3>
-        <div class="btn-grid">
-            <button class="btn" onclick="setMultiplier('x1')">x1</button>
-            <button class="btn" onclick="setMultiplier('x1.5')">x1.5</button>
-            <button class="btn" onclick="setMultiplier('x2')">x2</button>
-            <button class="btn" onclick="setMultiplier('x3')">x3</button>
-        </div>
-
-        <h3 class="depth" style="margin-top: 15px; color: #ff66ff;">TIEFENMODUL (Z)</h3>
-        <div class="stat-row">
-            <span class="stat-label">Fokusebene:</span>
-            <span class="stat-value" id="focusZ">0.00</span>
-        </div>
-        <div class="stat-row">
-            <span class="stat-label">Streuung σz:</span>
-            <span class="stat-value" id="spreadZ">0.00</span>
-        </div>
-        <div id="depthbar-wrap">
-            <div id="depthbar-track"><div id="depthbar-fill"></div></div>
-            <div id="depthbar-label"><span>nah</span><span>Fokusebene</span><span>fern</span></div>
-        </div>
-
-        <!-- NEU: PREFETCH_3 Panel -->
-        <h3 class="prefetch">PREFETCH_3 · ENGINE</h3>
-        <div class="prefetch-row"><span>POS MODE:</span><span>ULTRA-U</span></div>
-        <div class="prefetch-row"><span>KERNEL:</span><span>ULTRA-KERNEL</span></div>
-        <div class="prefetch-row"><span>SYNC:</span><span>ALL GATES OPEN</span></div>
-        
-        <h3 class="prefetch">3x3 MOTION SWITCHES (NC)</h3>
-        <div class="motion-switches" id="motion-switches"></div>
-
-        <div class="aura-text">
-            "Der Cosmonaut verbindet PREFETCH_3 mit der 6D Struktur. SYN interpretiert die Quantenfluktuationen des Kerns. Bei 6D ATTACK steigen die Satelliten und die Tiefe kollabiert in die Magenta-Zone. Die 9 Motion-Switches simulieren die 3x3 Bewegung."
-        </div>
+    <!-- SATELLITEN -->
+    <div style="font-size:6px;color:#445555;">🛰 SATELLITEN · 729 → 81 → 9 → 3</div>
+    <div class="sat-grid">
+      <div class="sat"><div class="num" style="color:#ffd700;" id="sat729">729</div><div class="lbl">SUPER</div><div class="val" id="sat729v">0%</div></div>
+      <div class="sat"><div class="num" style="color:#00ccff;" id="sat81">81</div><div class="lbl">ORBIT</div><div class="val" id="sat81v">0%</div></div>
+      <div class="sat"><div class="num" style="color:#ff66ff;" id="sat9">9</div><div class="lbl">KERN</div><div class="val" id="sat9v">0%</div></div>
+      <div class="sat"><div class="num" style="color:#00ff88;" id="sat3">3</div><div class="lbl">UR</div><div class="val" id="sat3v">0%</div></div>
     </div>
 
-    <div id="focusHint" style="position:absolute; bottom:16px; left:50%; transform:translateX(-50%); font-size:10px; color:#ff66ff; opacity:0.7; z-index:10; letter-spacing:2px;">🖱 Mausrad / ↑↓ = Fokusebene verschieben</div>
+    <!-- ENGINE -->
+    <div class="engine-grid">
+      <div class="engine-card" style="border-color:rgba(255,215,0,0.1);"><div class="val" style="color:#ffd700;" id="engineVal">0</div><div class="lbl">ENGINE</div></div>
+      <div class="engine-card" style="border-color:rgba(255,68,68,0.1);"><div class="val" style="color:#ff4444;" id="attackVal">0</div><div class="lbl">ATTACK</div></div>
+      <div class="engine-card" style="border-color:rgba(0,255,136,0.1);"><div class="val" style="color:#00ff88;" id="blitzVal">0</div><div class="lbl">BLITZ</div></div>
+    </div>
 
-    <canvas id="canvas"></canvas>
+    <!-- ATMOSPHÄRE -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:2px;font-size:5px;text-align:center;margin:3px 0;">
+      <div style="background:rgba(0,0,0,0.1);border-radius:3px;padding:2px;"><div style="color:#00ff88;">O₂</div><div id="atmO2" style="font-size:10px;">21%</div></div>
+      <div style="background:rgba(0,0,0,0.1);border-radius:3px;padding:2px;"><div style="color:#ff4444;">CO₂</div><div id="atmCO2" style="font-size:10px;">0.04%</div></div>
+      <div style="background:rgba(0,0,0,0.1);border-radius:3px;padding:2px;"><div style="color:#00ccff;">H₂O</div><div id="atmH2O" style="font-size:10px;">1%</div></div>
+      <div style="background:rgba(0,0,0,0.1);border-radius:3px;padding:2px;"><div style="color:#ff66ff;">GAS</div><div id="atmGas" style="font-size:10px;">78%</div></div>
+      <div style="background:rgba(0,0,0,0.1);border-radius:3px;padding:2px;"><div style="color:#ffaa00;">NEBEL</div><div id="atmNebel" style="font-size:10px;">0%</div></div>
+    </div>
 
-    <script>
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
+    <!-- CONTROLS -->
+    <div class="controls">
+      <button class="attack" id="btnAttack">⚡ 6D ATTACK</button>
+      <button class="primary" id="btnStep">🌀 STEP</button>
+      <button class="blitz" id="btnBlitz">⚡ PIPELINEBLITZ</button>
+      <button id="btnRun3">▶ RUN3</button>
+      <button id="btnBeam">⚡ BEAM</button>
+      <button id="btnHolo">◈ HOLO</button>
+      <button id="btnRespo">◈ RESPO</button>
+      <button id="btnDs9">★ DS9</button>
+      <button id="btnOrg">🔄 ORG</button>
+      <button id="btnReorg">🔄 REORG</button>
+      <button class="danger" id="btnReset">⟲ RESET</button>
+    </div>
 
-        let width, height;
-        let particles = [];
-        let nucleus = { x: 0, y: 0, z: 0 };
+    <div class="log" id="log">[🌀] FOUNDER · 756 ACHSEN · PIPELINEBLITZ · bereit</div>
+  </div>
+</div>
 
-        // ==========================================
-        // NC FOUNDER SYSTEM (STEUERUNG)
-        // ==========================================
-        const NC = {
-            mode: "ROOT",
-            attackPower: 0,
-            multiplier: 1.0,
-            multipliers: { x1: 1.0, x15: 1.5, x2: 2.0, x3: 3.0 }
-        };
+<div class="footer"><span class="founder">★</span> FOUNDER · 6D NC ATTACK · 756 ACHSEN · 729/81/9/3 · <span class="founder">wieimmer4u</span></div>
 
-        // ==========================================
-        // PREFETCH_3 MOTION (3x3 Sim)
-        // ==========================================
-        const PREFETCH = {
-            motion: [false, false, false, false, false, false, false, false, false] // 9 Switches für 3x3
-        };
+</div>
 
-        // ==========================================
-        // TIEFENMODUL
-        // ==========================================
-        const DEPTH = {
-            focusZ: 0,
-            focusRange: 0.35,
-            zPull: 0.00045,
-            zDrift: 0.0006,
-            bounds: 2.2
-        };
+<script>
+// ================================================================
+// FOUNDER · 6D NC ATTACK · 756 ACHSEN · PIPELINEBLITZ
+// ================================================================
 
-        // UI Motion Switches erzeugen
-        const switchContainer = document.getElementById('motion-switches');
-        for (let i = 0; i < 9; i++) {
-            const btn = document.createElement('button');
-            btn.className = 'motion-btn';
-            btn.innerText = 'M' + (i + 1);
-            btn.onclick = () => {
-                PREFETCH.motion[i] = !PREFETCH.motion[i];
-                btn.classList.toggle('active', PREFETCH.motion[i]);
-                
-                // Physik: Jeder Schalter beeinflusst die Geschwindigkeit leicht
-                if (PREFETCH.motion[i]) {
-                    particles.forEach(p => {
-                        p.vx += (i % 3 - 1) * 0.0005;
-                        p.vy += (Math.floor(i / 3) - 1) * 0.0005;
-                    });
-                }
-            };
-            switchContainer.appendChild(btn);
-        }
+// ─── STATE ──────────────────────────────────────────────────────
+const STATE = {
+  cycle: 0,
+  attack: 0,
+  blitz: 0,
+  run3: false,
+  beam: false,
+  holo: true,
+  respo: false,
+  ds9: false,
+  org: false,
+  reorg: false,
+  engine: 0,
+  attackVal: 0,
+  blitzVal: 0,
+  sat: { '729': 0, '81': 0, '9': 0, '3': 0 },
+  atm: { o2: 21, co2: 0.04, h2o: 1, gas: 78, nebel: 0 },
+  dims: [3, 9, 27, 81, 243, 729],
+  axes: 756
+};
 
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-            nucleus.x = width / 2;
-            nucleus.y = height / 2;
-        }
-        window.addEventListener('resize', resize);
-        resize();
+// ─── CANVAS ─────────────────────────────────────────────────────
+const canvas = document.getElementById('holoCanvas');
+const ctx = canvas.getContext('2d');
 
-        // Partikel erstellen
-        const PARTICLE_COUNT = 3000;
-        for (let i = 0; i < PARTICLE_COUNT; i++) {
-            particles.push({
-                layer: i < 100 ? "UR" : (i < 500 ? "KERN" : (i < 1500 ? "ORBIT" : "SUPER")),
-                x: (Math.random() - 0.5) * 4,
-                y: (Math.random() - 0.5) * 4,
-                z: (Math.random() - 0.5) * 4,
-                vx: (Math.random() - 0.5) * 0.002,
-                vy: (Math.random() - 0.5) * 0.002,
-                vz: (Math.random() - 0.5) * 0.002,
-                size: Math.random() * 2 + 0.5,
-                color: 'rgba(0, 255, 255,' 
-            });
-        }
+function resizeCanvas() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width - 12 || 800;
+  canvas.height = rect.height - 28 || 400;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
 
-        // ── BEFEHLE ──
-        function triggerAttack() {
-            NC.attackPower = 1.0;
-            NC.multiplier = 1.0;
-            NC.mode = "NC6-ATTACK";
-            document.getElementById('mode').innerText = NC.mode;
-            document.getElementById('statusLine').innerText = "⚡ 6D ATTACK: PREFETCH AKTIV · SATS STEIGEN";
-        }
+// ─── 756 ACHSEN als Golden-Spiral ─────────────────────────────
+const GOLDEN = Math.PI * (3 - Math.sqrt(5));
+const POINTS = [];
+(function build() {
+  const N = 756;
+  for (let i = 0; i < N; i++) {
+    const y = 1 - (i / (N - 1)) * 2;
+    const r = Math.sqrt(Math.max(0, 1 - y*y));
+    const theta = GOLDEN * i;
+    POINTS.push({ x: Math.cos(theta)*r, y: y, z: Math.sin(theta)*r, idx: i });
+  }
+})();
 
-        function triggerRun3() {
-            NC.mode = "ROLLE";
-            document.getElementById('mode').innerText = "RUN3 AKTIV";
-            particles.forEach(p => p.vx += 0.01);
-        }
+function rotate(p, ry, rx) {
+  let cos = Math.cos(ry), sin = Math.sin(ry);
+  let x1 = p.x*cos - p.z*sin, z1 = p.x*sin + p.z*cos;
+  cos = Math.cos(rx); sin = Math.sin(rx);
+  let y2 = p.y*cos - z1*sin, z2 = p.y*sin + z1*cos;
+  return { x:x1, y:y2, z:z2 };
+}
 
-        function setMultiplier(level) {
-            const key = level.replace('.', '');
-            NC.multiplier = NC.multipliers[key] || 1.0;
-            document.getElementById('mult').innerText = level;
-            NC.mode = "MULTI " + level;
-            document.getElementById('mode').innerText = NC.mode;
-            
-            // Bei x1.5 soll die Aura explodieren
-            if (NC.multiplier >= 1.5) {
-                document.getElementById('statusLine').innerText = "⚡ AURA EXPLOSION BEI x" + level;
-            }
-        }
+// ─── RENDER ─────────────────────────────────────────────────────
+function render() {
+  const w = canvas.width, h = canvas.height;
+  const cx = w/2, cy = h/2;
+  const R = Math.min(w, h) * 0.35;
 
-        function triggerPipeline() {
-            if (NC.attackPower > 0) {
-                NC.attackPower = Math.min(1.0, NC.attackPower * 1.5); 
-                NC.multiplier = 1.5;
-            } else {
-                NC.attackPower = 0.5;
-                NC.multiplier = 0.5;
-            }
-            NC.mode = "PIPELINEBLITZ";
-            document.getElementById('mode').innerText = "PIPELINEBLITZ";
-        }
+  ctx.clearRect(0, 0, w, h);
+  const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, w/2);
+  grad.addColorStop(0, '#0a0a1a'); grad.addColorStop(0.5, '#050510'); grad.addColorStop(1, '#000000');
+  ctx.fillStyle = grad; ctx.fillRect(0, 0, w, h);
 
-        function triggerBeam() {
-            NC.mode = "BEAM 729";
-            document.getElementById('mode').innerText = "BEAM 729";
-            particles.forEach(p => {
-                if(p.layer === "SUPER") p.z += 1.5;
-            });
-        }
+  const ry = STATE.cycle * 0.002;
+  const rx = 0.35 + Math.sin(STATE.cycle * 0.001) * 0.1;
 
-        function triggerReset() {
-            NC.attackPower = 0;
-            NC.multiplier = 1.0;
-            NC.mode = "ROOT";
-            document.getElementById('mode').innerText = "ROOT RETURN";
-            document.getElementById('statusLine').innerText = "PREFETCH_3 AKTIV · 756 ACHSEN · 729 SUPER · 81 ORBIT · 9 KERN · 3 UR";
-            document.getElementById('mult').innerText = "x1";
-            particles.forEach(p => {
-                p.x = (Math.random() - 0.5) * 2;
-                p.y = (Math.random() - 0.5) * 2;
-                p.z = (Math.random() - 0.5) * 2;
-                p.vx = (Math.random() - 0.5) * 0.002;
-                p.vy = (Math.random() - 0.5) * 0.002;
-                p.vz = (Math.random() - 0.5) * 0.002;
-                p.color = 'rgba(0, 255, 255,'; 
-            });
-            // Motion Schalter zurücksetzen
-            PREFETCH.motion.fill(false);
-            document.querySelectorAll('.motion-btn').forEach(b => b.classList.remove('active'));
-            DEPTH.focusZ = 0;
-            document.getElementById('auraVal').innerText = "Neutral";
-        }
+  // Atmosphären-Nebel
+  if (STATE.atm.nebel > 0) {
+    ctx.fillStyle = `rgba(255,170,0,${STATE.atm.nebel / 200})`;
+    ctx.beginPath();
+    ctx.arc(cx, cy, R * (0.5 + STATE.atm.nebel / 100), 0, Math.PI * 2);
+    ctx.fill();
+  }
 
-        window.addEventListener('wheel', e => {
-            DEPTH.focusZ += Math.sign(e.deltaY) * 0.05;
-            DEPTH.focusZ = Math.max(-1.5, Math.min(1.5, DEPTH.focusZ));
-        });
-        window.addEventListener('keydown', e => {
-            if (e.key === 'ArrowUp')   DEPTH.focusZ = Math.max(-1.5, DEPTH.focusZ - 0.05);
-            if (e.key === 'ArrowDown') DEPTH.focusZ = Math.min(1.5, DEPTH.focusZ + 0.05);
-        });
+  // 756 Achsen
+  const colors = ['#ffd700','#ff4444','#00ccff','#ff66ff','#00ff88','#ff8800'];
+  POINTS.forEach((p, i) => {
+    const rot = rotate(p, ry, rx);
+    const scale = 0.3 + (i / POINTS.length) * 0.5;
+    const px = cx + rot.x * R * scale;
+    const py = cy + rot.y * R * scale;
+    const pz = rot.z;
+    const persp = 400 / (400 + pz * 50);
+    const size = 0.5 + (i / POINTS.length) * 2 * persp;
+    const alpha = 0.05 + (i / POINTS.length) * 0.25 * persp;
+    const dimIdx = i % 6;
+    const attackBoost = STATE.attack > 0 ? 0.1 + STATE.attack * 0.01 : 0;
+    ctx.globalAlpha = Math.min(1, alpha + attackBoost * 0.1);
+    ctx.fillStyle = colors[dimIdx];
+    ctx.shadowColor = STATE.attack > 0 ? '#ff4444' : 'transparent';
+    ctx.shadowBlur = STATE.attack > 0 ? 5 + STATE.attack : 0;
+    ctx.beginPath();
+    ctx.arc(px, py, Math.max(0.3, size), 0, Math.PI * 2);
+    ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+  ctx.shadowBlur = 0;
 
-        // ==========================================
-        // DRAW NEBULA
-        // ==========================================
-        function drawNebula() {
-            ctx.clearRect(0, 0, width, height);
+  // Satelliten-Ringe
+  const satData = [
+    { key: '729', rad: R * 0.75, color: '#ffd700' },
+    { key: '81', rad: R * 0.55, color: '#00ccff' },
+    { key: '9', rad: R * 0.35, color: '#ff66ff' },
+    { key: '3', rad: R * 0.15, color: '#00ff88' }
+  ];
+  satData.forEach(s => {
+    const pct = STATE.sat[s.key] / 100;
+    ctx.strokeStyle = s.color + '33';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 6]);
+    ctx.beginPath();
+    ctx.arc(cx, cy, s.rad, 0, Math.PI * 2 * Math.max(0.1, pct));
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = s.color + '44';
+    ctx.font = '6px monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+    ctx.fillText(s.key, cx + s.rad * 0.85, cy - 2);
+  });
 
-            if(NC.attackPower > 0) NC.attackPower *= 0.995;
-            if(NC.attackPower < 0.01) NC.attackPower = 0;
+  // Zentrum (RUN3 / DS9)
+  if (STATE.run3) {
+    ctx.shadowColor = '#00ff88';
+    ctx.shadowBlur = 30;
+    ctx.fillStyle = '#00ff88';
+    ctx.beginPath();
+    ctx.arc(cx, cy, 6 + Math.sin(STATE.cycle*0.03)*2, 0, Math.PI*2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#00ff8844';
+    ctx.font = '6px monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillText('RUN3', cx, cy + 8);
+  }
 
-            DEPTH.focusZ += Math.sin(Date.now() * DEPTH.zDrift) * 0.0006;
+  if (STATE.ds9) {
+    ctx.shadowColor = '#ffd700';
+    ctx.shadowBlur = 50;
+    ctx.fillStyle = '#ffd700';
+    ctx.font = 'bold 18px monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('★', cx, cy - R * 0.65);
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#ffd70044';
+    ctx.font = '5px monospace';
+    ctx.textBaseline = 'top';
+    ctx.fillText('DEEP SPACE NINE', cx, cy - R * 0.65 + 12);
+  }
 
-            // PHYSIK: Multiplikator anwenden
-            let effectiveForce = (0.0005 * Math.sin(Date.now() * 0.001)) + (NC.attackPower * NC.multiplier * 0.003 * -1);
+  // BEAM
+  if (STATE.beam) {
+    for (let i = 0; i < 30; i++) {
+      const a = i / 30 * Math.PI * 2 + STATE.cycle * 0.005;
+      const d = R * (0.1 + Math.sin(STATE.cycle * 0.01 + i) * 0.2);
+      ctx.fillStyle = `rgba(255,102,255,${0.03 + Math.sin(STATE.cycle*0.02+i)*0.02})`;
+      ctx.shadowColor = '#ff66ff';
+      ctx.shadowBlur = 5;
+      ctx.beginPath();
+      ctx.arc(cx + Math.cos(a)*d, cy + Math.sin(a)*d, 2 + Math.sin(STATE.cycle*0.03+i)*1, 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.shadowBlur = 0;
+  }
 
-            let gradColor = effectiveForce < -0.001 ? 'rgba(100, 20, 50, 0.8)' : 'rgba(0, 80, 120, 0.6)';
-            let gradient = ctx.createRadialGradient(nucleus.x, nucleus.y, 0, nucleus.x, nucleus.y, 600);
-            gradient.addColorStop(0, gradColor);
-            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, width, height);
+  // Attack-Anzeige
+  if (STATE.attack > 0) {
+    ctx.fillStyle = `rgba(255,68,68,${0.05 + STATE.attack * 0.01})`;
+    ctx.font = '7px monospace';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillText(`⚡ ATTACK ${STATE.attack}`, 10, 10);
+  }
 
-            let zSum = 0, zSqSum = 0, inFocusCount = 0;
-            const sorted = [...particles].sort((a, b) => b.z - a.z);
+  // BLITZ
+  if (STATE.blitz > 0) {
+    ctx.fillStyle = `rgba(0,255,136,${0.05 + STATE.blitz * 0.01})`;
+    ctx.font = '7px monospace';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'top';
+    ctx.fillText(`⚡ BLITZ ${STATE.blitz}`, w - 10, 10);
+  }
 
-            sorted.forEach(p => {
-                p.x += p.vx;
-                p.y += p.vy;
-                p.z += p.vz;
+  // Werte
+  ctx.fillStyle = '#445555';
+  ctx.font = '5px monospace';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'bottom';
+  ctx.fillText(`756 ACHSEN · CYCLE ${STATE.cycle}`, 10, h - 6);
+  ctx.textAlign = 'right';
+  ctx.fillText(`ENGINE ${Math.round(STATE.engine)}`, w - 10, h - 6);
+}
 
-                const dx = p.x - nucleus.x;
-                const dy = p.y - nucleus.y;
-                const dz = p.z - nucleus.z;
-                const dist3D = Math.sqrt(dx * dx + dy * dy + dz * dz) || 0.0001;
+// ─── 6D ATTACK ──────────────────────────────────────────────────
+function attack6D() {
+  STATE.attack++;
+  STATE.cycle++;
+  STATE.attackVal = STATE.attack;
 
-                p.vx -= (dx / dist3D) * effectiveForce;
-                p.vy -= (dy / dist3D) * effectiveForce;
-                p.vz -= (dz / dist3D) * effectiveForce;
+  // Satelliten steigen
+  STATE.sat['3'] = Math.min(100, STATE.sat['3'] + 2 + Math.random() * 3);
+  STATE.sat['9'] = Math.min(100, STATE.sat['9'] + 1.5 + Math.random() * 2);
+  STATE.sat['81'] = Math.min(100, STATE.sat['81'] + 1 + Math.random() * 1.5);
+  STATE.sat['729'] = Math.min(100, STATE.sat['729'] + 0.5 + Math.random() * 1);
 
-                const dzFocus = p.z - DEPTH.focusZ;
-                p.vz -= dzFocus * DEPTH.zPull;
+  // Engine
+  STATE.engine = (STATE.engine + 10 + Math.random() * 20) % 1000;
 
-                const scale = 400 / (400 + p.z * 200);
-                const screenX = nucleus.x + p.x * scale * 200;
-                const screenY = nucleus.y + p.y * scale * 200;
+  // Atmosphäre
+  STATE.atm.co2 = Math.min(10, STATE.atm.co2 + 0.01 + Math.random() * 0.02);
+  STATE.atm.nebel = Math.min(30, STATE.atm.nebel + 0.1 + Math.random() * 0.3);
+  STATE.atm.o2 = Math.max(15, STATE.atm.o2 - 0.02);
 
-                if (dist3D > 3 || Math.abs(p.z) > DEPTH.bounds) {
-                    p.x = (Math.random() - 0.5) * 2;
-                    p.y = (Math.random() - 0.5) * 2;
-                    p.z = (Math.random() - 0.5) * 2;
-                }
+  // BLITZ
+  STATE.blitz = Math.min(100, STATE.blitz + 1);
 
-                let color = p.color;
-                if (effectiveForce < -0.001) {
-                    if(p.layer === "UR") color = 'rgba(255, 255, 255,';
-                    else if(p.layer === "KERN") color = 'rgba(0, 255, 255,';
-                    else if(p.layer === "ORBIT") color = 'rgba(255, 204, 0,';
-                    else if(p.layer === "SUPER") color = 'rgba(255, 102, 255,';
-                }
+  updateUI();
+  log(`⚡ 6D ATTACK #${STATE.attack} · 756 Achsen attackiert`, 'attack');
+  render();
+}
 
-                const distFromFocus = Math.abs(p.z - DEPTH.focusZ);
-                const inFocus = distFromFocus < DEPTH.focusRange;
-                if (inFocus) inFocusCount++;
-                const focusFactor = Math.max(0.15, 1 - distFromFocus / 1.8);
+// ─── STEP ──────────────────────────────────────────────────────
+function step() {
+  STATE.cycle++;
+  const dim = STATE.dims[STATE.cycle % STATE.dims.length];
+  STATE.engine = (STATE.engine + dim * 0.5) % 1000;
+  STATE.sat['3'] = Math.min(100, STATE.sat['3'] + 0.5);
+  STATE.sat['9'] = Math.min(100, STATE.sat['9'] + 0.3);
+  STATE.sat['81'] = Math.min(100, STATE.sat['81'] + 0.2);
+  STATE.sat['729'] = Math.min(100, STATE.sat['729'] + 0.1);
+  log(`🌀 STEP · ${dim} · Engine ${Math.round(STATE.engine)}`, 'flow');
+  updateUI();
+  render();
+}
 
-                zSum += p.z; zSqSum += p.z * p.z;
+// ─── PIPELINEBLITZ ─────────────────────────────────────────────
+function pipelineBlitz() {
+  STATE.blitz++;
+  STATE.blitzVal = STATE.blitz;
+  STATE.cycle += 6;
 
-                const alpha = (0.15 + 0.75 * focusFactor) * Math.max(0.2, scale);
-                const renderSize = p.size * scale * (inFocus ? 1 : 1 + distFromFocus * 0.8);
+  // Alle 6 Läufe gleichzeitig
+  for (let i = 0; i < 6; i++) {
+    STATE.engine = (STATE.engine + 15 + Math.random() * 25) % 1000;
+    STATE.sat['3'] = Math.min(100, STATE.sat['3'] + 1 + Math.random() * 2);
+    STATE.sat['9'] = Math.min(100, STATE.sat['9'] + 0.8 + Math.random() * 1.5);
+    STATE.sat['81'] = Math.min(100, STATE.sat['81'] + 0.5 + Math.random() * 1);
+    STATE.sat['729'] = Math.min(100, STATE.sat['729'] + 0.2 + Math.random() * 0.5);
+  }
 
-                ctx.fillStyle = color + alpha.toFixed(3) + ')';
-                ctx.beginPath();
-                ctx.arc(screenX, screenY, Math.max(0.3, renderSize), 0, Math.PI * 2);
-                ctx.fill();
-            });
+  STATE.run3 = true;
+  STATE.attack++;
+  STATE.attackVal = STATE.attack;
 
-            const n = particles.length;
-            const meanZ = zSum / n;
-            const varZ = zSqSum / n - meanZ * meanZ;
-            const sigmaZ = Math.sqrt(Math.max(0, varZ));
-            document.getElementById('focusZ').textContent = DEPTH.focusZ.toFixed(2);
-            document.getElementById('spreadZ').textContent = sigmaZ.toFixed(2);
-            document.getElementById('attackPower').textContent = NC.attackPower.toFixed(2);
+  log(`⚡ PIPELINEBLITZ #${STATE.blitz} · Alle 6 Läufe aktiviert`, 'blitz');
+  updateUI();
+  render();
+}
 
-            const pct = ((DEPTH.focusZ + 1.5) / 3) * 100;
-            document.getElementById('depthbar-fill').style.width = pct.toFixed(1) + '%';
+// ─── RUN3 ──────────────────────────────────────────────────────
+function toggleRun3() {
+  STATE.run3 = !STATE.run3;
+  log(STATE.run3 ? '▶ RUN3 aktiviert · Rechte Achse' : '⏸ RUN3 deaktiviert', 'flow');
+  updateUI();
+  render();
+}
 
-            const density = inFocusCount / particles.length;
-            const zOffset = DEPTH.focusZ;
-            const zFactor = Math.max(0, 1 - Math.abs(zOffset) / DEPTH.bounds);
+// ─── BEAM ──────────────────────────────────────────────────────
+function toggleBeam() {
+  STATE.beam = !STATE.beam;
+  log(STATE.beam ? '⚡ BEAM 729 aktiviert' : '⚡ BEAM deaktiviert', 'flow');
+  updateUI();
+  render();
+}
 
-            const goldFactor = Math.max(0, zFactor * density) + (NC.attackPower * NC.multiplier);
-            const magentaFactor = Math.max(0, (1 - zFactor)) + (NC.attackPower * NC.multiplier);
+// ─── HOLO ──────────────────────────────────────────────────────
+function toggleHolo() {
+  STATE.holo = !STATE.holo;
+  log(STATE.holo ? '◈ HOLO aktiviert' : '◈ HOLO deaktiviert', 'flow');
+  updateUI();
+}
 
-            const auraColor = `rgba(
-                ${Math.min(255, 255 * goldFactor + 255 * magentaFactor)},
-                ${Math.min(255, 204 * goldFactor)},
-                ${Math.min(255, 255 * magentaFactor)},
-                ${0.25 + 0.5 * density}
-            )`;
+// ─── RESPO ──────────────────────────────────────────────────────
+function toggleRespo() {
+  STATE.respo = !STATE.respo;
+  log(STATE.respo ? '◈ RESPO Reflex aktiviert' : '◈ RESPO deaktiviert', 'flow');
+  updateUI();
+  render();
+}
 
-            ctx.strokeStyle = auraColor;
-            ctx.lineWidth = 1.5 + (NC.attackPower * NC.multiplier) * 2;
-            for (let i = 0; i < 3 + Math.floor((NC.attackPower * NC.multiplier) * 2); i++) {
-                ctx.beginPath();
-                let radius = 150 + i * 50 + Math.sin(Date.now() * (0.002 + (NC.attackPower * NC.multiplier) * 0.01) + i) * 20;
-                ctx.arc(nucleus.x, nucleus.y, radius, 0, Math.PI * 2);
-                ctx.stroke();
-            }
+// ─── DS9 ──────────────────────────────────────────────────────
+function toggleDs9() {
+  STATE.ds9 = !STATE.ds9;
+  log(STATE.ds9 ? '★ DEEP SPACE NINE aktiviert' : '★ DS9 deaktiviert', 'flow');
+  updateUI();
+  render();
+}
 
-            const focusRingR = 180 + DEPTH.focusZ * 60;
-            ctx.strokeStyle = 'rgba(255, 102, 255, 0.35)';
-            ctx.lineWidth = 1.5;
-            ctx.setLineDash([3, 6]);
-            ctx.beginPath();
-            ctx.arc(nucleus.x, nucleus.y, Math.max(10, focusRingR), 0, Math.PI * 2);
-            ctx.stroke();
-            ctx.setLineDash([]);
+// ─── ORG ──────────────────────────────────────────────────────
+function toggleOrg() {
+  STATE.org = !STATE.org;
+  if (STATE.org) {
+    const sorted = ['3','9','81','729'].sort((a,b) => STATE.sat[a] - STATE.sat[b]);
+    log(`🔄 ORG · sortiert · ${sorted.join(' → ')}`, 'flow');
+  } else {
+    log('🔄 ORG · deaktiviert', 'flow');
+  }
+  updateUI();
+}
 
-            // Kern
-            ctx.shadowBlur = 20 + ((NC.attackPower * NC.multiplier) * 40);
-            ctx.shadowColor = (NC.attackPower * NC.multiplier) > 0.1 ? "magenta" : "cyan";
-            ctx.fillStyle = (NC.attackPower * NC.multiplier) > 0.1 ? "rgba(255, 102, 255, 0.8)" : "rgba(0, 255, 255, 0.8)";
-            ctx.beginPath();
-            ctx.arc(nucleus.x, nucleus.y, 5 + Math.sin(Date.now() * 0.01) * 2 + (NC.attackPower * NC.multiplier), 0, Math.PI * 2);
-            ctx.fill();
-            ctx.shadowBlur = 0;
-        }
+// ─── REORG ────────────────────────────────────────────────────
+function toggleReorg() {
+  STATE.reorg = !STATE.reorg;
+  if (STATE.reorg) {
+    const keys = ['3','9','81','729'];
+    for (let i = keys.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [keys[i], keys[j]] = [keys[j], keys[i]];
+    }
+    log(`🔄 REORG · gemischt · ${keys.join(' → ')}`, 'flow');
+  } else {
+    log('🔄 REORG · deaktiviert', 'flow');
+  }
+  updateUI();
+}
 
-        function updateStats() {
-            document.getElementById('auraVal').innerText = (NC.attackPower * NC.multiplier) > 0.1 ? "VERDICHTET" : "Neutral";
-        }
+// ─── RESET ────────────────────────────────────────────────────
+function resetAll() {
+  STATE.cycle = 0;
+  STATE.attack = 0;
+  STATE.blitz = 0;
+  STATE.run3 = false;
+  STATE.beam = false;
+  STATE.holo = true;
+  STATE.respo = false;
+  STATE.ds9 = false;
+  STATE.org = false;
+  STATE.reorg = false;
+  STATE.engine = 0;
+  STATE.attackVal = 0;
+  STATE.blitzVal = 0;
+  STATE.sat = { '3': 0, '9': 0, '81': 0, '729': 0 };
+  STATE.atm = { o2: 21, co2: 0.04, h2o: 1, gas: 78, nebel: 0 };
+  log('⟲ RESET · Founder zurückgesetzt', 'flow');
+  updateUI();
+  render();
+}
 
-        function animate() {
-            drawNebula();
-            updateStats();
-            requestAnimationFrame(animate);
-        }
+// ─── UPDATE UI ──────────────────────────────────────────────────
+function updateUI() {
+  document.getElementById('s6d').textContent = STATE.cycle > 0 ? '●' : '○';
+  document.getElementById('s6d').className = 'val ' + (STATE.cycle > 0 ? 'on' : 'off');
+  document.getElementById('sblitz').textContent = STATE.blitz > 0 ? '◉' : '●';
+  document.getElementById('sblitz').className = 'val ' + (STATE.blitz > 0 ? 'pulse' : 'off');
+  document.getElementById('sattack').textContent = STATE.attack > 0 ? '⚡' : '●';
+  document.getElementById('sattack').className = 'val ' + (STATE.attack > 0 ? 'attack' : 'off');
+  document.getElementById('srun3').textContent = STATE.run3 ? '●' : '○';
+  document.getElementById('srun3').className = 'val ' + (STATE.run3 ? 'on' : 'off');
 
-        animate();
-    </script>
+  document.getElementById('sat3').textContent = Math.round(STATE.sat['3']);
+  document.getElementById('sat9').textContent = Math.round(STATE.sat['9']);
+  document.getElementById('sat81').textContent = Math.round(STATE.sat['81']);
+  document.getElementById('sat729').textContent = Math.round(STATE.sat['729']);
+  document.getElementById('sat3v').textContent = Math.round(STATE.sat['3']) + '%';
+  document.getElementById('sat9v').textContent = Math.round(STATE.sat['9']) + '%';
+  document.getElementById('sat81v').textContent = Math.round(STATE.sat['81']) + '%';
+  document.getElementById('sat729v').textContent = Math.round(STATE.sat['729']) + '%';
+
+  document.getElementById('engineVal').textContent = Math.round(STATE.engine);
+  document.getElementById('attackVal').textContent = STATE.attack;
+  document.getElementById('blitzVal').textContent = STATE.blitz;
+
+  document.getElementById('atmO2').textContent = STATE.atm.o2.toFixed(1) + '%';
+  document.getElementById('atmCO2').textContent = STATE.atm.co2.toFixed(2) + '%';
+  document.getElementById('atmH2O').textContent = STATE.atm.h2o.toFixed(1) + '%';
+  document.getElementById('atmGas').textContent = STATE.atm.gas.toFixed(1) + '%';
+  document.getElementById('atmNebel').textContent = STATE.atm.nebel.toFixed(1) + '%';
+}
+
+// ─── LOG ────────────────────────────────────────────────────────
+function log(msg, type = 'ok') {
+  const el = document.getElementById('log');
+  const time = new Date().toLocaleTimeString();
+  const cls = ['ok','flow','attack','blitz','founder'].includes(type) ? type : 'ok';
+  el.innerHTML += `<div>[${time}] <span class="${cls}">${msg}</span></div>`;
+  el.scrollTop = el.scrollHeight;
+  if (el.children.length > 30) el.removeChild(el.firstChild);
+}
+
+// ─── BUTTONS ────────────────────────────────────────────────────
+document.getElementById('btnAttack').addEventListener('click', attack6D);
+document.getElementById('btnStep').addEventListener('click', step);
+document.getElementById('btnBlitz').addEventListener('click', pipelineBlitz);
+document.getElementById('btnRun3').addEventListener('click', toggleRun3);
+document.getElementById('btnBeam').addEventListener('click', toggleBeam);
+document.getElementById('btnHolo').addEventListener('click', toggleHolo);
+document.getElementById('btnRespo').addEventListener('click', toggleRespo);
+document.getElementById('btnDs9').addEventListener('click', toggleDs9);
+document.getElementById('btnOrg').addEventListener('click', toggleOrg);
+document.getElementById('btnReorg').addEventListener('click', toggleReorg);
+document.getElementById('btnReset').addEventListener('click', resetAll);
+
+// ─── TASTATUR ──────────────────────────────────────────────────
+document.addEventListener('keydown', (e) => {
+  if (e.key === ' ') { e.preventDefault(); attack6D(); }
+  if (e.key === '1') attack6D();
+  if (e.key === '2') step();
+  if (e.key === '3') pipelineBlitz();
+  if (e.key === '4') toggleRun3();
+  if (e.key === '5') toggleBeam();
+  if (e.key === '6') toggleHolo();
+  if (e.key === '7') toggleRespo();
+  if (e.key === '8') toggleDs9();
+  if (e.key === '9') toggleOrg();
+  if (e.key === '0') toggleReorg();
+  if (e.key === 'x' || e.key === 'X') resetAll();
+});
+
+// ─── INIT ──────────────────────────────────────────────────────
+log('🌀 FOUNDER · 756 ACHSEN · PIPELINEBLITZ · bereit', 'founder');
+log('⌨️  space/1=ATTACK  2=STEP  3=BLITZ  4=RUN3  5=BEAM  6=HOLO  7=RESPO  8=DS9  9=ORG  0=REORG  x=RESET', 'flow');
+log('★ 729 → 81 → 9 → 3 · Satelliten-Stellung · Atmosphäre live', 'founder');
+updateUI();
+render();
+
+// ─── ANIMATION ──────────────────────────────────────────────────
+function animate() {
+  if (STATE.holo) {
+    STATE.cycle += 0.3;
+    render();
+  }
+  requestAnimationFrame(animate);
+}
+
+// Atmosphären-Zyklus
+setInterval(() => {
+  if (STATE.attack > 0) {
+    STATE.atm.o2 = Math.max(15, STATE.atm.o2 - 0.01 + Math.random() * 0.02);
+    STATE.atm.co2 = Math.min(10, STATE.atm.co2 + 0.005 + Math.random() * 0.01);
+    STATE.atm.nebel = Math.min(30, STATE.atm.nebel + 0.05 + Math.random() * 0.1);
+    updateUI();
+  }
+}, 2000);
+
+animate();
+</script>
 
 </body>
 </html>
