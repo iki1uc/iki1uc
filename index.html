@@ -2,523 +2,733 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>iki1uc – COCKPIT (repariert)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌀 IMPERIUM GALACTUM · CUBIK-RAM-GPU · 3D MASSE</title>
 
 <style>
 * { box-sizing:border-box; margin:0; padding:0; }
 body {
   background: #0a0a0f;
-  color: #00ff88;
-  font-family: 'Courier New', monospace;
-  padding: 16px;
+  color: #c8d0d0;
+  font-family: 'Consolas', monospace;
   min-height: 100vh;
+  padding: 10px;
+  background: radial-gradient(ellipse at 50% 0%, #0a0a1a, #000000);
 }
+.container { max-width: 1600px; width: 100%; margin: 0 auto; }
 
-.cockpit {
-  display: grid;
-  grid-template-columns: 260px 1fr 240px;
-  gap: 10px;
-  height: 100vh;
+.header { text-align: center; border-bottom: 2px solid rgba(255,215,0,0.15); padding-bottom: 8px; margin-bottom: 10px; }
+.header h1 {
+  font-size: 22px;
+  background: linear-gradient(90deg, #ffd700, #ff6600, #ff44ff, #00ccff, #ffd700);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: 4px; animation: glow 4s infinite;
 }
+@keyframes glow { 0%,100%{filter:drop-shadow(0 0 10px rgba(255,215,0,0.1))} 50%{filter:drop-shadow(0 0 40px rgba(255,215,0,0.3))} }
+.header .sub { color: #3d5a70; font-size: 9px; letter-spacing: 3px; }
+.header .sub .ds9 { color: #ffd700; } .header .sub .achsen { color: #ff66ff; } .header .sub .6d { color: #00ff88; }
 
-.panel {
-  background: #111118;
-  border: 1px solid #2a2a3a;
-  border-radius: 8px;
-  padding: 14px;
-  overflow: hidden;
+.status-bar {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(100px,1fr)); gap: 4px;
+  background: rgba(0,0,0,0.2); border-radius: 10px; padding: 6px 10px; margin: 6px 0;
 }
-.panel-title {
-  color: #66ccff;
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  border-bottom: 1px solid #2a2a3a;
-  padding-bottom: 6px;
-  margin-bottom: 10px;
-}
-.panel a {
-  color: #66ccff;
-  text-decoration: none;
-  display: block;
-  padding: 3px 0;
-  font-size: 12px;
-  border-bottom: 1px solid #1a1a2a;
-  transition: all 0.2s;
-}
-.panel a:hover {
-  color: #00ff88;
-  background: #1a1a2a;
-  padding-left: 8px;
-}
+.status-item { text-align: center; font-size: 7px; padding: 2px 4px; }
+.status-item .val { font-size: 16px; font-weight: bold; }
+.status-item .val.on { color: #00ff88; } .status-item .val.off { color: #445555; }
+.status-item .val.pulse { color: #ffd700; animation: pulse 1s infinite; }
+.status-item .val.achse { color: #ff66ff; }
+@keyframes pulse { 0%,100%{opacity:0.5} 50%{opacity:1} }
 
-.instrument {
-  background: #0d0d18;
-  border: 1px solid #1a1a3a;
-  border-radius: 4px;
-  padding: 8px 10px;
-  margin: 4px 0;
-  font-size: 12px;
-}
-.instrument .label { color: #6688aa; font-size: 9px; text-transform: uppercase; }
-.instrument .value { font-size: 15px; font-weight: bold; }
-.instrument .value.green { color: #88ff44; }
-.instrument .value.pink { color: #ff66ff; }
-.instrument .value.blue { color: #66ccff; }
-.instrument .value.gold { color: #ffcc44; }
+.main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin: 8px 0; }
+@media (max-width:900px){ .main-grid { grid-template-columns:1fr; } }
 
-#dashboard {
-  background: #0a0a12;
-  border: 1px solid #2a2a4a;
-  border-radius: 6px;
-  padding: 14px;
-  min-height: 160px;
-  margin-top: 8px;
-  flex: 1;
-  overflow: auto;
-}
+.galaxy { background: rgba(10,14,20,0.3); border: 1px solid rgba(100,200,255,0.03); border-radius: 14px; padding: 10px; }
+.galaxy h3 { color: #ffd700; font-size: 10px; letter-spacing: 2px; border-bottom: 1px solid rgba(255,215,0,0.06); padding-bottom: 4px; margin-bottom: 6px; }
+#galaxyCanvas { width: 100%; aspect-ratio: 16/9; background: #0a0a0f; border-radius: 8px; border: 1px solid rgba(255,255,255,0.02); display: block; cursor: grab; }
+#galaxyCanvas:active { cursor: grabbing; }
 
-#dash-switch {
-  display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-}
-#dash-switch button {
-  background: #111122;
-  color: #6688aa;
-  border: 1px solid #2a2a4a;
-  padding: 5px 14px;
-  cursor: pointer;
-  font-family: 'Courier New', monospace;
-  font-size: 11px;
-  border-radius: 4px;
-  transition: all 0.2s;
-}
-#dash-switch button:hover { background: #1a1a3a; border-color: #66ccff; }
-#dash-switch button.active {
-  background: #1a2a4a;
-  color: #00ff88;
-  border-color: #00ff88;
-}
-#dash-switch button.auto-btn { color: #ff66ff; border-color: #550055; }
-#dash-switch button.auto-btn.active { background: #2a0a4a; border-color: #ff66ff; }
+.panel { background: rgba(10,14,20,0.3); border: 1px solid rgba(60,120,180,0.03); border-radius: 14px; padding: 10px; }
+.panel h3 { color: #00ccff; font-size: 10px; letter-spacing: 2px; border-bottom: 1px solid rgba(0,204,255,0.06); padding-bottom: 4px; margin-bottom: 6px; }
 
-.box { background:#111120; border:1px solid #2a2a4a; padding:10px; margin:4px 0; border-radius:4px; font-size:13px; }
-.box.green { background:#002200; border-color:#88ff44; color:#88ff44; }
-.box.pink { background:#220044; border-color:#dd88ff; color:#dd88ff; }
-.box.blue { background:#002244; border-color:#66ccff; color:#66ccff; }
-.box.purple { background:#330033; border-color:#ff66ff; color:#ff66ff; }
+.ordner-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 3px; margin: 4px 0; }
+.ordner { background: rgba(0,0,0,0.2); border-radius: 4px; padding: 3px 6px; text-align: center; font-size: 7px; border: 1px solid rgba(255,255,255,0.02); cursor: pointer; transition: all 0.2s; }
+.ordner:hover { border-color: rgba(255,215,0,0.1); background: rgba(30,50,70,0.1); }
+.ordner .name { color: #8ab8e6; } .ordner .status { font-size: 5px; color: #445555; }
+.ordner .status.on { color: #00ff88; } .ordner .status.pulse { color: #ffd700; animation: pulse 1s infinite; }
 
-.holo-box {
-  background:#1a0a2a;
-  padding:20px;
-  border:1px solid #550055;
-  border-radius:6px;
-  animation: pulse 2s infinite ease-in-out;
+.engine-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; margin: 4px 0; }
+.engine-card { background: rgba(0,0,0,0.2); border-radius: 6px; padding: 4px 8px; text-align: center; border: 1px solid rgba(255,255,255,0.02); }
+.engine-card .val { font-size: 18px; font-weight: bold; } .engine-card .lbl { font-size: 6px; color: #445555; text-transform: uppercase; }
+.engine-card.eng .val { color: #ffd700; } .engine-card.ind .val { color: #ff4444; } .engine-card.markt .val { color: #00ff88; }
+
+.controls { display: flex; gap: 4px; flex-wrap: wrap; margin: 6px 0; }
+.controls button { background: rgba(20,35,45,0.3); color: #8ab8e6; border: 1px solid rgba(100,200,255,0.04); padding: 4px 12px; border-radius: 14px; font-family: inherit; font-size: 8px; cursor: pointer; transition: all 0.2s; }
+.controls button:hover { background: rgba(40,80,100,0.2); color: #b8e2ff; }
+.controls button.primary { border-color: rgba(255,215,0,0.2); color: #ffd700; } .controls button.primary:hover { background: rgba(255,215,0,0.05); }
+.controls button.ds9 { border-color: rgba(255,102,255,0.2); color: #ff66ff; } .controls button.ds9:hover { background: rgba(255,102,255,0.05); }
+.controls button.achse { border-color: rgba(0,204,255,0.2); color: #00ccff; } .controls button.achse:hover { background: rgba(0,204,255,0.05); }
+.controls button.danger { border-color: rgba(255,68,68,0.2); color: #f44; } .controls button.danger:hover { background: rgba(255,68,68,0.05); }
+
+.log { background: rgba(0,0,0,0.3); border-radius: 8px; padding: 6px 10px; font-size: 7px; color: #3d5a70; max-height: 80px; overflow-y: auto; border: 1px solid rgba(100,200,255,0.01); margin-top: 6px; font-family: monospace; line-height: 1.5; }
+.log .ok { color: #00ff88; } .log .flow { color: #ffaa00; } .log .whirl { color: #ff66ff; }
+.log .ds9 { color: #ffd700; } .log .achse { color: #00ccff; } .log .6d { color: #00ff88; }
+
+/* NEU: 3D MASSE + NARRATIV */
+.main-grid2 { display: grid; grid-template-columns: 2fr 2fr 1.6fr; gap: 10px; margin: 8px 0; }
+@media (max-width:900px){ .main-grid2 { grid-template-columns:1fr; } }
+
+.schrauben-grid { display: grid; grid-template-columns: repeat(9, 1fr); gap: 3px; margin-top: 6px; }
+.schraube { background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.03); border-radius: 5px; padding: 3px; text-align: center; }
+.schraube .idx { font-size: 6px; color: #445555; }
+.schraube input[type=range] {
+  writing-mode: bt-lr; -webkit-appearance: slider-vertical;
+  width: 14px; height: 40px; margin: 2px 0; accent-color: #ffd700;
 }
-@keyframes pulse {
-  0% { box-shadow:0 0 8px #8800aa; }
-  50% { box-shadow:0 0 35px #cc44ff; }
-  100% { box-shadow:0 0 8px #8800aa; }
+.schraube .grp { font-size: 5px; color: #3d5a70; }
+.schrauben-meta { font-size: 8px; color: #8ab8e6; margin-top: 6px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; }
+
+.narrativ-box {
+  font-size: 10px; color: #cddde6; line-height: 1.6; max-height: 340px; overflow-y: auto;
+  background: rgba(0,0,0,0.2); border-radius: 8px; padding: 8px 10px; margin-top: 4px;
 }
+.narrativ-box p { margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px dashed rgba(255,255,255,0.05); }
+.narrativ-box p:last-child { color: #ffd700; }
+.narrativ-box .tag { color: #ff66ff; font-size: 8px; }
 
-.file-list { max-height:200px; overflow-y:auto; font-size:11px; }
-.file-list::-webkit-scrollbar { width:3px; }
-.file-list::-webkit-scrollbar-track { background:#0a0a12; }
-.file-list::-webkit-scrollbar-thumb { background:#2a2a4a; border-radius:2px; }
-.file-list a { font-size:11px; padding:2px 0; }
+.footer { text-align: center; margin-top: 10px; color: #1a1a2a; font-size: 6px; letter-spacing: 3px; }
+.footer .ds9 { color: #ffd700; } .footer .achse { color: #ff66ff; }
 
-.status-ok { color:#00ff88; }
-.status-warn { color:#ffcc00; }
-.status-err { color:#ff3366; }
-
-@media (max-width: 860px) {
-  .cockpit { grid-template-columns:1fr; grid-template-rows:auto; height:auto; }
-  .panel { margin-bottom:8px; }
-}
+/* NEU: CONNECT 3 RECHNER */
+.rechner-row { display:flex; justify-content:space-between; align-items:center; font-size:9px; margin-bottom:5px; color:#8ab8e6; }
+.rechner-row .dot { width:7px; height:7px; border-radius:50%; display:inline-block; margin-right:5px; background:#444; }
+.rechner-row .dot.online { background:#00ff88; box-shadow:0 0 6px #00ff88; }
+.link-row { display:flex; justify-content:space-between; align-items:center; font-size:9px; color:#8ab8e6; margin:4px 0; }
+.link-row button { font-size:8px; padding:3px 8px; }
+.link-status { color:#f44; }
+.link-status.active { color:#00ff88; }
+.connect-meta { font-size:8px; color:#8ab8e6; margin-top:6px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; }
 </style>
 </head>
 <body>
 
-<!-- COCKPIT -->
-<div class="cockpit">
+<div class="container">
 
-  <!-- LINKS: NAVIGATION -->
-  <div class="panel" style="grid-column:1; grid-row:1/5; display:flex; flex-direction:column; gap:6px;">
-    <div class="panel-title">✦ NAVIGATION</div>
-    <div style="font-size:11px; color:#6688aa; padding-bottom:6px; border-bottom:1px solid #1a1a2a;">
-      <span class="status-ok">●</span> CORE: iki1uc
-      <br><span class="status-ok">●</span> VERSION: 1.2
-      <br><span class="status-ok">●</span> SCALE: 692
-    </div>
-    <div style="margin-top:4px;">
-      <a href="./CORE.load">⚡ CORE.load</a>
-      <a href="./fin.e.js">🧠 fin.e.js</a>
-      <a href="./ready.js">📈 ready.js</a>
-      <a href="./respo.js">🎯 respo.js</a>
-      <a href="./ID.html">🆔 ID.html</a>
-      <a href="./suite.html">📦 suite.html</a>
-    </div>
-    <div style="border-top:1px solid #1a1a2a; padding-top:6px;">
-      <div class="panel-title" style="font-size:9px;">VISUAL</div>
-      <a href="./visual/CONTINUUM.html">🌀 CONTINUUM</a>
-      <a href="./visual/LAGE.html">📍 LAGE</a>
-      <a href="./visual/ORT.html">🧭 ORT</a>
-    </div>
-    <div style="border-top:1px solid #1a1a2a; padding-top:6px;">
-      <div class="panel-title" style="font-size:9px;">AXIS</div>
-      <a href="./AXIS/nc.html">🌀 NC</a>
-      <a href="./AXIS/phi.html">Φ PHI</a>
-      <a href="./AXIS/phi2.html">Φ² PHI2</a>
-      <a href="./AXIS/phiinfty.html">♾️ PHI∞</a>
-    </div>
-    <div style="border-top:1px solid #1a1a2a; padding-top:6px; margin-top:auto;">
-      <a href="./RESPO/index.html" style="color:#66ccff;">📊 RESPO</a>
-      <a href="./RAW/cluster.html">💎 RAW</a>
-      <a href="./ROM/rom.map">📖 ROM</a>
+<div class="header">
+  <h1>🌀 IMPERIUM GALACTUM · CUBIK-RAM-GPU · 3D MASSE</h1>
+  <div class="sub"><span class="ds9">★ DEEP SPACE NINE</span> · <span class="achsen">756 ACHSEN</span> · <span class="6d">CUBIK-RAM-GPU</span> · 3→9→27→81→243→729</div>
+</div>
+
+<div class="status-bar" id="statusBar">
+  <div class="status-item"><div class="val on" id="s6d">●</div>6D</div>
+  <div class="status-item"><div class="val achse" id="s756">756</div>ACHSEN</div>
+  <div class="status-item"><div class="val on" id="s81">81</div>SCHRAUBEN</div>
+  <div class="status-item"><div class="val pulse" id="sds9">◉</div>DS9</div>
+  <div class="status-item"><div class="val on" id="sengine">●</div>ENGINE</div>
+  <div class="status-item"><div class="val on" id="smarkt">●</div>MARKT</div>
+  <div class="status-item"><div class="val on" id="sboerse">●</div>BOERSE</div>
+  <div class="status-item"><div class="val pulse" id="sorg">◉</div>ORG/REORG</div>
+</div>
+
+<div class="main-grid">
+  <div class="galaxy">
+    <h3>🌀 GALAXY · 756 ACHSEN · CUBIK-RAM · 3D-Punktwolke</h3>
+    <canvas id="galaxyCanvas"></canvas>
+    <div style="display:flex;gap:8px;margin-top:4px;font-size:7px;color:#445555;flex-wrap:wrap;">
+      <span style="color:#ffd700;">★ DS9</span>
+      <span style="color:#00ff88;">◉ 6D</span>
+      <span style="color:#8ab8e6;">🖱 Ziehen = Rotieren</span>
     </div>
   </div>
 
-  <!-- MITTE: DASHBOARD -->
-  <div style="grid-column:2; grid-row:1/5; display:flex; flex-direction:column; gap:8px;">
-
-    <!-- HEADER -->
-    <div class="panel" style="flex:0;">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <span style="color:#66ccff; font-size:17px; font-weight:bold;">☕ COCKPIT</span>
-        <span style="color:#6688aa; font-size:10px;">692 Repos · Ordnung 1–4</span>
-      </div>
+  <div class="panel">
+    <h3>⚙️ IMPERIUM · KONTROLLE</h3>
+    <div style="font-size:7px;color:#445555;margin-bottom:2px;">📁 KALKULATION · 13 ORDNER</div>
+    <div class="ordner-grid" id="ordnerGrid">
+      <div class="ordner" data-ordner="3"><span class="name">3</span><span class="status on">●</span></div>
+      <div class="ordner" data-ordner="6"><span class="name">6</span><span class="status on">●</span></div>
+      <div class="ordner" data-ordner="9"><span class="name">9</span><span class="status pulse">◉</span></div>
+      <div class="ordner" data-ordner="API"><span class="name">API</span><span class="status on">●</span></div>
+      <div class="ordner" data-ordner="RUN"><span class="name">RUN</span><span class="status on">●</span></div>
+      <div class="ordner" data-ordner="boerse"><span class="name">BOERSE</span><span class="status on">●</span></div>
+      <div class="ordner" data-ordner="industry"><span class="name">INDUSTRY</span><span class="status on">●</span></div>
+      <div class="ordner" data-ordner="links"><span class="name">LINKS</span><span class="status on">●</span></div>
+      <div class="ordner" data-ordner="markt"><span class="name">MARKT</span><span class="status pulse">◉</span></div>
+      <div class="ordner" data-ordner="rechts"><span class="name">RECHTS</span><span class="status on">●</span></div>
+      <div class="ordner" data-ordner="rolle"><span class="name">ROLLE</span><span class="status on">●</span></div>
+      <div class="ordner" data-ordner="use"><span class="name">USE</span><span class="status on">●</span></div>
+      <div class="ordner" data-ordner="weg"><span class="name">WEG</span><span class="status pulse">◉</span></div>
     </div>
 
-    <!-- INSTRUMENTE -->
-    <div class="panel" style="flex:0;">
-      <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:6px;">
-        <div class="instrument"><div class="label">READY</div><div class="value green" id="ready-val">…</div></div>
-        <div class="instrument"><div class="label">MIND (AEON)</div><div class="value pink" id="mind-val">…</div></div>
-        <div class="instrument"><div class="label">RESPO‑S</div><div class="value blue" id="respo-val">…</div></div>
-        <div class="instrument"><div class="label">MOVE</div><div class="value gold" id="move-val">…</div></div>
-      </div>
+    <div style="font-size:7px;color:#445555;margin:4px 0 2px 0;">⚡ 6Y · ENGINE · INDUSTRY · MARKT · BOERSE</div>
+    <div class="engine-grid">
+      <div class="engine-card eng"><div class="val" id="engineVal">0</div><div class="lbl">ENGINE</div></div>
+      <div class="engine-card ind"><div class="val" id="industryVal">0</div><div class="lbl">INDUSTRY</div></div>
+      <div class="engine-card markt"><div class="val" id="marktVal">0</div><div class="lbl">MARKT</div></div>
     </div>
 
-    <!-- DASHBOARD -->
-    <div class="panel" style="flex:1; display:flex; flex-direction:column; min-height:200px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-        <span class="panel-title" style="margin:0; border:0;">📺 DASHBOARD</span>
-        <div id="dash-switch">
-          <button data-mode="grid" class="active">GRID</button>
-          <button data-mode="control">CONTROL</button>
-          <button data-mode="holo">HOLO</button>
-          <button data-mode="auto" class="auto-btn">🤖 AUTO</button>
-        </div>
-      </div>
-      <div id="dashboard" style="flex:1;">
-        <div class="box green">READY: lädt…</div>
-      </div>
+    <div style="display:flex;gap:6px;justify-content:center;margin:4px 0;font-size:9px;">
+      <span style="color:#ffd700;">3</span><span style="color:#ff4444;">→</span>
+      <span style="color:#00ccff;">9</span><span style="color:#ff4444;">→</span>
+      <span style="color:#ff66ff;">27</span><span style="color:#ff4444;">→</span>
+      <span style="color:#00ff88;">81</span><span style="color:#ff4444;">→</span>
+      <span style="color:#ffd700;">243</span><span style="color:#ff4444;">→</span>
+      <span style="color:#ff66ff;">729</span>
     </div>
 
-    <!-- DATEI-BROWSER -->
-    <div class="panel" style="flex:0; max-height:160px;">
-      <div class="panel-title">📂 DATEI‑BROWSER</div>
-      <div class="file-list" id="file-list">
-        <span style="color:#6688aa; font-size:11px;">Lade Dateien…</span>
-      </div>
+    <div class="controls">
+      <button class="primary" id="btn6d">🌀 6D STEP</button>
+      <button class="ds9" id="btnDs9">★ DS9</button>
+      <button class="achse" id="btnAchse">📐 756 ACHSEN</button>
+      <button id="btnOrg">🔄 ORG</button>
+      <button id="btnReorg">🔄 REORG</button>
+      <button id="btnSlide">📊 SLIDE</button>
+      <button id="btnWette">🎲 WETTE</button>
+      <button class="danger" id="btnReset">⟲ RESET</button>
+    </div>
+
+    <div class="log" id="log">[🌀] IMPERIUM GALACTUM · CUBIK-RAM-GPU · bereit</div>
+  </div>
+</div>
+
+<div class="main-grid2">
+  <div class="panel">
+    <h3>🎛 81 STELLSCHRAUBEN · CUBIK-RAM-MASSE</h3>
+    <div class="schrauben-grid" id="schraubenGrid"></div>
+    <div class="schrauben-meta">
+      <span>Ø aller 81: <b id="schraubenAvg" style="color:#ffd700;">50</b>%</span>
+      <span>GPU-Masse: <b id="gpuMass" style="color:#00ccff;">0</b></span>
+      <button id="btnSchraubenReset" style="font-size:8px;">⟲ Alle auf 50%</button>
+      <button id="btnSchraubenRandom" style="font-size:8px;">🎲 Zufällig</button>
     </div>
   </div>
 
-  <!-- RECHTS: STATUS -->
-  <div class="panel" style="grid-column:3; grid-row:1/5; display:flex; flex-direction:column; gap:6px;">
-    <div class="panel-title">✦ STATUS</div>
-    <div id="status-list" style="font-size:12px; line-height:1.8;">
-      <div><span class="status-ok">●</span> CORE: <span style="color:#00ff88;">aktiv</span></div>
-      <div><span class="status-ok">●</span> PIPELINE: <span style="color:#00ff88;">bereit</span></div>
-      <div><span class="status-ok">●</span> RESPO: <span style="color:#66ccff;">geladen</span></div>
-      <div><span class="status-ok">●</span> MIND: <span style="color:#dd88ff;">AEON</span></div>
-      <div><span class="status-ok">●</span> READY: <span style="color:#88ff44;">aktiv</span></div>
-      <div><span class="status-ok">●</span> MOVE: <span style="color:#ffcc44;">OK</span></div>
-      <div><span class="status-ok">●</span> AEON: <span style="color:#ff66ff;">pulsiert</span></div>
-    </div>
-    <div style="border-top:1px solid #1a1a2a; padding-top:8px;">
-      <div class="panel-title" style="font-size:9px;">HIGH‑END RESPO</div>
-      <div style="font-size:10px; color:#66ccff; line-height:1.6;">
-        Q81 · X81 · A81 · RESPO.ai · Station · Pipeline
-      </div>
-    </div>
-    <div style="border-top:1px solid #1a1a2a; padding-top:8px;">
-      <div class="panel-title" style="font-size:9px;">ORDNUNGEN</div>
-      <div style="font-size:10px; color:#6688aa; line-height:1.6;">
-        1: CONTINUUM <span style="color:#00ff88;">●</span><br>
-        2: TRANSWARP <span style="color:#66ccff;">●</span><br>
-        3: WARP3 <span style="color:#88ff44;">●</span><br>
-        4: AEON <span style="color:#ff66ff;">●</span>
-      </div>
-    </div>
-    <div style="border-top:1px solid #1a1a2a; padding-top:8px; margin-top:auto;">
-      <div style="font-size:10px; color:#445566;" id="clock">⏱️ </div>
+  <div class="panel">
+    <h3>📖 NARRATIV · Was das Imperium gerade erlebt</h3>
+    <div class="narrativ-box" id="narrativBox">
+      <p><span class="tag">[Prolog]</span> 756 Achsen ruhen im Dunkel des Imperiums. Noch bewegt sich nichts — die 81 Stellschrauben stehen bei 50%, die Galaxie wartet auf den ersten 6D‑Schritt.</p>
     </div>
   </div>
+
+  <div class="panel">
+    <h3>🔗 CONNECT · 3 RECHNER</h3>
+    <div class="rechner-row"><span><span class="dot online" id="dotR1"></span>RECHNER‑1</span><span id="r1state">online</span></div>
+    <div class="rechner-row"><span><span class="dot online" id="dotR2"></span>RECHNER‑2</span><span id="r2state">online</span></div>
+    <div class="rechner-row"><span><span class="dot online" id="dotR3"></span>RECHNER‑3</span><span id="r3state">online</span></div>
+
+    <div class="link-row">
+      <span>R1 ↔ R2</span>
+      <span class="link-status" id="linkR1R2">○ inaktiv</span>
+      <button data-link="R1-R2" onclick="toggleLink(this.dataset.link)">TOGGLE</button>
+    </div>
+    <div class="link-row">
+      <span>R2 ↔ R3</span>
+      <span class="link-status" id="linkR2R3">○ inaktiv</span>
+      <button data-link="R2-R3" onclick="toggleLink(this.dataset.link)">TOGGLE</button>
+    </div>
+    <div class="link-row">
+      <span>R1 ↔ R3</span>
+      <span class="link-status" id="linkR1R3">○ inaktiv</span>
+      <button data-link="R1-R3" onclick="toggleLink(this.dataset.link)">TOGGLE</button>
+    </div>
+
+    <div class="connect-meta">
+      <button id="btnConnectAll" style="font-size:8px;">🔗 CONNECT ALL</button>
+      <button id="btnPingRechner" style="font-size:8px;">📡 PING</button>
+      <span>Netzwerk‑Boost: <b id="netBoost" style="color:#00ff88;">0%</b></span>
+    </div>
+  </div>
+</div>
+
+<div class="footer"><span class="ds9">★</span> IMPERIUM GALACTUM · CUBIK-RAM-GPU · 3→9→27→81→243→729 · <span class="achse">wieimmer4u</span></div>
 
 </div>
 
-<!-- ============================================================ -->
-<!-- SCRIPT – KOMPLETT REPARIERT -->
-<!-- ============================================================ -->
 <script>
-(function() {
+// ================================================================
+// IMPERIUM GALACTUM · CUBIK-RAM-GPU · 3D MASSE
+// ================================================================
 
-  // ===== FALLBACKS =====
-  function getReady() {
-    try {
-      if (typeof READY === 'function') return READY();
-      if (window.READY) return window.READY();
-    } catch {}
-    return Math.pow(3, Math.pow(9, 81));
+const STATE = {
+  achsen: 756,
+  dims: [3, 9, 27, 81, 243, 729],
+  engine: 0, industry: 0, markt: 0, boerse: 0,
+  cycle: 0, org: false, reorg: false, slide: 0, wette: 0,
+  ds9: false, sixD: false, ordner: {},
+  axiom1: 0, axiom2: 0, axiom3: 0,
+  // 81 Stellschrauben (Masse pro Block)
+  schrauben: Array.from({length:81}, () => 50),
+  // Rotation
+  rotY: 0, rotX: 0.35, autoRotate: true,
+  // Netzwerk-Boost
+  netBoost: 0
+};
+
+// ============================================================
+// NEU: CONNECT · 3 RECHNER (GPU MESH)
+// ============================================================
+const RECHNER = {
+  R1: { name:"RECHNER-1", online:true },
+  R2: { name:"RECHNER-2", online:true },
+  R3: { name:"RECHNER-3", online:true }
+};
+const LINKS = {
+  'R1-R2': { a:'R1', b:'R2', active:false },
+  'R2-R3': { a:'R2', b:'R3', active:false },
+  'R1-R3': { a:'R1', b:'R3', active:false }
+};
+
+function toggleLink(key){
+  const link = LINKS[key];
+  if (!link) return;
+  link.active = !link.active;
+  const el = document.getElementById('link' + key.replace('-', ''));
+  el.textContent = link.active ? '● aktiv' : '○ inaktiv';
+  el.className = 'link-status' + (link.active ? ' active' : '');
+  updateNetBoost();
+}
+
+function connectAllRechner(){
+  Object.keys(LINKS).forEach(key => {
+    LINKS[key].active = true;
+    const el = document.getElementById('link' + key.replace('-', ''));
+    el.textContent = '● aktiv';
+    el.className = 'link-status active';
+  });
+  updateNetBoost();
+  log('🔗 CONNECT ALL · alle 3 Rechner vermascht', 'ok');
+  narrate('R1, R2 und R3 schließen den Kreis — das Netzwerk legt sich wie ein drittes Dreieck um die Kugel der 756 Achsen und aktiviert den CUBIK-RAM-GPU.', 'Wendepunkt');
+}
+
+function pingRechner(){
+  ['R1','R2','R3'].forEach(k => {
+    const stateEl = document.getElementById(k.toLowerCase()+'state');
+    const ms = Math.floor(5 + Math.random()*20);
+    stateEl.textContent = `${ms}ms`;
+    setTimeout(() => { stateEl.textContent = 'online'; }, 1200);
+  });
+  log('📡 PING · R1/R2/R3', 'flow');
+}
+
+function updateNetBoost(){
+  const activeCount = Object.values(LINKS).filter(l => l.active).length;
+  STATE.netBoost = activeCount / 3;
+  document.getElementById('netBoost').textContent = Math.round(STATE.netBoost*100) + '%';
+}
+
+const ORDNER = ['3','6','9','API','RUN','boerse','industry','links','markt','rechts','rolle','use','weg'];
+ORDNER.forEach(o => STATE.ordner[o] = { active: true, value: 0 });
+
+// ============================================================
+// 81 STELLSCHRAUBEN (Cubik-RAM Masse)
+// ============================================================
+function buildSchraubenUI(){
+  const grid = document.getElementById('schraubenGrid');
+  grid.innerHTML = '';
+  for (let i = 0; i < 81; i++){
+    const cell = document.createElement('div');
+    cell.className = 'schraube';
+    const dimGroup = STATE.dims[i % STATE.dims.length];
+    cell.innerHTML = `
+      <div class="idx">${i+1}</div>
+      <input type="range" min="0" max="100" value="${STATE.schrauben[i]}" data-idx="${i}">
+      <div class="grp">${dimGroup}</div>
+    `;
+    grid.appendChild(cell);
   }
-
-  function getRaum() {
-    return { ZUG: "A1", BLATT: "ROOT", STATUS: "REAL", IST: "OK", NEU: "TMP", RESULT: "OK" };
-  }
-
-  function getMove(raum) {
-    return raum && raum.STATUS === "REAL" ? raum.IST : (raum && raum.NEU) || "OK";
-  }
-
-  function getRespo() {
-    try {
-      if (typeof RESPO_AXIS !== 'undefined') return RESPO_AXIS;
-      if (window.RESPO_AXIS) return window.RESPO_AXIS;
-    } catch {}
-    return { R: 42, E: 33, S: 81, P: 12, O: 27 };
-  }
-
-  function getMind(raum, map) {
-    return {
-      EBENE: "AEON",
-      ORDNUNG: 4,
-      STATUS: "° & % 3",
-      SIGNAL: raum && raum.IST === "OK" ? "grün" : "gelb",
-      WAHRNEHMUNG: raum && raum.STATUS === "REAL" ? "klar" : "unscharf",
-      FOKUS: map ? "verbunden" : "leer",
-      VERFÜGBARKEIT: map ? "hoch" : "niedrig",
-      STABILITÄT: raum && raum.NEU === "TMP" ? "variabel" : "stabil",
-      RÜCKFÜHRUNG: raum && raum.BLATT === "ROOT" ? "aktiv" : "neutral",
-      SIGNATUR: "AEON-A1-ROOT"
-    };
-  }
-
-  // ===== INSTRUMENTE =====
-  function updateInstruments() {
-    try {
-      const ready = getReady();
-      const raum = getRaum();
-      const mind = getMind(raum, true);
-      const move = getMove(raum);
-      const respo = getRespo();
-      const respoStr = JSON.stringify(respo);
-
-      document.getElementById("ready-val").innerText = typeof ready === 'number' ? ready.toFixed(0) : String(ready);
-      document.getElementById("mind-val").innerText = mind.EBENE + " (" + mind.ORDNUNG + ")";
-      document.getElementById("respo-val").innerText = respoStr.includes("S") ? "S‑aktiv" : "…";
-      document.getElementById("move-val").innerText = move || "—";
-    } catch(e) {
-      document.getElementById("ready-val").innerText = "✓";
-      document.getElementById("mind-val").innerText = "AEON (4)";
-      document.getElementById("respo-val").innerText = "S‑aktiv";
-      document.getElementById("move-val").innerText = "OK";
-    }
-  }
-
-  // ===== DASHBOARD RENDERER =====
-  const dash = document.getElementById("dashboard");
-
-  function renderGrid() {
-    try {
-      const ready = getReady();
-      const raum = getRaum();
-      const mind = getMind(raum, true);
-      const respo = getRespo();
-      const respoStr = JSON.stringify(respo);
-      dash.innerHTML = `
-        <div class="box green">📊 GRID<br>READY: ${typeof ready === 'number' ? ready.toFixed(0) : ready}</div>
-        <div class="box pink">🧠 MIND: ${mind.EBENE} (${mind.ORDNUNG})</div>
-        <div class="box blue">🎯 RESPO: ${respoStr}</div>
-        <div class="box purple">♾️ AEON: ${mind.SIGNATUR}</div>
-      `;
-    } catch {
-      dash.innerHTML = `<div class="box green">📊 GRID MODE</div><div class="box pink">MIND: AEON</div>`;
-    }
-  }
-
-  function renderControl() {
-    try {
-      const ready = getReady();
-      const raum = getRaum();
-      const mind = getMind(raum, true);
-      const respo = getRespo();
-      dash.innerHTML = `
-        <div style="background:#111120;padding:16px;border:1px solid #2a2a4a;border-radius:4px;">
-          <h2 style="color:#66ccff;font-size:16px;">⏣ CONTROL</h2>
-          <p style="color:#88ff44;">READY: ${typeof ready === 'number' ? ready.toFixed(0) : ready}</p>
-          <p style="color:#dd88ff;">MIND: ${mind.EBENE} (${mind.ORDNUNG})</p>
-          <p style="color:#66ccff;">RESPO: ${JSON.stringify(respo)}</p>
-          <p style="color:#ff66ff;">AEON: ${mind.SIGNATUR}</p>
-          <p style="color:#00ff88;">SIGNAL: ${mind.SIGNAL}</p>
-        </div>
-      `;
-    } catch {
-      dash.innerHTML = `<div style="background:#111120;padding:16px;border:1px solid #2a2a4a;"><h2 style="color:#66ccff;">⏣ CONTROL</h2></div>`;
-    }
-  }
-
-  function renderHolo() {
-    try {
-      const ready = getReady();
-      const raum = getRaum();
-      const mind = getMind(raum, true);
-      const respo = getRespo();
-      dash.innerHTML = `
-        <div class="holo-box">
-          <h2 style="color:#ff66ff;font-size:16px;">✦ HOLO CORE ✦</h2>
-          <p style="color:#88ff44;">READY: ${typeof ready === 'number' ? ready.toFixed(0) : ready}</p>
-          <p style="color:#dd88ff;">MIND: ${mind.EBENE}</p>
-          <p style="color:#66ccff;">RESPO: ${JSON.stringify(respo)}</p>
-          <p style="color:#ff66ff;">AEON: ${mind.SIGNATUR}</p>
-          <p style="color:#00ff88;">SIGNAL: ${mind.SIGNAL}</p>
-        </div>
-      `;
-    } catch {
-      dash.innerHTML = `<div class="holo-box"><h2 style="color:#ff66ff;">✦ HOLO ✦</h2></div>`;
-    }
-  }
-
-  // ===== ENTSCHEIDUNG =====
-  function decideMode() {
-    try {
-      const ready = getReady();
-      const raum = getRaum();
-      const move = getMove(raum);
-      const respo = getRespo();
-      const respoStr = JSON.stringify(respo);
-
-      let scoreGrid = 0, scoreControl = 0, scoreHolo = 0;
-      if (ready > 0) scoreGrid += 2;
-      if (move === "OK") scoreControl += 2;
-      if (respoStr.includes("S")) scoreHolo += 3;
-      if (raum.STATUS === "REAL") scoreControl += 1;
-
-      const max = Math.max(scoreGrid, scoreControl, scoreHolo);
-      if (max === scoreGrid) return "grid";
-      if (max === scoreControl) return "control";
-      return "holo";
-    } catch {
-      return "grid";
-    }
-  }
-
-  // ===== DASHBOARD UPDATE =====
-  let currentMode = "grid";
-
-  function updateDashboard(mode) {
-    if (mode === "grid") { renderGrid(); currentMode = "grid"; }
-    else if (mode === "control") { renderControl(); currentMode = "control"; }
-    else if (mode === "holo") { renderHolo(); currentMode = "holo"; }
-    else {
-      // AUTO: entscheide selbst
-      const autoMode = decideMode();
-      updateDashboard(autoMode);
-      return;
-    }
-    updateInstruments();
-  }
-
-  // ===== SWITCHER – KORREKT REPARIERT =====
-  let autoInterval = null;
-
-  function setupSwitcher() {
-    const buttons = document.querySelectorAll("#dash-switch button");
-
-    buttons.forEach(btn => {
-      btn.addEventListener("click", function() {
-        // Alle Buttons deaktivieren
-        buttons.forEach(b => b.classList.remove("active"));
-        this.classList.add("active");
-
-        // AUTO-Interval löschen
-        if (autoInterval) {
-          clearInterval(autoInterval);
-          autoInterval = null;
-        }
-
-        const mode = this.dataset.mode;
-
-        if (mode === "auto") {
-          updateDashboard("auto");
-          autoInterval = setInterval(() => {
-            updateDashboard("auto");
-          }, 1500 + Math.random() * 1500);
-          return;
-        }
- 
-        updateDashboard(mode);
-      });
+  grid.querySelectorAll('input[type=range]').forEach(input => {
+    input.addEventListener('input', (e) => {
+      const idx = Number(e.target.dataset.idx);
+      STATE.schrauben[idx] = Number(e.target.value);
+      updateSchraubenStats();
+      renderGalaxy();
     });
+  });
+  updateSchraubenStats();
+}
+
+function updateSchraubenStats(){
+  const avg = STATE.schrauben.reduce((a,b)=>a+b,0) / STATE.schrauben.length;
+  document.getElementById('schraubenAvg').textContent = avg.toFixed(1);
+  // GPU Masse: Summe aller Schrauben (wie VRAM Auslastung)
+  const mass = STATE.schrauben.reduce((a,b)=>a+b,0);
+  document.getElementById('gpuMass').textContent = Math.round(mass).toLocaleString('de-DE');
+  STATE.achsen = Math.round(756 * (0.7 + avg/100 * 0.3));
+  document.getElementById('s756').textContent = STATE.achsen;
+}
+
+// ============================================================
+// CANVAS / 3D
+// ============================================================
+const canvas = document.getElementById('galaxyCanvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width - 20 || 800;
+  canvas.height = canvas.width * 0.5625 || 450;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+// 756 Achsen als 3D Kugel (Golden Spiral)
+const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
+const POINTS_3D = [];
+(function buildPoints(){
+  const N = 756;
+  for (let i = 0; i < N; i++){
+    const y = 1 - (i / (N - 1)) * 2;
+    const radiusAtY = Math.sqrt(Math.max(0, 1 - y*y));
+    const theta = GOLDEN_ANGLE * i;
+    const x = Math.cos(theta) * radiusAtY;
+    const z = Math.sin(theta) * radiusAtY;
+    const group = Math.floor((i / N) * 81);
+    const dimIdx = i % STATE.dims.length;
+    POINTS_3D.push({ x, y, z, group, dimIdx });
   }
-
-  // ===== DATEI-BROWSER =====
-  function loadFileList() {
-    const list = document.getElementById("file-list");
-    const files = [
-      "CORE.load", "fin.e.js", "ready.js", "respo.js", "ID.html", "suite.html",
-      "Master-Kern/MASTER-SCANNER.html", "Master-Kern/system-check.item",
-      "visual/CONTINUUM.html", "visual/LAGE.html", "visual/ORT.html",
-      "core/iki1uc.html", "pipeline/pipeline.map", "RESPO/index.html",
-      "AXIS/nc.html", "AXIS/phi.html", "AXIS/phi2.html", "AXIS/phiinfty.html"
-    ];
-    list.innerHTML = files.map(f => `<a href="./${f}">📄 ${f}</a>`).join("");
-  }
-
-  // ===== CLOCK =====
-  function updateClock() {
-    document.getElementById("clock").innerText = "⏱️ " + new Date().toLocaleTimeString();
-  }
-
-  // ===== MODULE NACHLADEN =====
-  function tryLoadModules() {
-    try {
-      import('./ready.js').then(m => {
-        window.READY = m.READY || m.default;
-        updateInstruments();
-      }).catch(() => {});
-      import('./core/respo.js').then(m => {
-        window.RESPO_AXIS = m.RESPO_AXIS || m.default;
-        updateInstruments();
-      }).catch(() => {});
-    } catch {}
-  }
-
-  // ===== START =====
-  function start() {
-    loadFileList();
-    setupSwitcher();
-    updateDashboard("grid");
-    updateClock();
-    setInterval(updateClock, 1000);
-    setInterval(updateInstruments, 2000);
-    tryLoadModules();
-
-    console.log("☕ COCKPIT geladen – iki1uc");
-    console.log("📊 692 Repos · Ordnung 1–4");
-    console.log("🔄 Auto-Switcher bereit");
-  }
-
-  // Warten bis DOM geladen ist
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', start);
-  } else {
-    start();
-  }
-
 })();
+
+function rotate(p, ry, rx){
+  let cos = Math.cos(ry), sin = Math.sin(ry);
+  let x1 = p.x*cos - p.z*sin;
+  let z1 = p.x*sin + p.z*cos;
+  cos = Math.cos(rx); sin = Math.sin(rx);
+  let y2 = p.y*cos - z1*sin;
+  let z2 = p.y*sin + z1*cos;
+  return { x:x1, y:y2, z:z2 };
+}
+
+function renderGalaxy() {
+  const w = canvas.width, h = canvas.height;
+  const cx = w/2, cy = h/2;
+  const R = Math.min(w, h) * 0.34;
+
+  ctx.clearRect(0, 0, w, h);
+  const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, w/2);
+  grad.addColorStop(0, '#0a0a1a'); grad.addColorStop(0.5, '#050510'); grad.addColorStop(1, '#000000');
+  ctx.fillStyle = grad; ctx.fillRect(0, 0, w, h);
+
+  const colors = ['#ffd700','#ff4444','#00ccff','#ff66ff','#00ff88','#ff8800'];
+
+  if (STATE.autoRotate) STATE.rotY += 0.003;
+
+  // NEU: GPU Masse & Boost
+  const boost = 1 + STATE.netBoost;
+  
+  // Rendering
+  const projected = POINTS_3D.map(p => {
+    const r = rotate(p, STATE.rotY, STATE.rotX);
+    const schraubeVal = STATE.schrauben[p.group] / 100;
+    
+    // CUBIK-RAM: Schraube steuert nicht nur Größe, sondern auch Geschwindigkeit (Masse)
+    const scale = 0.6 + schraubeVal * 0.6;
+    const px = r.x * R * scale * boost;
+    const py = r.y * R * scale * boost;
+    const pz = r.z * R * scale * boost;
+    
+    const perspective = 500 / (500 + pz);
+    
+    return {
+      x: cx + px * perspective,
+      y: cy + py * perspective,
+      z: pz,
+      size: (1 + schraubeVal * 2.5) * perspective,
+      alpha: (0.15 + schraubeVal * 0.55) * Math.max(0.2, perspective),
+      color: colors[p.dimIdx]
+    };
+  }).sort((a,b) => a.z - b.z);
+
+  projected.forEach(p => {
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = Math.min(1, p.alpha);
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, Math.max(0.4, p.size), 0, Math.PI * 2);
+    ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+
+  // Dim-Ringe
+  STATE.dims.forEach((d, idx) => {
+    const rad = R * (0.15 + idx * 0.14);
+    ctx.strokeStyle = colors[idx] + '18';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 8]);
+    ctx.beginPath(); ctx.arc(cx, cy, rad, 0, Math.PI * 2); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = colors[idx] + '55';
+    ctx.font = '7px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillText(d, cx + rad * 0.8, cy - 4);
+  });
+
+  // 6D Punkt
+  if (STATE.sixD) {
+    const angle = STATE.cycle * 0.02;
+    const x = cx + Math.cos(angle) * R * 0.6, y = cy + Math.sin(angle) * R * 0.6;
+    ctx.shadowColor = '#00ff88'; ctx.shadowBlur = 30; ctx.fillStyle = '#00ff88';
+    ctx.beginPath(); ctx.arc(x, y, 4 + Math.sin(STATE.cycle*0.05)*2, 0, Math.PI*2); ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#00ff8888'; ctx.font = '6px monospace'; ctx.textAlign='center'; ctx.textBaseline='bottom';
+    ctx.fillText('6D', x, y - 6);
+  }
+
+  // DS9
+  if (STATE.ds9) {
+    ctx.shadowColor = '#ffd700'; ctx.shadowBlur = 40; ctx.fillStyle = '#ffd700';
+    ctx.font = 'bold 20px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('★', cx, cy - R * 0.55);
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#ffd70088'; ctx.font = '6px monospace'; ctx.textBaseline = 'top';
+    ctx.fillText('DEEP SPACE NINE', cx, cy - R * 0.55 + 14);
+  }
+
+  // Connect-Dreieck
+  const netR = Math.min(w, h) * 0.44;
+  const posR = {
+    R1: { x: cx, y: cy - netR },
+    R2: { x: cx - netR*0.87, y: cy + netR*0.5 },
+    R3: { x: cx + netR*0.87, y: cy + netR*0.5 }
+  };
+  Object.values(LINKS).forEach(link => {
+    const a = posR[link.a], b = posR[link.b];
+    ctx.strokeStyle = link.active ? 'rgba(0,255,136,0.4)' : 'rgba(255,255,255,0.03)';
+    ctx.lineWidth = link.active ? 1.5 : 1;
+    ctx.setLineDash(link.active ? [] : [2, 6]);
+    ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    ctx.setLineDash([]);
+  });
+  Object.entries(posR).forEach(([key, p]) => {
+    ctx.fillStyle = 'rgba(0,255,136,0.7)';
+    ctx.beginPath(); ctx.arc(p.x, p.y, 3.5, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = 'rgba(180,255,220,0.5)'; ctx.font = '7px monospace'; ctx.textAlign = 'center';
+    ctx.fillText(key, p.x, p.y - 7);
+  });
+
+  ctx.fillStyle = '#8ab8e6'; ctx.font = '6px monospace'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+  ctx.fillText(`ENGINE: ${Math.round(STATE.engine)}`, 10, h - 20);
+  ctx.fillText(`INDUSTRY: ${Math.round(STATE.industry)}`, 10, h - 12);
+  ctx.fillText(`MARKT: ${Math.round(STATE.markt)}`, 10, h - 4);
+  ctx.textAlign = 'right';
+  ctx.fillText(`GPU MASSE: ${document.getElementById('gpuMass').innerText}`, w - 10, h - 12);
+  ctx.fillText(`ORG: ${STATE.org?'ON':'OFF'} · REORG: ${STATE.reorg?'ON':'OFF'}`, w - 10, h - 4);
+}
+
+// Maus-Rotation
+let dragging = false, lastX = 0, lastY = 0;
+canvas.addEventListener('mousedown', e => { dragging = true; lastX = e.clientX; lastY = e.clientY; STATE.autoRotate = false; });
+window.addEventListener('mouseup', () => dragging = false);
+window.addEventListener('mousemove', e => {
+  if (!dragging) return;
+  STATE.rotY += (e.clientX - lastX) * 0.008;
+  STATE.rotX += (e.clientY - lastY) * 0.008;
+  lastX = e.clientX; lastY = e.clientY;
+  renderGalaxy();
+});
+canvas.addEventListener('touchstart', e => { dragging = true; lastX = e.touches[0].clientX; lastY = e.touches[0].clientY; STATE.autoRotate = false; });
+canvas.addEventListener('touchend', () => dragging = false);
+canvas.addEventListener('touchmove', e => {
+  if (!dragging) return;
+  STATE.rotY += (e.touches[0].clientX - lastX) * 0.008;
+  STATE.rotX += (e.touches[0].clientY - lastY) * 0.008;
+  lastX = e.touches[0].clientX; lastY = e.touches[0].clientY;
+  renderGalaxy();
+  e.preventDefault();
+}, { passive:false });
+
+// ============================================================
+// NARRATIV
+// ============================================================
+const NARR_TAGS = ['Kapitel','Bewegung','Zwischenspiel','Echo','Wendepunkt'];
+function narrate(text, tag){
+  const box = document.getElementById('narrativBox');
+  const p = document.createElement('p');
+  p.innerHTML = `<span class="tag">[${tag || NARR_TAGS[Math.floor(Math.random()*NARR_TAGS.length)]}]</span> ${text}`;
+  box.appendChild(p);
+  box.scrollTop = box.scrollHeight;
+  while (box.children.length > 20) box.removeChild(box.firstChild);
+}
+
+// ============================================================
+// SIMULATION
+// ============================================================
+function sixDStep() {
+  STATE.cycle++;
+  STATE.sixD = true;
+  const dimIndex = STATE.cycle % STATE.dims.length;
+  const dim = STATE.dims[dimIndex];
+
+  const boost = 1 + STATE.netBoost * 0.5;
+  STATE.engine = (STATE.engine + dim * 0.1 * boost) % 1000;
+  STATE.industry = (STATE.industry + dim * 0.15 * boost) % 1000;
+  STATE.markt = (STATE.markt + dim * 0.2 * boost) % 1000;
+  STATE.boerse = (STATE.boerse + dim * 0.05 * boost) % 1000;
+  STATE.axiom1 = (STATE.axiom1 + dim * 0.03) % 100;
+  STATE.axiom2 = (STATE.axiom2 + dim * 0.04) % 100;
+  STATE.axiom3 = (STATE.axiom3 + dim * 0.05) % 100;
+
+  ORDNER.forEach((o, idx) => { STATE.ordner[o].value = (STATE.ordner[o].value + dim * (0.01 + idx*0.002)) % 100; });
+
+  document.getElementById('engineVal').textContent = Math.round(STATE.engine);
+  document.getElementById('industryVal').textContent = Math.round(STATE.industry);
+  document.getElementById('marktVal').textContent = Math.round(STATE.markt);
+
+  log(`🌀 6D STEP · ${dim} · Engine: ${Math.round(STATE.engine)} · Industrie: ${Math.round(STATE.industry)} · Markt: ${Math.round(STATE.markt)}`, '6d');
+  narrate(`Die Achsen falten sich durch die Ebene der ${dim}. Engine steht bei ${Math.round(STATE.engine)}, der Markt zieht auf ${Math.round(STATE.markt)} — die GPU Masse verdichtet sich in den 81 Stellschrauben.`, 'Bewegung');
+  updateUI(); renderGalaxy();
+}
+
+function toggleDs9() {
+  STATE.ds9 = !STATE.ds9;
+  log(STATE.ds9 ? '★ DEEP SPACE NINE · aktiviert' : '★ DEEP SPACE NINE · deaktiviert', 'ds9');
+  narrate(STATE.ds9
+    ? 'Über der Kugel der 756 Achsen entzündet sich Deep Space Nine — ein fester Punkt, an dem sich alle Rotationen ausrichten.'
+    : 'Deep Space Nine verblasst wieder im Dunkel. Die Achsen rotieren weiter, ohne Ankerpunkt.', 'Wendepunkt');
+  updateUI(); renderGalaxy();
+}
+
+function toggleAchsen() {
+  STATE.achsen = STATE.achsen === 756 ? 756 + Math.round(Math.random() * 100) : 756;
+  log(`📐 ACHSEN · ${STATE.achsen}`, 'achse');
+  narrate(`Die Achsenzahl verschiebt sich auf ${STATE.achsen} — die 81 Stellschrauben justieren sich neu, um den Raum wieder ins Gleichgewicht zu bringen.`, 'Echo');
+  updateUI(); renderGalaxy();
+}
+
+function toggleOrg() {
+  STATE.org = !STATE.org;
+  if (STATE.org) {
+    const sorted = [...ORDNER].sort((a,b) => STATE.ordner[a].value - STATE.ordner[b].value);
+    log(`🔄 ORG · sortiert · ${sorted.join(', ')}`, 'flow');
+    narrate('Die 13 Ordner der Kalkulation ordnen sich neu — vom leisesten zum lautesten Wert, ein stiller Ruck durch das Imperium.', 'Zwischenspiel');
+  } else { log('🔄 ORG · deaktiviert', 'flow'); }
+  updateUI();
+}
+
+function toggleReorg() {
+  STATE.reorg = !STATE.reorg;
+  if (STATE.reorg) {
+    const shuffled = [...ORDNER];
+    for (let i = shuffled.length - 1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]]; }
+    log(`🔄 REORG · gemischt · ${shuffled.join(', ')}`, 'whirl');
+    narrate('REORG greift ein — die Ordner tauschen wild die Plätze, als würde das Imperium kurz den Atem anhalten.', 'Zwischenspiel');
+  } else { log('🔄 REORG · deaktiviert', 'flow'); }
+  updateUI();
+}
+
+function doSlide() {
+  STATE.slide++;
+  const value = Math.round(10 + Math.random() * 90);
+  log(`📊 SLIDE · ${value}% · ${STATE.slide}`, 'flow');
+  narrate(`Ein SLIDE von ${value}% zieht durch die Kugel — manche Achsen gewinnen an Fahrt, andere fallen zurück.`, 'Echo');
+  updateUI();
+}
+
+function doWette() {
+  STATE.wette++;
+  const value = Math.round(Math.random() * 100);
+  const gewinn = value > 50 ? 'gewonnen 🎉' : 'verloren 😅';
+  log(`🎲 WETTE · ${value}% · ${gewinn} · ${STATE.wette}`, 'whirl');
+  narrate(`Das Imperium wettet — ${value}% — und ${value > 50 ? 'gewinnt einen Moment Übermut' : 'verliert kurz das Gleichgewicht'}, bevor die Achsen sich wieder fangen.`, 'Wendepunkt');
+  updateUI();
+}
+
+function resetAll() {
+  STATE.cycle=0; STATE.engine=0; STATE.industry=0; STATE.markt=0; STATE.boerse=0;
+  STATE.org=false; STATE.reorg=false; STATE.slide=0; STATE.wette=0; STATE.sixD=false; STATE.ds9=false;
+  STATE.achsen = 756; STATE.axiom1=0; STATE.axiom2=0; STATE.axiom3=0;
+  STATE.schrauben = Array.from({length:81}, () => 50);
+  STATE.rotY = 0; STATE.rotX = 0.35; STATE.autoRotate = true;
+  STATE.netBoost = 0;
+  ORDNER.forEach(o => STATE.ordner[o].value = 0);
+  document.getElementById('engineVal').textContent = '0';
+  document.getElementById('industryVal').textContent = '0';
+  document.getElementById('marktVal').textContent = '0';
+  buildSchraubenUI();
+  log('⟲ RESET · Imperium zurückgesetzt', 'flow');
+  narrate('Alles kehrt zum Prolog zurück. 756 Achsen, 81 Stellschrauben auf 50%, die Galaxie ruht wieder im Dunkel.', 'Kapitel');
+  updateUI(); renderGalaxy();
+}
+
+function updateUI() {
+  document.getElementById('s6d').textContent = STATE.sixD ? '●' : '○';
+  document.getElementById('s6d').className = 'val ' + (STATE.sixD ? 'on' : 'off');
+  document.getElementById('sds9').textContent = STATE.ds9 ? '◉' : '●';
+  document.getElementById('sds9').className = 'val ' + (STATE.ds9 ? 'pulse' : 'off');
+  document.getElementById('sorg').textContent = STATE.org || STATE.reorg ? '◉' : '●';
+  document.getElementById('sorg').className = 'val ' + (STATE.org || STATE.reorg ? 'pulse' : 'off');
+  document.getElementById('sengine').textContent = STATE.engine > 0 ? '●' : '○';
+  document.getElementById('smarkt').textContent = STATE.markt > 0 ? '●' : '○';
+  document.getElementById('sboerse').textContent = STATE.boerse > 0 ? '●' : '○';
+
+  document.querySelectorAll('.ordner').forEach(el => {
+    const name = el.dataset.ordner;
+    const val = STATE.ordner[name]?.value || 0;
+    const status = el.querySelector('.status');
+    if (val > 50) { status.textContent = '◉'; status.className = 'status pulse'; }
+    else if (val > 20) { status.textContent = '●'; status.className = 'status on'; }
+    else { status.textContent = '○'; status.className = 'status'; }
+  });
+}
+
+function log(msg, type = 'ok') {
+  const el = document.getElementById('log');
+  const time = new Date().toLocaleTimeString();
+  const cls = ['ok','flow','whirl','ds9','achse','6d'].includes(type) ? type : 'ok';
+  el.innerHTML += `<div>[${time}] <span class="${cls}">${msg}</span></div>`;
+  el.scrollTop = el.scrollHeight;
+  if (el.children.length > 30) el.removeChild(el.firstChild);
+}
+
+// Tastatur
+document.addEventListener('keydown', (e) => {
+  if (e.key === ' ') { e.preventDefault(); sixDStep(); }
+  if (e.key === 'd' || e.key === 'D') toggleDs9();
+  if (e.key === 'a' || e.key === 'A') toggleAchsen();
+  if (e.key === 'o' || e.key === 'O') toggleOrg();
+  if (e.key === 'r' || e.key === 'R') toggleReorg();
+  if (e.key === 's' || e.key === 'S') doSlide();
+  if (e.key === 'w' || e.key === 'W') doWette();
+  if (e.key === 'x' || e.key === 'X') resetAll();
+});
+
+// Buttons
+document.getElementById('btn6d').addEventListener('click', sixDStep);
+document.getElementById('btnDs9').addEventListener('click', toggleDs9);
+document.getElementById('btnAchse').addEventListener('click', toggleAchsen);
+document.getElementById('btnOrg').addEventListener('click', toggleOrg);
+document.getElementById('btnReorg').addEventListener('click', toggleReorg);
+document.getElementById('btnSlide').addEventListener('click', doSlide);
+document.getElementById('btnWette').addEventListener('click', doWette);
+document.getElementById('btnReset').addEventListener('click', resetAll);
+
+document.getElementById('btnConnectAll').addEventListener('click', connectAllRechner);
+document.getElementById('btnPingRechner').addEventListener('click', pingRechner);
+
+document.getElementById('btnSchraubenReset').addEventListener('click', () => {
+  STATE.schrauben = Array.from({length:81}, () => 50);
+  buildSchraubenUI(); renderGalaxy();
+  narrate('Alle 81 Stellschrauben kehren auf 50% zurück — ein neutraler Grundton für die Achsen.', 'Echo');
+});
+document.getElementById('btnSchraubenRandom').addEventListener('click', () => {
+  STATE.schrauben = Array.from({length:81}, () => Math.round(Math.random()*100));
+  buildSchraubenUI(); renderGalaxy();
+  narrate('Die 81 Stellschrauben springen wild — die Kugel der 756 Achsen flackert in ungleichmäßiger Intensität.', 'Zwischenspiel');
+});
+
+document.querySelectorAll('.ordner').forEach(el => {
+  el.addEventListener('click', () => {
+    const name = el.dataset.ordner;
+    const val = STATE.ordner[name];
+    if (val) { val.value = (val.value + 10) % 100; log(`📁 ${name} · ${Math.round(val.value)}%`, 'flow'); updateUI(); renderGalaxy(); }
+  });
+});
+
+// INIT
+buildSchraubenUI();
+log('🌀 IMPERIUM GALACTUM · 756 ACHSEN · 81 STELLSCHRAUBEN · 3D · geladen', 'ds9');
+log('⌨️  space=6D  d=DS9  a=ACHSEN  o=ORG  r=REORG  s=SLIDE  w=WETTE  x=RESET  🖱=Rotieren', 'flow');
+updateUI();
+renderGalaxy();
+
+// Animation loop
+setInterval(() => { STATE.cycle += 0.3; renderGalaxy(); }, 60);
 </script>
 
 </body>
