@@ -6,25 +6,25 @@
 export const AX_XA_ROUTER = {
 
   async init() {
-    console.log("RUN21 · AX_XA_ROUTER · Organ startet…");
+    console.log("RUN21 · Organ startet…");
 
-    await this.root();
+    await this.rawator();
     await this.engine();
     await this.pipeline();
     await this.room();
     await this.sys();
-    await this.respo();
-    await this.space();
+    await this.continuum();
+    await this.root();
 
     console.log("RUN21 · Organ vollständig aktiv.");
   },
 
-  async root() {
+  async rawator() {
     try {
-      const scan = await import("../root-scan.js");
-      if (scan.run) scan.run();
-      console.log("ROOT‑Scan aktiv.");
-    } catch (e) { console.warn("ROOT Fehler:", e); }
+      const raw = await import("./RAWATOR.js");
+      if (raw.RAWATOR?.init) raw.RAWATOR.init();
+      console.log("RAWATOR aktiv.");
+    } catch (e) { console.warn("RAWATOR Fehler:", e); }
   },
 
   async engine() {
@@ -53,23 +53,24 @@ export const AX_XA_ROUTER = {
 
   async sys() {
     try {
-      const tri = await import("../sys/triangle.sys");
-      const quad = await import("../sys/quad.tem");
+      await import("../sys/triangle.sys");
+      await import("../sys/quad.tem");
       console.log("SYS‑Matrix geladen.");
     } catch (e) { console.warn("SYS Fehler:", e); }
   },
 
-  async respo() {
+  async continuum() {
     try {
-      const motor = await import("../respo/respo.motor.index.html");
-      console.log("RESPO‑Motor aktiv.");
-    } catch (e) { console.warn("RESPO Fehler:", e); }
+      const cont = await fetch("../space/continuum-reality.json").then(r => r.json());
+      console.log("Continuum geladen:", cont);
+    } catch (e) { console.warn("Continuum Fehler:", e); }
   },
 
-  async space() {
+  async root() {
     try {
-      const cont = await import("../space/continuum-reality.json");
-      console.log("Continuum geladen.");
-    } catch (e) { console.warn("Continuum Fehler:", e); }
+      const scan = await import("../root-scan.js");
+      if (scan.run) scan.run();
+      console.log("ROOT‑Scan aktiv.");
+    } catch (e) { console.warn("ROOT Fehler:", e); }
   }
 };
