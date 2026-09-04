@@ -17,13 +17,17 @@ export const AX_XA_ROUTER = {
     await this.root();
 
     console.log("RUN21 · Organ vollständig aktiv.");
+
+    // Jetzt wird dein RAWATOR-Schluss ausgeführt
+    if (window.RAWATOR?.init) RAWATOR.init();
+    if (window.updateUI) updateUI();
   },
 
   async rawator() {
     try {
       const raw = await import("./RAWATOR.js");
-      if (raw.RAWATOR?.init) raw.RAWATOR.init();
-      console.log("RAWATOR aktiv.");
+      window.RAWATOR = raw.RAWATOR;
+      console.log("RAWATOR geladen.");
     } catch (e) { console.warn("RAWATOR Fehler:", e); }
   },
 
@@ -62,7 +66,8 @@ export const AX_XA_ROUTER = {
   async continuum() {
     try {
       const cont = await fetch("../space/continuum-reality.json").then(r => r.json());
-      console.log("Continuum geladen:", cont);
+      window.CONTINUUM = cont;
+      console.log("Continuum geladen.");
     } catch (e) { console.warn("Continuum Fehler:", e); }
   },
 
