@@ -18,15 +18,44 @@ export const AX_XA_ROUTER = {
 
     console.log("RUN21 · Organ vollständig aktiv.");
 
+    // ────────────────────────────────────────────────
     // Jetzt wird dein RAWATOR-Schluss ausgeführt
-    if (window.RAWATOR?.init) RAWATOR.init();
+    // ────────────────────────────────────────────────
+
     if (window.updateUI) updateUI();
+    if (window.log) {
+      log('🧬 RAWATOR · 🧲 MAGNETO · COCKPIT · KRÜMMUNGSANTRIEB geladen', 'ok');
+      log('⌨️  space=Magneto  o=Orbit  s=Suite  a=Admin0  n=Narrativ  p=Pulse  x=Reset  v=Vital  h=Hologramm', 'ok');
+    }
+
+    if (window.rawatorOut) {
+      rawatorOut.textContent =
+        '🧬 RAWATOR · 🧲 MAGNETO · KRÜMMUNGSANTRIEB · 81-HOLOGRAMM · BEREIT';
+    }
+
+    if (window.narrativContent) {
+      narrativContent.textContent =
+        '🌀 Deep Space Nine · Continuum offen · Krümmungsantrieb aktiv · GS6';
+    }
+
+    console.log('🧬 RAWATOR · 🧲 MAGNETO · COCKPIT · KRÜMMUNGSANTRIEB');
+    console.log('⌨️  space=Magneto  o=Orbit  s=Suite  a=Admin0  n=Narrativ  p=Pulse  x=Reset  v=Vital  h=Hologramm');
+    console.log('🌀 "Der Krümmungsantrieb ist aktiviert." – Ridvan · Only 4U');
+
+    // Auto-Start übernehmen
+    setTimeout(() => {
+      if (window.MAGNETO) MAGNETO.running = true;
+      if (window.updateUI) updateUI();
+      if (window.log) log('▶ AUTO-START · System aktiv', 'ok');
+      if (window.toggleAuto) toggleAuto();
+    }, 1000);
   },
 
   async rawator() {
     try {
       const raw = await import("./RAWATOR.js");
       window.RAWATOR = raw.RAWATOR;
+      RAWATOR.init();
       console.log("RAWATOR geladen.");
     } catch (e) { console.warn("RAWATOR Fehler:", e); }
   },
