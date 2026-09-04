@@ -898,6 +898,31 @@ function realityScan() {
   return capabilities;
 }
 
+// … dein Aggregator-Code …
+
+// … dein RUN21-Organ-Kernel …
+
+// =====================================================
+// RUN21 · REALITY-SCAN
+// =====================================================
+function realityScan() {
+  const capabilities = {
+    fire: MODULES.filter(m => m.category === 'fire').length,
+    ice: MODULES.filter(m => m.category === 'ice').length,
+    ort: MODULES.filter(m => m.category === 'ort').length,
+    continuum: MODULES.some(m => m.name === 'continuum‑reality'),
+    engine: typeof window.AX_XA_ROUTER !== 'undefined',
+    rawator: typeof window.RAWATOR !== 'undefined',
+    magneto: typeof window.MAGNETO !== 'undefined'
+  };
+
+  console.log("🔍 REALITY-SCAN:", capabilities);
+
+  return capabilities;
+}
+
+RUN21.init();
+
     
 </script>
 
