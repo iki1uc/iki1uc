@@ -1,765 +1,555 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🌀 RAWATOR · MAGNETO · COCKPIT · KRÜMMUNGSANTRIEB · 81-HOLOGRAMM</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>⚙️ ADMIN‑PULT · ULMR · 3‑9‑81 ACHSEN</title>
 
-<style>
-:root {
-    --bg: #0a0a12;
-    --fg: #0ff;
-    --gold: #ffd700;
-    --vital: #00ff88;
-    --co2: #ff6600;
-    --wasser: #66ccff;
-    --sauerstoff: #00ff88;
-    --anime: #ff66ff;
-    --shuffle: #ffaa00;
-    --orbit: #6b6bff;
-    --suite: #ff66ff;
-    --commander: #ff8c00;
-    --admin0: #ff0044;
-    --magneto: #ff00ff;
-    --krümmung: #00ffff;
-    --bootlink: #6ec8ff;
-}
-* { margin:0; padding:0; box-sizing:border-box; }
-body {
-    background: var(--bg);
-    color: var(--fg);
-    font-family: 'Consolas', monospace;
-    min-height: 100vh;
-    padding: 8px;
-    background-image: radial-gradient(ellipse at 30% 40%, #0a0a20 0%, #000 100%);
-}
+  <!-- ===== DEIN EXISTIERENDES CSS ===== -->
+  <link rel="stylesheet" href="style.css" />
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 6px;
-    border-bottom: 2px solid var(--gold);
-    padding-bottom: 8px;
-    margin-bottom: 10px;
-}
-.header h1 {
-    font-size: 20px;
-    color: var(--gold);
-    letter-spacing: 3px;
-}
-.header h1 .rawator { color: var(--vital); }
-.header h1 .magneto { color: var(--magneto); }
-.header h1 .krümmung { color: var(--krümmung); }
-#clock { font-size: 11px; color: #666; }
+  <!-- ===== ZUSÄTZLICHES ADMIN‑CSS ===== -->
+  <style>
+    /* Basis – an dein Design angepasst */
+    :root {
+      --bg: #0a0a12;
+      --fg: #0ff;
+      --gold: #ffd700;
+      --vital: #00ff88;
+      --co2: #ff6600;
+      --wasser: #66ccff;
+      --sauerstoff: #00ff88;
+      --anime: #ff66ff;
+      --shuffle: #ffaa00;
+      --orbit: #6b6bff;
+      --suite: #ff66ff;
+      --commander: #ff8c00;
+      --admin0: #ff0044;
+      --magneto: #ff00ff;
+      --krümmung: #00ffff;
+      --bootlink: #6ec8ff;
+      --achse1: #ffaa44;
+      --achse2: #44ffaa;
+      --achse3: #aa44ff;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Consolas', monospace;
+      padding: 12px;
+      background-image: radial-gradient(ellipse at 20% 30%, #0c0c1a 0%, #000 100%);
+    }
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 10px;
+      margin-bottom: 16px;
+    }
+    .admin-header h1 {
+      font-size: 22px;
+      letter-spacing: 4px;
+    }
+    .admin-header h1 .ulmr { color: var(--gold); }
+    .admin-header h1 .achse { color: var(--achse1); }
+    .admin-header .status-led {
+      display: flex;
+      gap: 16px;
+      font-size: 11px;
+    }
+    .admin-header .status-led .dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 4px;
+    }
+    .dot.green { background: #4f4; box-shadow: 0 0 8px #4f4; }
+    .dot.yellow { background: #ffa; box-shadow: 0 0 8px #ffa; }
+    .dot.red { background: #f44; box-shadow: 0 0 8px #f44; }
 
-.cockpit {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 8px;
-    min-height: 500px;
-}
-@media (max-width: 900px) { .cockpit { grid-template-columns: 1fr; } }
+    .achsen-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 1000px) { .achsen-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 700px) { .achsen-grid { grid-template-columns: 1fr; } }
 
-.rawator-panel, .magneto-panel, .bootlink-panel {
-    background: rgba(10,10,20,0.7);
-    border: 1px solid rgba(255,170,0,0.05);
-    border-radius: 12px;
-    padding: 12px;
-    backdrop-filter: blur(10px);
-}
-.rawator-panel h2, .magneto-panel h2, .bootlink-panel h2 {
-    color: var(--gold);
-    font-size: 13px;
-    border-bottom: 1px solid rgba(255,255,255,0.02);
-    padding-bottom: 6px;
-    margin-bottom: 8px;
-}
+    .achse-panel {
+      background: rgba(10,10,20,0.75);
+      border: 1px solid #1a1a2a;
+      border-radius: 12px;
+      padding: 12px;
+      backdrop-filter: blur(6px);
+    }
+    .achse-panel h2 {
+      color: var(--gold);
+      font-size: 13px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding-bottom: 6px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .achse-panel h2 .badge {
+      font-size: 9px;
+      background: #1a1a2a;
+      padding: 2px 8px;
+      border-radius: 20px;
+      color: #888;
+    }
+    .achse-metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+    }
+    .metric-item {
+      background: #0e0e1a;
+      border-radius: 4px;
+      padding: 4px 8px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+    }
+    .metric-item .label { color: #666; }
+    .metric-item .value { font-weight: bold; }
+    .value.achse1 { color: var(--achse1); }
+    .value.achse2 { color: var(--achse2); }
+    .value.achse3 { color: var(--achse3); }
 
-.metric-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 4px;
-    margin-bottom: 8px;
-}
-.metric {
-    background: #0e0e1a;
-    border: 1px solid #1a1a2a;
-    border-radius: 6px;
-    padding: 6px;
-    text-align: center;
-}
-.metric .label { color: #666; font-size: 7px; text-transform: uppercase; }
-.metric .value { font-size: 16px; font-weight: bold; }
-.metric.vital .value { color: var(--vital); }
-.metric.co2 .value { color: var(--co2); }
-.metric.wasser .value { color: var(--wasser); }
-.metric.sauerstoff .value { color: var(--sauerstoff); }
-.metric.bootlink .value { color: var(--bootlink); }
+    .deutung-panel {
+      background: rgba(10,10,20,0.7);
+      border: 1px solid #1a1a2a;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 16px;
+    }
+    .deutung-panel h2 {
+      color: var(--gold);
+      font-size: 13px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding-bottom: 6px;
+      margin-bottom: 8px;
+    }
+    #deutung-output {
+      background: #06060a;
+      border-radius: 6px;
+      padding: 8px;
+      font-size: 10px;
+      max-height: 120px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      color: #88ddbb;
+      border: 1px solid #1a1a2a;
+      line-height: 1.5;
+    }
 
-.anime-grid {
-    display: grid;
-    grid-template-columns: repeat(9, 1fr);
-    gap: 2px;
-    margin: 6px 0;
-}
-.anime-frame {
-    background: #0e0e1a;
-    border: 1px solid #1a1a2a;
-    border-radius: 2px;
-    padding: 2px;
-    text-align: center;
-    font-size: 6px;
-    color: #666;
-}
-.anime-frame .id { color: var(--gold); font-weight: bold; }
-.anime-frame .vital { color: var(--vital); font-size: 8px; }
-.anime-frame.active { border-color: var(--anime); background: rgba(255,102,255,0.05); }
+    .controls-zone {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      background: rgba(10,10,20,0.5);
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 12px;
+      border: 1px solid #1a1a2a;
+    }
+    .controls-zone button {
+      background: #111;
+      color: var(--fg);
+      border: 1px solid #333;
+      padding: 4px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 9px;
+      transition: 0.2s;
+    }
+    .controls-zone button:hover { border-color: var(--gold); background: #1a1a2a; }
+    .controls-zone button.primary { border-color: var(--gold); color: var(--gold); }
+    .controls-zone button.primary:hover { background: var(--gold); color: #000; }
+    .controls-zone button.attack { border-color: var(--commander); color: var(--commander); }
+    .controls-zone button.attack:hover { background: var(--commander); color: #000; }
+    .controls-zone button.mesh { border-color: var(--vital); color: var(--vital); }
+    .controls-zone button.mesh:hover { background: var(--vital); color: #000; }
+    .controls-zone input {
+      background: #1e242c;
+      border: 1px solid #2f3542;
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 9px;
+      flex: 1;
+      min-width: 140px;
+    }
 
-#rawator-output {
-    background: rgba(0,0,0,0.3);
-    border-radius: 8px;
-    padding: 10px;
-    min-height: 50px;
-    font-size: 10px;
-    line-height: 1.4;
-    border: 1px solid rgba(255,255,255,0.02);
-    margin-top: 6px;
-    white-space: pre-wrap;
-    color: #88ddbb;
-    max-height: 100px;
-    overflow-y: auto;
-}
+    .boot-block-monitor {
+      background: rgba(10,10,20,0.7);
+      border: 1px solid #1a1a2a;
+      border-radius: 10px;
+      padding: 10px;
+      margin-top: 8px;
+    }
+    .boot-block-monitor .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 10px;
+    }
+    .boot-block-monitor .row .item {
+      color: #666;
+    }
+    .boot-block-monitor .row .item span {
+      color: var(--bootlink);
+      font-weight: bold;
+    }
 
-.orbit-suite-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4px;
-    margin-bottom: 6px;
-}
-.orbit-card {
-    background: #0e0e1a;
-    border: 1px solid #1a1a2a;
-    border-radius: 4px;
-    padding: 6px;
-    text-align: center;
-}
-.orbit-card .symbol { font-size: 16px; display: block; }
-.orbit-card .name { color: var(--gold); font-size: 8px; }
-.orbit-card .wert { font-size: 14px; font-weight: bold; }
-.orbit-card.orbit .wert { color: var(--orbit); }
-.orbit-card.suite .wert { color: var(--suite); }
-.orbit-card.commander .wert { color: var(--commander); }
-.orbit-card.admin0 .wert { color: var(--admin0); }
-
-.pipeline-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 4px;
-    margin-bottom: 6px;
-}
-.pipe-step {
-    background: #0e0e1a;
-    border: 1px solid #1a1a2a;
-    border-radius: 4px;
-    padding: 4px;
-    text-align: center;
-    font-size: 8px;
-    color: #666;
-}
-.pipe-step .level { color: var(--gold); font-weight: bold; font-size: 12px; }
-.pipe-step.active { border-color: var(--fg); background: #0f1a1a; }
-.pipe-step.active .level { color: var(--fg); }
-
-#narrativ-box {
-    background: #0e0e1a;
-    border: 1px solid #1a1a2a;
-    border-radius: 4px;
-    padding: 6px;
-    text-align: center;
-    font-size: 9px;
-    color: #666;
-    margin-bottom: 6px;
-}
-#narrativ-box .title { color: var(--gold); font-weight: bold; }
-#narrativ-box .content { color: var(--fg); font-size: 11px; margin-top: 2px; }
-
-.controls {
-    display: flex;
-    gap: 4px;
-    flex-wrap: wrap;
-    margin: 4px 0;
-}
-button {
-    background: #111;
-    color: var(--fg);
-    border: 1px solid #333;
-    padding: 4px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 9px;
-    transition: all 0.2s;
-}
-button:hover { border-color: var(--gold); background: #1a1a2a; }
-button.primary { border-color: var(--gold); color: var(--gold); }
-button.primary:hover { background: var(--gold); color: #000; }
-button.speed { border-color: var(--commander); color: var(--commander); }
-button.speed:hover { background: var(--commander); color: #000; }
-button.orbit { border-color: var(--orbit); color: var(--orbit); }
-button.orbit:hover { background: var(--orbit); color: #000; }
-button.suite { border-color: var(--suite); color: var(--suite); }
-button.suite:hover { background: var(--suite); color: #000; }
-button.admin0 { border-color: var(--admin0); color: var(--admin0); }
-button.admin0:hover { background: var(--admin0); color: #000; }
-button.magneto { border-color: var(--magneto); color: var(--magneto); }
-button.magneto:hover { background: var(--magneto); color: #000; }
-button.vital { border-color: var(--vital); color: var(--vital); }
-button.vital:hover { background: var(--vital); color: #000; }
-button.co2 { border-color: var(--co2); color: var(--co2); }
-button.co2:hover { background: var(--co2); color: #000; }
-button.wasser { border-color: var(--wasser); color: var(--wasser); }
-button.wasser:hover { background: var(--wasser); color: #000; }
-button.anime { border-color: var(--anime); color: var(--anime); }
-button.anime:hover { background: var(--anime); color: #000; }
-button.shuffle { border-color: var(--shuffle); color: var(--shuffle); }
-button.shuffle:hover { background: var(--shuffle); color: #000; }
-button.danger { border-color: #f44; color: #f44; }
-button.danger:hover { background: #f44; color: #000; }
-button.bootlink { border-color: var(--bootlink); color: var(--bootlink); }
-button.bootlink:hover { background: var(--bootlink); color: #000; }
-
-#log {
-    background: #06060a;
-    border-radius: 4px;
-    padding: 4px 6px;
-    font-size: 8px;
-    color: #6a6a8a;
-    max-height: 80px;
-    overflow-y: auto;
-    line-height: 1.3;
-    margin-top: 4px;
-}
-#log .entry { padding: 1px 0; border-bottom: 1px solid #0a0a12; }
-#log .time { color: #444; }
-#log .msg.ok { color: #4f4; }
-#log .msg.speed { color: var(--commander); }
-#log .msg.orbit { color: var(--orbit); }
-#log .msg.suite { color: var(--suite); }
-#log .msg.admin0 { color: var(--admin0); }
-#log .msg.magneto { color: var(--magneto); }
-#log .msg.vital { color: var(--vital); }
-#log .msg.anime { color: var(--anime); }
-#log .msg.shuffle { color: var(--shuffle); }
-#log .msg.narrativ { color: var(--gold); }
-#log .msg.bootlink { color: var(--bootlink); }
-
-.krümmung-bar {
-    background: #0e0e1a;
-    border: 1px solid #1a1a2a;
-    border-radius: 4px;
-    padding: 4px 8px;
-    margin-top: 4px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 9px;
-    color: #666;
-}
-.krümmung-bar .wert {
-    color: var(--krümmung);
-    font-weight: bold;
-    font-size: 14px;
-}
-.krümmung-bar .label { color: var(--gold); }
-
-.footer {
-    display: flex;
-    justify-content: space-between;
-    padding: 6px 10px;
-    margin-top: 8px;
-    background: rgba(0,0,0,0.2);
-    border-radius: 6px;
-    font-size: 9px;
-    color: #445555;
-    border: 1px solid rgba(255,255,255,0.01);
-    flex-wrap: wrap;
-    gap: 4px;
-}
-.footer span { color: #88ddbb; }
-.footer .gold { color: var(--gold); }
-</style>
+    .footer-admin {
+      margin-top: 16px;
+      padding: 8px 12px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 6px;
+      font-size: 9px;
+      color: #445555;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .footer-admin .gold { color: var(--gold); }
+  </style>
 </head>
 <body>
 
-<div class="header">
-    <h1>
-        <span class="rawator">🧬 RAWATOR</span>
-        <span style="color:#666;">·</span>
-        <span class="magneto">🧲 MAGNETO</span>
-        <span style="color:#666;">·</span>
-        <span class="krümmung">🌀 KRÜMMUNGSANTRIEB</span>
-        <span style="color:#666;">·</span>
-        <span style="color:var(--shuffle);">81-HOLOGRAMM</span>
-    </h1>
-    <div>
-        <span id="clock">⏱️ --:--:--</span>
-        <span style="margin-left:12px;color:#666;" id="cycle-count">CYC 0</span>
-        <span style="margin-left:12px;color:var(--krümmung);" id="krümmung-status">🌀 0.00</span>
-    </div>
+<!-- ===== HEADER ===== -->
+<div class="admin-header">
+  <h1>
+    <span class="ulmr">⚙️ ULMR</span>
+    <span style="color:#666;">·</span>
+    <span class="achse">3‑9‑81 ACHSEN</span>
+    <span style="color:#666;">·</span>
+    <span style="color:var(--gold);">ADMIN‑PULT</span>
+  </h1>
+  <div class="status-led">
+    <span><span class="dot green"></span> 3.js</span>
+    <span><span class="dot green"></span> 9.js</span>
+    <span><span class="dot green"></span> 81.js</span>
+    <span id="sys-clock" style="color:#666;">⏱️ --:--</span>
+  </div>
 </div>
 
-<div class="cockpit">
-
-    <div class="rawator-panel">
-        <h2>🧬 RAWATOR · LEBENDIG · 81-HOLOGRAMM</h2>
-
-        <div class="metric-grid">
-            <div class="metric vital"><div class="label">🌀 VITAL</div><div class="value" id="vital-value">0.00</div></div>
-            <div class="metric co2"><div class="label">💨 CO₂</div><div class="value" id="co2-value">0.00</div></div>
-            <div class="metric wasser"><div class="label">💧 H₂O</div><div class="value" id="wasser-value">0.00</div></div>
-            <div class="metric sauerstoff"><div class="label">💨 O₂</div><div class="value" id="sauerstoff-value">0.00</div></div>
-        </div>
-
-        <div class="anime-grid" id="anime-grid"></div>
-
-        <div id="rawator-output">🧬 RAWATOR · LEBENDIG · 81-HOLOGRAMM bereit</div>
-
-        <div class="controls">
-            <button class="vital" id="btn-vital">🌀 VITAL</button>
-            <button class="co2" id="btn-co2">💨 CO₂</button>
-            <button class="wasser" id="btn-wasser">💧 H₂O</button>
-            <button class="sauerstoff" id="btn-o2">💨 O₂</button>
-            <button class="anime" id="btn-anime">🎨 ANIME</button>
-            <button class="shuffle" id="btn-shuffle">🔄 SHUFFLE</button>
-            <button class="primary" id="btn-hologramm">🌀 HOLOGRAMM</button>
-            <button class="vital" id="btn-shuffle-dance">💃 DANCE</button>
-        </div>
+<!-- ===== DREI ACHSEN (ENGINES) ===== -->
+<div class="achsen-grid">
+  <!-- Achse 1: Welt (3.js) -->
+  <div class="achse-panel" id="achse-welt">
+    <h2>🌍 WELT‑ACHSE <span class="badge">3.js</span></h2>
+    <div class="achse-metrics">
+      <div class="metric-item"><span class="label">Router</span><span class="value achse1" id="welt-router">—</span></div>
+      <div class="metric-item"><span class="label">Stage</span><span class="value achse1" id="welt-stage">—</span></div>
+      <div class="metric-item"><span class="label">Plugins</span><span class="value achse1" id="welt-plugins">—</span></div>
+      <div class="metric-item"><span class="label">UI‑Badges</span><span class="value achse1" id="welt-badges">—</span></div>
     </div>
+  </div>
 
-    <div class="magneto-panel">
-        <h2>🧲 MAGNETO · PILOT · ADMIN-0 · DEEP SPACE NINE</h2>
-
-        <div class="orbit-suite-grid">
-            <div class="orbit-card orbit"><span class="symbol">🔄</span><div class="name">ORBIT</div><div class="wert" id="orbit-wert">0.00</div></div>
-            <div class="orbit-card suite"><span class="symbol">🎭</span><div class="name">SUITE</div><div class="wert" id="suite-wert">0.00</div></div>
-            <div class="orbit-card commander"><span class="symbol">⚡</span><div class="name">COMMANDER</div><div class="wert" id="commander-wert">0.00</div></div>
-            <div class="orbit-card admin0"><span class="symbol">🟥</span><div class="name">ADMIN-0</div><div class="wert" id="admin0-wert">0.00</div></div>
-        </div>
-
-        <div class="pipeline-grid" id="pipeline-grid">
-            <div class="pipe-step active"><div class="level">3</div>Grund</div>
-            <div class="pipe-step"><div class="level">9</div>Erweiterung</div>
-            <div class="pipe-step"><div class="level">27</div>Motor</div>
-            <div class="pipe-step"><div class="level">81</div>Vollendung</div>
-        </div>
-
-        <div id="narrativ-box">
-            <div class="title">📖 NARRATIV</div>
-            <div class="content" id="narrativ-content">🌀 Deep Space Nine · Continuum offen</div>
-        </div>
-
-        <div class="krümmung-bar">
-            <span class="label">🌀 KRÜMMUNGSANTRIEB</span>
-            <span class="wert" id="krümmung-wert">0.000</span>
-            <span style="color:#666;font-size:8px;">GS6 · ∞-aktiv</span>
-        </div>
-
-        <div class="controls">
-            <button class="speed" id="btn-speed">⚡ SPEED</button>
-            <button class="orbit" id="btn-orbit">🔄 ORBIT</button>
-            <button class="suite" id="btn-suite">🎭 SUITE</button>
-            <button class="admin0" id="btn-admin0">🟥 ADMIN-0</button>
-            <button class="magneto" id="btn-magneto">🧲 MAGNETO</button>
-            <button class="primary" id="btn-narrativ">📖 NARRATIV</button>
-            <button class="primary" id="btn-pulse">▶ PULSE</button>
-            <button class="danger" id="btn-reset">⟲ RESET</button>
-        </div>
-
-        <div id="log">
-            <div class="entry"><span class="time">[INIT]</span> <span class="msg ok">🧬 RAWATOR · 🧲 MAGNETO · COCKPIT · KRÜMMUNGSANTRIEB</span></div>
-        </div>
+  <!-- Achse 2: Kraft (9.js) -->
+  <div class="achse-panel" id="achse-kraft">
+    <h2>⚡ KRAFT‑ACHSE <span class="badge">9.js</span></h2>
+    <div class="achse-metrics">
+      <div class="metric-item"><span class="label">Attack‑Queue</span><span class="value achse2" id="kraft-queue">—</span></div>
+      <div class="metric-item"><span class="label">ZEN‑Parser</span><span class="value achse2" id="kraft-zen">—</span></div>
+      <div class="metric-item"><span class="label">Input‑Dispatcher</span><span class="value achse2" id="kraft-input">—</span></div>
+      <div class="metric-item"><span class="label">Befehle</span><span class="value achse2" id="kraft-cmds">0</span></div>
     </div>
+  </div>
 
+  <!-- Achse 3: Leben (81.js) -->
+  <div class="achse-panel" id="achse-leben">
+    <h2>🧬 LEBENS‑ACHSE <span class="badge">81.js</span></h2>
+    <div class="achse-metrics">
+      <div class="metric-item"><span class="label">Mesh‑Zellen</span><span class="value achse3" id="leben-zellen">81</span></div>
+      <div class="metric-item"><span class="label">Tick</span><span class="value achse3" id="leben-tick">0</span></div>
+      <div class="metric-item"><span class="label">Vital</span><span class="value achse3" id="leben-vital">0.00</span></div>
+      <div class="metric-item"><span class="label">Drift</span><span class="value achse3" id="leben-drift">0.00</span></div>
+    </div>
+  </div>
 </div>
 
-<!-- ============================================================ -->
-<!-- BOOT-BLOCK LINK — liest STATE aus master-boot-block.html      -->
-<!-- ============================================================ -->
-<div class="bootlink-panel" style="margin-top:8px;">
-    <h2>🔗 BOOT.BLOCK LINK — <span id="boot-status" style="color:#666;">○ verbinde…</span></h2>
-    <div class="metric-grid">
-        <div class="metric bootlink"><div class="label">MODE</div><div class="value" id="boot-mode">—</div></div>
-        <div class="metric bootlink"><div class="label">ACHSEN (A81)</div><div class="value" id="boot-achsen">—</div></div>
-        <div class="metric bootlink"><div class="label">ZAHNRAD</div><div class="value" id="boot-gear">—</div></div>
-        <div class="metric bootlink"><div class="label">ENERGIE</div><div class="value" id="boot-energy">—</div></div>
-    </div>
-    <div class="controls">
-        <button class="bootlink" id="btn-boot-reload">🔄 Verbindung neu laden</button>
-    </div>
-    <!-- unsichtbarer Daten-Lieferant: dieselbe Ordnerebene wie diese Datei -->
-    <iframe id="bootFrame" src="master-boot-block.html" style="display:none;" title="boot-block-datenquelle"></iframe>
+<!-- ===== DEUTUNGS‑PANEL ===== -->
+<div class="deutung-panel">
+  <h2>📖 DEUTUNG · ZEN‑INTERPRETATION & MESH‑LOG</h2>
+  <div id="deutung-output">▶ ULMR · Admin‑Pult bereit · warte auf Engine‑Daten …</div>
 </div>
 
-<div class="footer">
-    <span>🧬 VITAL: <span id="status-vital" class="gold">0.00</span></span>
-    <span>🌀 HOLOGRAMM: <span id="status-hologramm" class="gold">81</span></span>
-    <span>🎨 ANIME: <span id="status-anime" class="gold">81</span></span>
-    <span>🔄 SHUFFLE: <span id="status-shuffle" class="gold">81</span></span>
-    <span>🧲 MAGNETO: <span id="status-magneto" class="gold">●</span></span>
-    <span style="color:var(--krümmung);">🌀 KRÜMMUNG: <span id="status-krümmung" class="gold">0.000</span></span>
-    <span style="color:#445555;">wieimmer4u · Only 4U</span>
+<!-- ===== STEUERUNGSZENTRALE ===== -->
+<div class="controls-zone">
+  <input id="attackInput" placeholder="SHOCK / WAVE / LINK / PUSH / GROW / MOVE / BREAK" />
+  <button class="attack" onclick="sendAttack()">⚡ SENDEN</button>
+  <button class="mesh" onclick="pauseLoop()">⏸ PAUSE</button>
+  <button class="mesh" onclick="stepLoop()">⏭ SCHRITT</button>
+  <button class="mesh" onclick="resetMesh()">⟲ RESET</button>
+  <button class="primary" onclick="toggleAuto()">▶ AUTO</button>
+  <span style="color:#666;font-size:9px;margin-left:4px;">Speed:</span>
+  <input type="range" id="speedSlider" min="1" max="10" value="3" style="width:80px;background:#1e242c;" />
 </div>
 
+<!-- ===== BOOT‑BLOCK‑MONITOR ===== -->
+<div class="boot-block-monitor">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+    <span style="color:var(--gold);font-size:11px;">🔗 BOOT.BLOCK LINK</span>
+    <span id="boot-status" style="color:#666;font-size:9px;">○ nicht verbunden</span>
+  </div>
+  <div class="row">
+    <div class="item">MODE <span id="boot-mode">—</span></div>
+    <div class="item">ACHSEN (A81) <span id="boot-achsen">—</span></div>
+    <div class="item">ZAHNRAD <span id="boot-gear">—</span></div>
+    <div class="item">ENERGIE <span id="boot-energy">—</span></div>
+    <div class="item"><button class="bootlink" onclick="reloadBootFrame()" style="background:#111;border:1px solid #333;color:#6ec8ff;padding:2px 10px;border-radius:4px;cursor:pointer;">🔄 neu laden</button></div>
+  </div>
+  <iframe id="bootFrame" src="master-boot-block.html" style="display:none;"></iframe>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<div class="footer-admin">
+  <span>🧬 ULMR‑KERN: <span class="gold">3 · 9 · 81</span></span>
+  <span>🌀 ACHSEN: <span class="gold">WELT · KRAFT · LEBEN</span></span>
+  <span>⚡ ADMIN‑PULT · vollständig geöffnet</span>
+</div>
+
+<!-- ============================================================= -->
+<!-- =====  DIE DREI ENGINES LADEN (REIhenfolge: 3 → 9 → 81) ===== -->
+<!-- ============================================================= -->
+<script src="3.js"></script>
+<script src="9.js"></script>
+<script src="81.js"></script>
+
+<!-- ============================================================= -->
+<!-- =====  ADMIN‑PULT LOGIK (steuert die Engines) ================ -->
+<!-- ============================================================= -->
 <script>
-// ================================================================
-// 1. RAWATOR · LEBENDIG · ENGINE
-// ================================================================
+  (function() {
+    'use strict';
 
-const RAWATOR = {
-    vital: 0.5,
-    co2: { name: 'CO₂', atoms: ['C', 'O₂'], charge: 0, vital: 0.3 },
-    wasser: { name: 'H₂O', atoms: ['H₂', 'O'], charge: 0, vital: 0.7 },
-    sauerstoff: { name: 'O₂', atoms: ['O₂'], charge: 0, vital: 0.9 },
-    anime: [],
-    shuffle: [],
-    messgerät: { vital: 0, co2: 0, wasser: 0, sauerstoff: 0, hologramm: 81, anime: 81, shuffle: 81, status: 'aktiv' },
+    // ---- DOM-Referenzen ----
+    const deutung = document.getElementById('deutung-output');
+    const bootStatus = document.getElementById('boot-status');
 
-    init() {
-        for (let i = 1; i <= 81; i++) {
-            this.anime.push({ id: `A${i}`, vital: 0.3 + Math.random() * 0.6, active: i % 9 === 0 });
-        }
-        const moves = ['STEP', 'SLIDE', 'SHIFT', 'SPIN', 'FLOW', 'BREAK', 'RISE', 'DROP', 'WAVE'];
-        for (let i = 0; i < 81; i++) {
-            this.shuffle.push({ move: moves[i % moves.length], step: i + 1, energy: 0.5 + Math.random() * 0.5 });
-        }
-        this.updateMetrics();
-    },
-
-    updateMetrics() {
-        const totalVital = this.anime.reduce((a, b) => a + b.vital, 0);
-        this.vital = totalVital / this.anime.length;
-        this.co2.vital = 0.3 + (1 - this.vital) * 0.4;
-        this.wasser.vital = 0.5 + this.vital * 0.3;
-        this.sauerstoff.vital = 0.6 + this.vital * 0.3;
-        this.messgerät.vital = this.vital;
-        this.messgerät.co2 = this.co2.vital;
-        this.messgerät.wasser = this.wasser.vital;
-        this.messgerät.sauerstoff = this.sauerstoff.vital;
-        this.messgerät.anime = this.anime.length;
-        this.messgerät.shuffle = this.shuffle.length;
-    },
-
-    hologramProof() {
-        const lebendig = this.anime.filter(a => a.vital > 0.5).length;
-        return { total: this.anime.length, lebendig, vital: this.vital, co2: this.co2, wasser: this.wasser, sauerstoff: this.sauerstoff };
+    // ---- Hilfsfunktionen für Log ----
+    function logDeutung(msg, type = 'info') {
+      const time = new Date().toLocaleTimeString();
+      deutung.innerHTML += `[${time}] ${msg}\n`;
+      deutung.scrollTop = deutung.scrollHeight;
+      if (deutung.children.length > 50) deutung.innerHTML = deutung.innerHTML.split('\n').slice(-40).join('\n');
     }
-};
 
-RAWATOR.init();
+    // ---- 1. Engine‑Checks & Achsen‑Update ----
+    function updateAchsen() {
+      // Welt (3.js)
+      if (typeof window.ROUTER !== 'undefined') {
+        document.getElementById('welt-router').textContent = window.ROUTER.current || 'aktiv';
+      }
+      if (typeof window.STAGE !== 'undefined') {
+        document.getElementById('welt-stage').textContent = window.STAGE.mode || '3D';
+      }
+      if (typeof window.PLUGIN_CORE !== 'undefined') {
+        document.getElementById('welt-plugins').textContent = Object.keys(window.PLUGIN_CORE).length || '13';
+        document.getElementById('welt-badges').textContent = window.PLUGIN_CORE.activeCount || '0';
+      }
 
-// ================================================================
-// 2. MAGNETO · PILOT · ADMIN-0 · ENGINE
-// ================================================================
+      // Kraft (9.js)
+      if (typeof window.ATTACK_QUEUE !== 'undefined') {
+        document.getElementById('kraft-queue').textContent = window.ATTACK_QUEUE.length || 0;
+      }
+      if (typeof window.ZEN !== 'undefined') {
+        document.getElementById('kraft-zen').textContent = window.ZEN.status || 'bereit';
+      }
+      if (typeof window.INPUT_DISPATCHER !== 'undefined') {
+        document.getElementById('kraft-input').textContent = window.INPUT_DISPATCHER.mode || 'aktiv';
+      }
 
-const MAGNETO = {
-    orbit: 0.5, suite: 0.5, commander: 0.5, admin0: 0.5,
-    pipeline: 3, speedCount: 0, running: false, cycle: 0,
-    energy: 0, score: 0, decision: null, narrativ: '', krümmung: 0,
-
-    magnetoCommand() {
-        this.speedCount++;
-        this.orbit = Math.min(1, this.orbit + 0.05 + Math.random() * 0.1);
-        this.suite = Math.min(1, this.suite + 0.05 + Math.random() * 0.1);
-        this.commander = Math.min(1, this.commander + 0.05 + Math.random() * 0.1);
-        this.admin0 = Math.min(1, this.admin0 + 0.05 + Math.random() * 0.1);
-        this.energy = Math.min(100, this.energy + 2 + Math.random() * 5);
-        this.score = this.energy * 0.618;
-        this.krümmung = (this.orbit + this.suite + this.commander + this.admin0) / 4;
-
-        const levels = [3, 9, 27, 81];
-        const idx = levels.indexOf(this.pipeline);
-        this.pipeline = levels[(idx + 1) % levels.length];
-
-        this.cycle++;
-        if (this.energy > 60) this.decision = 'GÜLTIG';
-        else if (this.energy > 30) this.decision = 'MÖGLICH';
-        else this.decision = 'UNSICHER';
-
-        RAWATOR.vital = Math.min(1, RAWATOR.vital + 0.01 + Math.random() * 0.02);
-        RAWATOR.updateMetrics();
-
-        return this.getStatus();
-    },
-
-    getStatus() {
-        return { orbit: this.orbit, suite: this.suite, commander: this.commander, admin0: this.admin0, pipeline: this.pipeline, energy: this.energy, score: this.score, decision: this.decision, krümmung: this.krümmung, cycle: this.cycle };
+      // Leben (81.js)
+      if (typeof window.MESH !== 'undefined') {
+        document.getElementById('leben-zellen').textContent = window.MESH.cells ? window.MESH.cells.length : 81;
+        document.getElementById('leben-tick').textContent = window.MESH.tick || 0;
+        document.getElementById('leben-vital').textContent = (window.MESH.vital || 0).toFixed(2);
+        document.getElementById('leben-drift').textContent = (window.MESH.drift || 0).toFixed(2);
+      }
     }
-};
 
-// ─── EXPOSURE — symmetrisch zu master-boot-block.html ──────────
-window.RAWATOR = RAWATOR;
-window.MAGNETO = MAGNETO;
+    // ---- 2. Boot‑Block‑Sync ----
+    function syncBootBlock() {
+      try {
+        const frame = document.getElementById('bootFrame');
+        const state = frame.contentWindow.STATE;
+        if (!state) throw new Error('STATE nicht bereit');
+        document.getElementById('boot-mode').textContent = state.mode || '—';
+        document.getElementById('boot-achsen').textContent = state.a81 || '—';
+        document.getElementById('boot-gear').textContent = state.gear || '—';
+        document.getElementById('boot-energy').textContent = (state.energy || 0) + '%';
+        bootStatus.textContent = '● verbunden';
+        bootStatus.style.color = '#4f4';
+      } catch (e) {
+        bootStatus.textContent = '○ nicht verbunden (Cross‑Origin oder Frame nicht geladen)';
+        bootStatus.style.color = '#666';
+      }
+    }
 
-// ================================================================
-// 3. DOM FUNKTIONEN
-// ================================================================
+    window.reloadBootFrame = function() {
+      document.getElementById('bootFrame').src = document.getElementById('bootFrame').src;
+      logDeutung('🔄 BOOT.BLOCK‑Frame neu geladen');
+    };
 
-const logDiv = document.getElementById('log');
-const rawatorOut = document.getElementById('rawator-output');
-const narrativContent = document.getElementById('narrativ-content');
+    // ---- 3. Steuerungsfunktionen (verknüpfen mit Engines) ----
+    window.sendAttack = function() {
+      const input = document.getElementById('attackInput');
+      const cmd = input.value.trim();
+      if (!cmd) return;
+      if (typeof window.processZEN === 'function') {
+        window.processZEN(cmd);
+        logDeutung(`⚡ Attack: ${cmd} → ZEN verarbeitet`);
+      } else if (typeof window.dispatchAttack === 'function') {
+        window.dispatchAttack(cmd);
+        logDeutung(`⚡ Attack: ${cmd} → dispatchAttack`);
+      } else {
+        logDeutung(`⚠️ Keine Attack‑Engine gefunden. Befehl: ${cmd}`, 'warn');
+      }
+      input.value = '';
+      updateAchsen();
+    };
 
-function log(msg, type = 'ok') {
-    const entry = document.createElement('div');
-    entry.className = 'entry';
-    const time = new Date().toLocaleTimeString();
-    entry.innerHTML = `<span class="time">[${time}]</span> <span class="msg ${type}">${msg}</span>`;
-    logDiv.appendChild(entry);
-    logDiv.scrollTop = logDiv.scrollHeight;
-    while (logDiv.children.length > 30) logDiv.removeChild(logDiv.firstChild);
-}
+    window.pauseLoop = function() {
+      if (typeof window.togglePause === 'function') {
+        window.togglePause();
+        logDeutung('⏸ Pause umgeschaltet');
+      } else {
+        logDeutung('⚠️ togglePause() nicht gefunden', 'warn');
+      }
+    };
 
-function updateUI() {
-    const r = RAWATOR;
-    const m = MAGNETO;
+    window.stepLoop = function() {
+      if (typeof window.stepTick === 'function') {
+        window.stepTick();
+        logDeutung('⏭ Einzelner Tick ausgeführt');
+        updateAchsen();
+      } else {
+        logDeutung('⚠️ stepTick() nicht gefunden', 'warn');
+      }
+    };
 
-    document.getElementById('vital-value').textContent = r.vital.toFixed(2);
-    document.getElementById('co2-value').textContent = r.co2.vital.toFixed(2);
-    document.getElementById('wasser-value').textContent = r.wasser.vital.toFixed(2);
-    document.getElementById('sauerstoff-value').textContent = r.sauerstoff.vital.toFixed(2);
-    document.getElementById('status-vital').textContent = r.vital.toFixed(2);
-    document.getElementById('status-hologramm').textContent = r.anime.length;
-    document.getElementById('status-anime').textContent = r.anime.length;
-    document.getElementById('status-shuffle').textContent = r.shuffle.length;
+    window.resetMesh = function() {
+      if (typeof window.resetGrid === 'function') {
+        window.resetGrid();
+        logDeutung('⟲ Mesh zurückgesetzt');
+        updateAchsen();
+      } else {
+        logDeutung('⚠️ resetGrid() nicht gefunden', 'warn');
+      }
+    };
 
-    const grid = document.getElementById('anime-grid');
-    grid.innerHTML = '';
-    r.anime.slice(0, 9).forEach(f => {
-        const el = document.createElement('div');
-        el.className = 'anime-frame active';
-        el.innerHTML = `<div class="id">${f.id}</div><div class="vital">${f.vital.toFixed(2)}</div>`;
-        grid.appendChild(el);
+    let autoInterval = null;
+    window.toggleAuto = function() {
+      if (autoInterval) {
+        clearInterval(autoInterval);
+        autoInterval = null;
+        logDeutung('⏸ AUTO‑Modus deaktiviert');
+        return;
+      }
+      const speed = parseInt(document.getElementById('speedSlider').value) || 3;
+      const delay = Math.max(200, 2000 / speed);
+      autoInterval = setInterval(() => {
+        if (typeof window.stepTick === 'function') {
+          window.stepTick();
+          updateAchsen();
+        }
+      }, delay);
+      logDeutung(`▶ AUTO‑Modus aktiv (Speed ${speed}, ${delay}ms)`);
+    };
+
+    // ---- 4. Initialisierung der Engines (wenn verfügbar) ----
+    function initEngines() {
+      let ok = true;
+      try {
+        if (typeof initMesh === 'function') { initMesh(); logDeutung('✅ 81.js · Mesh initialisiert'); } 
+        else { logDeutung('⚠️ initMesh() nicht gefunden', 'warn'); ok = false; }
+        if (typeof initUI === 'function') { initUI(); logDeutung('✅ 3.js · UI initialisiert'); } 
+        else { logDeutung('⚠️ initUI() nicht gefunden', 'warn'); ok = false; }
+        if (typeof initZEN === 'function') { initZEN(); logDeutung('✅ 9.js · ZEN initialisiert'); } 
+        else { logDeutung('⚠️ initZEN() nicht gefunden', 'warn'); ok = false; }
+        if (typeof startLoop === 'function') { startLoop(); logDeutung('✅ Tick‑Loop gestartet'); } 
+        else { logDeutung('⚠️ startLoop() nicht gefunden', 'warn'); ok = false; }
+      } catch (e) {
+        logDeutung(`❌ Fehler beim Initialisieren: ${e.message}`, 'error');
+        ok = false;
+      }
+      if (ok) {
+        logDeutung('🚀 ULMR · Alle drei Achsen sind aktiv.');
+      } else {
+        logDeutung('⚠️ Einige Engine‑Funktionen fehlen – simuliere Basiswerte.', 'warn');
+        // Fallback‑Simulation, damit das UI nicht leer bleibt
+        window.MESH = window.MESH || { cells: Array(81).fill(0), tick: 0, vital: 0.5, drift: 0.1 };
+        window.ATTACK_QUEUE = window.ATTACK_QUEUE || [];
+        window.ZEN = window.ZEN || { status: 'simuliert' };
+        window.ROUTER = window.ROUTER || { current: 'simuliert' };
+        window.PLUGIN_CORE = window.PLUGIN_CORE || { activeCount: 0 };
+      }
+      updateAchsen();
+    }
+
+    // ---- 5. Taktgeber ----
+    setInterval(() => {
+      updateAchsen();
+      syncBootBlock();
+    }, 500);
+
+    // ---- 6. Uhr ----
+    function updateClock() {
+      document.getElementById('sys-clock').textContent = `⏱️ ${new Date().toLocaleTimeString()}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // ---- 7. Start ----
+    document.addEventListener('DOMContentLoaded', function() {
+      // Warte kurz, bis die Skripte geladen sind
+      setTimeout(initEngines, 300);
     });
 
-    document.getElementById('orbit-wert').textContent = m.orbit.toFixed(2);
-    document.getElementById('suite-wert').textContent = m.suite.toFixed(2);
-    document.getElementById('commander-wert').textContent = m.commander.toFixed(2);
-    document.getElementById('admin0-wert').textContent = m.admin0.toFixed(2);
-    document.getElementById('krümmung-wert').textContent = m.krümmung.toFixed(3);
-    document.getElementById('status-krümmung').textContent = m.krümmung.toFixed(3);
-    document.getElementById('cycle-count').textContent = `CYC ${m.cycle}`;
-    document.getElementById('krümmung-status').textContent = `🌀 ${m.krümmung.toFixed(3)}`;
-
-    const steps = document.querySelectorAll('.pipe-step');
-    const levels = [3, 9, 27, 81];
-    steps.forEach((step, i) => { step.classList.toggle('active', m.pipeline >= levels[i]); });
-
-    document.getElementById('status-magneto').textContent = m.running ? '● aktiv' : '○ bereit';
-    document.getElementById('status-magneto').style.color = m.running ? '#ff00ff' : '#666';
-}
-
-function generateNarrativ() {
-    const kandidaten = ['OS', 'BOOT', 'iki1uc', '243', 'DOOR', 'DOO', 'RESPO', 'NC.engine', 'SCORE', 'WETTE', 'SLIDE', 'AXIOM'];
-    const shuffled = kandidaten.sort(() => Math.random() - 0.5);
-    const trio = shuffled.slice(0, 3);
-    return `🌀 Triolet: ${trio.join(' ↔ ')} · Vital: ${RAWATOR.vital.toFixed(2)} · Krümmung: ${MAGNETO.krümmung.toFixed(3)} · GS6 aktiv`;
-}
-
-// ================================================================
-// 4. BUTTONS & EVENTS
-// ================================================================
-
-document.getElementById('btn-vital').onclick = () => {
-    RAWATOR.vital = Math.min(1, RAWATOR.vital + 0.1 + Math.random() * 0.1);
-    RAWATOR.updateMetrics();
-    updateUI();
-    rawatorOut.textContent = `🌀 VITAL: ${RAWATOR.vital.toFixed(4)}\nCO₂: ${RAWATOR.co2.vital.toFixed(4)}\nH₂O: ${RAWATOR.wasser.vital.toFixed(4)}\nO₂: ${RAWATOR.sauerstoff.vital.toFixed(4)}`;
-    log(`🌀 VITAL = ${RAWATOR.vital.toFixed(2)}`, 'vital');
-};
-
-document.getElementById('btn-co2').onclick = () => {
-    rawatorOut.textContent = `💨 CO₂\nName: ${RAWATOR.co2.name}\nAtome: ${RAWATOR.co2.atoms.join(' + ')}\nVital: ${RAWATOR.co2.vital.toFixed(4)}`;
-    log('💨 CO₂ angezeigt', 'ok');
-};
-
-document.getElementById('btn-wasser').onclick = () => {
-    rawatorOut.textContent = `💧 WASSER (H₂O)\nName: ${RAWATOR.wasser.name}\nAtome: ${RAWATOR.wasser.atoms.join(' + ')}\nVital: ${RAWATOR.wasser.vital.toFixed(4)}`;
-    log('💧 H₂O angezeigt', 'ok');
-};
-
-document.getElementById('btn-o2').onclick = () => {
-    rawatorOut.textContent = `💨 SAUERSTOFF (O₂)\nName: ${RAWATOR.sauerstoff.name}\nAtome: ${RAWATOR.sauerstoff.atoms.join(' + ')}\nVital: ${RAWATOR.sauerstoff.vital.toFixed(4)}`;
-    log('💨 O₂ angezeigt', 'ok');
-};
-
-document.getElementById('btn-anime').onclick = () => {
-    const frames = RAWATOR.anime.slice(0, 9);
-    let text = '🎨 ANIME · 81 Frames\n';
-    frames.forEach(f => { text += `${f.id}: ${f.vital.toFixed(2)} ${f.active ? '●' : '○'}\n`; });
-    rawatorOut.textContent = text;
-    log(`🎨 ANIME · ${RAWATOR.anime.length} Frames geladen`, 'anime');
-};
-
-document.getElementById('btn-shuffle').onclick = () => {
-    const shuffle = RAWATOR.shuffle.slice(0, 9);
-    const moves = shuffle.map(s => s.move).join(' ');
-    rawatorOut.textContent = `🔄 SHUFFLE Dancer\n${shuffle.length} Steps · Moves: ${moves}`;
-    log(`🔄 SHUFFLE · ${shuffle.length} Steps`, 'shuffle');
-};
-
-document.getElementById('btn-hologramm').onclick = () => {
-    const proof = RAWATOR.hologramProof();
-    rawatorOut.textContent = `🌀 HOLOGRAMM-BEWEIS\nTotal: ${proof.total}\nLebendig: ${proof.lebendig}\nVital: ${proof.vital.toFixed(4)}\nCO₂: ${proof.co2.vital.toFixed(4)}\nH₂O: ${proof.wasser.vital.toFixed(4)}\nO₂: ${proof.sauerstoff.vital.toFixed(4)}`;
-    log(`🌀 HOLOGRAMM · ${proof.lebendig}/${proof.total} lebendig`, 'ok');
-};
-
-document.getElementById('btn-shuffle-dance').onclick = () => {
-    const moves = RAWATOR.shuffle.map(s => s.move);
-    const randomMove = moves[Math.floor(Math.random() * moves.length)];
-    rawatorOut.textContent = `💃 SHUFFLE DANCE · Move: ${randomMove}\n${moves.slice(0, 18).join(' ')}`;
-    log(`💃 SHUFFLE DANCE · ${randomMove}`, 'shuffle');
-};
-
-function magnetoCommand() {
-    const status = MAGNETO.magnetoCommand();
-    updateUI();
-    const narrativ = generateNarrativ();
-    MAGNETO.narrativ = narrativ;
-    narrativContent.textContent = narrativ;
-    log(`🧲 MAGNETO #${MAGNETO.speedCount} · Pipeline ${MAGNETO.pipeline} · Krümmung ${MAGNETO.krümmung.toFixed(3)}`, 'magneto');
-    rawatorOut.textContent = `🧲 MAGNETO · PILOT · ADMIN-0\nOrbit: ${status.orbit.toFixed(2)}\nSuite: ${status.suite.toFixed(2)}\nCommander: ${status.commander.toFixed(2)}\nAdmin-0: ${status.admin0.toFixed(2)}\nPipeline: ${status.pipeline}\nKrümmung: ${status.krümmung.toFixed(3)}\nEnergie: ${status.energy.toFixed(2)}\nDecision: ${status.decision}`;
-}
-
-document.getElementById('btn-speed').onclick = magnetoCommand;
-document.getElementById('btn-magneto').onclick = magnetoCommand;
-
-document.getElementById('btn-orbit').onclick = () => {
-    MAGNETO.orbit = Math.min(1, MAGNETO.orbit + 0.1);
-    updateUI();
-    log(`🔄 ORBIT = ${MAGNETO.orbit.toFixed(2)}`, 'orbit');
-};
-
-document.getElementById('btn-suite').onclick = () => {
-    MAGNETO.suite = Math.min(1, MAGNETO.suite + 0.1);
-    updateUI();
-    log(`🎭 SUITE = ${MAGNETO.suite.toFixed(2)}`, 'suite');
-};
-
-document.getElementById('btn-admin0').onclick = () => {
-    MAGNETO.admin0 = Math.min(1, MAGNETO.admin0 + 0.1);
-    MAGNETO.energy = Math.min(100, MAGNETO.energy + 5);
-    MAGNETO.score = MAGNETO.energy * 0.618;
-    if (MAGNETO.energy > 60) MAGNETO.decision = 'GÜLTIG';
-    else if (MAGNETO.energy > 30) MAGNETO.decision = 'MÖGLICH';
-    else MAGNETO.decision = 'UNSICHER';
-    updateUI();
-    log(`🟥 ADMIN-0 = ${MAGNETO.admin0.toFixed(2)} · Decision: ${MAGNETO.decision}`, 'admin0');
-};
-
-document.getElementById('btn-narrativ').onclick = () => {
-    const narrativ = generateNarrativ();
-    MAGNETO.narrativ = narrativ;
-    narrativContent.textContent = narrativ;
-    log(`📖 NARRATIV erzeugt: ${narrativ.substring(0, 40)}...`, 'narrativ');
-};
-
-document.getElementById('btn-pulse').onclick = () => {
-    MAGNETO.running = !MAGNETO.running;
-    updateUI();
-    log(MAGNETO.running ? '▶ PULSE aktiviert' : '⏸ PULSE pausiert', 'ok');
-};
-
-document.getElementById('btn-reset').onclick = () => {
-    MAGNETO.orbit = 0.5; MAGNETO.suite = 0.5; MAGNETO.commander = 0.5; MAGNETO.admin0 = 0.5;
-    MAGNETO.pipeline = 3; MAGNETO.speedCount = 0; MAGNETO.cycle = 0; MAGNETO.energy = 0;
-    MAGNETO.score = 0; MAGNETO.decision = null; MAGNETO.krümmung = 0; MAGNETO.running = false;
-    RAWATOR.vital = 0.5;
-    RAWATOR.updateMetrics();
-    narrativContent.textContent = '⟲ RESET · System bereit';
-    updateUI();
-    rawatorOut.textContent = '⟲ RESET · Alle Systeme zurückgesetzt';
-    log('⟲ RESET — Alles zurückgesetzt', 'ok');
-};
-
-// ================================================================
-// 5. BOOT-BLOCK LINK — STATE aus master-boot-block.html auslesen
-// ================================================================
-let bootBlockConnected = false;
-
-function syncFromBootBlock() {
-    const frame = document.getElementById('bootFrame');
-    try {
-        const bootState = frame.contentWindow.STATE;
-        if (!bootState) throw new Error('STATE noch nicht bereit');
-
-        if (!bootBlockConnected) {
-            bootBlockConnected = true;
-            document.getElementById('boot-status').textContent = '● verbunden';
-            document.getElementById('boot-status').style.color = '#4f4';
-            log('🔗 BOOT.BLOCK verbunden', 'bootlink');
-        }
-
-        document.getElementById('boot-mode').textContent = bootState.mode;
-        document.getElementById('boot-achsen').textContent = bootState.a81;
-        document.getElementById('boot-gear').textContent = bootState.gear;
-        document.getElementById('boot-energy').textContent = bootState.energy + '%';
-    } catch (err) {
-        // Cross-Origin-Block (z.B. file://) oder iframe noch nicht geladen
-        if (bootBlockConnected) {
-            bootBlockConnected = false;
-            log('⚠️ BOOT.BLOCK Verbindung verloren: ' + err.message, 'admin0');
-        }
-        document.getElementById('boot-status').textContent = '○ nicht verbunden';
-        document.getElementById('boot-status').style.color = '#666';
+    // Falls DOM schon ready ist
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      setTimeout(initEngines, 300);
     }
-}
 
-document.getElementById('btn-boot-reload').onclick = () => {
-    bootBlockConnected = false;
-    document.getElementById('bootFrame').src = document.getElementById('bootFrame').src;
-    log('🔄 BOOT.BLOCK-Frame neu geladen', 'bootlink');
-};
+    // ---- 8. Tastatur ----
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && document.activeElement === document.getElementById('attackInput')) {
+        window.sendAttack();
+        e.preventDefault();
+      }
+      if (e.key === ' ' && e.target === document.body) {
+        e.preventDefault();
+        window.toggleAuto();
+      }
+    });
 
-setInterval(syncFromBootBlock, 500);
+    // ---- 9. Speed‑Slider ----
+    document.getElementById('speedSlider').addEventListener('input', function() {
+      if (autoInterval) {
+        // Neustart des Intervalls mit neuer Geschwindigkeit
+        clearInterval(autoInterval);
+        autoInterval = null;
+        window.toggleAuto(); // startet neu mit aktuellem Slider-Wert
+      }
+    });
 
-// ─── TASTATUR ──────────────────────────────────────────────────
-document.addEventListener('keydown', (e) => {
-    if (e.key === ' ') { e.preventDefault(); magnetoCommand(); }
-    if (e.key === 'o' || e.key === 'O') document.getElementById('btn-orbit').click();
-    if (e.key === 's' || e.key === 'S') document.getElementById('btn-suite').click();
-    if (e.key === 'a' || e.key === 'A') document.getElementById('btn-admin0').click();
-    if (e.key === 'm' || e.key === 'M') magnetoCommand();
-    if (e.key === 'n' || e.key === 'N') document.getElementById('btn-narrativ').click();
-    if (e.key === 'p' || e.key === 'P') document.getElementById('btn-pulse').click();
-    if (e.key === 'x' || e.key === 'X') document.getElementById('btn-reset').click();
-    if (e.key === 'v' || e.key === 'V') document.getElementById('btn-vital').click();
-    if (e.key === 'h' || e.key === 'H') document.getElementById('btn-hologramm').click();
-});
+    // Initialer Log-Eintrag
+    logDeutung('🧬 ULMR · Admin‑Pult vollständig geöffnet · 3‑9‑81 Achsen bereit.');
+    logDeutung('💡 Nutze die Steuerung oder gib ZEN‑Befehle ein.');
 
-function updateClock() {
-    document.getElementById('clock').textContent = `⏱️ ${new Date().toLocaleTimeString()}`;
-}
-setInterval(updateClock, 1000);
-updateClock();
-
-let autoTimer = null;
-function toggleAuto() {
-    if (autoTimer) { clearInterval(autoTimer); autoTimer = null; log('⏸ AUTO pausiert', 'ok'); return; }
-    autoTimer = setInterval(() => { if (MAGNETO.running) magnetoCommand(); }, 2000);
-    log('▶ AUTO gestartet', 'ok');
-}
-setTimeout(() => {
-    MAGNETO.running = true;
-    updateUI();
-    log('▶ AUTO-START · System aktiv', 'ok');
-    toggleAuto();
-}, 1000);
-
-updateUI();
-log('🧬 RAWATOR · 🧲 MAGNETO · COCKPIT · KRÜMMUNGSANTRIEB geladen', 'ok');
-rawatorOut.textContent = '🧬 RAWATOR · 🧲 MAGNETO · KRÜMMUNGSANTRIEB · 81-HOLOGRAMM · BEREIT';
-narrativContent.textContent = '🌀 Deep Space Nine · Continuum offen · Krümmungsantrieb aktiv · GS6';
+  })();
 </script>
 
 </body>
