@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚡ iki1uc · NC‑MESH</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Minimal‑Styling für die Leichtigkeit */
+    body { margin: 0; background: #0b0e14; color: #b7c9e2; font-family: 'Courier New', monospace; padding: 20px; }
+    #mesh { width: 100%; height: 60vh; background: #1e242c; border-radius: 12px; margin-bottom: 15px; border: 1px solid #2f3542; }
+    #stats { display: flex; gap: 30px; margin-bottom: 15px; flex-wrap: wrap; }
+    #stats span { color: #7bed9f; font-weight: bold; }
+    #controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 15px; }
+    #controls input { background: #1e242c; border: 1px solid #2f3542; color: #fff; padding: 8px 12px; border-radius: 4px; flex: 1; min-width: 200px; }
+    #controls button { background: #2f3542; border: none; color: #fff; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+    #controls button:hover { background: #4a5162; }
+    #log { background: #1e242c; padding: 10px; border-radius: 4px; height: 100px; overflow-y: auto; font-size: 0.85rem; border: 1px solid #2f3542; }
+  </style>
+</head>
+<body>
+
+  <!-- ===== KERN‑UI ===== -->
+  <div id="mesh"></div>
+
+  <div id="stats">
+    <div>SCORE: <span id="score">0</span></div>
+    <div>TICK: <span id="tick">0</span></div>
+    <div>GEAR: <span id="gear">0</span></div>
+    <div>PLUGINS: <span id="plugins">0</span></div>
+  </div>
+
+  <div id="controls">
+    <input id="attackInput" placeholder="SHOCK / WAVE / LINK ...">
+    <button onclick="sendAttack()">SENDEN</button>
+    <button onclick="pauseLoop()">PAUSE</button>
+    <button onclick="stepLoop()">SCHRITT</button>
+    <button onclick="resetMesh()">RESET</button>
+  </div>
+
+  <div id="log">▶ iki1uc · System bereit ...</div>
+
+  <!-- ===== ENGINES LADEN (Reihenfolge = Welt → Kraft → Leben) ===== -->
+  <script src="3.js"></script>   <!-- UI / Router / Stage -->
+  <script src="9.js"></script>   <!-- Attack / ZEN -->
+  <script src="81.js"></script>  <!-- Mesh / Physik -->
+
+  <!-- ===== AKTIVIERUNG (nur Initialisierung, keine schwere Logik) ===== -->
+  <script>
+    // Fallback‑Hooks, falls die Engines die Buttons nicht selbst binden
+    window.sendAttack = function() {
+      const input = document.getElementById('attackInput');
+      if (input && typeof processZEN === 'function') {
+        processZEN(input.value);
+        input.value = '';
+      } else if (input && typeof window.dispatchAttack === 'function') {
+        window.dispatchAttack(input.value);
+        input.value = '';
+      }
+    };
+    window.pauseLoop = function() { if (typeof togglePause === 'function') togglePause(); };
+    window.stepLoop = function() { if (typeof stepTick === 'function') stepTick(); };
+    window.resetMesh = function() { if (typeof resetGrid === 'function') resetGrid(); };
+
+    // Startsequenz – alle Engines sind bereits durch <script> geladen
+    try {
+      if (typeof initMesh === 'function') initMesh();      // 81.js
+      if (typeof initUI === 'function') initUI();          // 3.js
+      if (typeof initZEN === 'function') initZEN();        // 9.js
+      if (typeof startLoop === 'function') startLoop();    // 81.js
+      document.getElementById('log').innerHTML += '<br>▶ RUN‑42 · Tick‑Loop aktiv.';
+    } catch (e) {
+      document.getElementById('log').innerHTML += `<br>❌ Boot‑Fehler: ${e.message}`;
+      console.error(e);
+    }
+  </script>
+
+</body>
+</html>
