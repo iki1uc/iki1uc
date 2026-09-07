@@ -3,84 +3,170 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>⚡ MASTER‑RUNTIME · iki1uc · 3‑9‑81</title>
+  <title>⚡ MASTER‑RUNTIME · slide‑ready · iki1uc</title>
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* Minimal‑Styling – nur für den Master‑Status */
-    body {
-      margin: 0;
-      background: #0a0a12;
-      color: #b7c9e2;
-      font-family: 'Courier New', monospace;
-      padding: 20px;
-    }
-    #mesh { width: 100%; height: 60vh; background: #1e242c; border-radius: 12px; margin-bottom: 15px; border: 1px solid #2f3542; }
-    #stats { display: flex; gap: 30px; margin-bottom: 15px; flex-wrap: wrap; }
-    #stats span { color: #7bed9f; font-weight: bold; }
-    #controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 15px; }
-    #controls input { background: #1e242c; border: 1px solid #2f3542; color: #fff; padding: 8px 12px; border-radius: 4px; flex: 1; min-width: 200px; }
-    #controls button { background: #2f3542; border: none; color: #fff; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
-    #controls button:hover { background: #4a5162; }
-    #log { background: #1e242c; padding: 10px; border-radius: 4px; height: 100px; overflow-y: auto; font-size: 0.85rem; border: 1px solid #2f3542; }
-    .master-badge {
-      background: #ffd700;
-      color: #000;
-      padding: 2px 12px;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      font-weight: bold;
-      display: inline-block;
-      margin-left: 12px;
-    }
+    /* Minimal‑Styling – jetzt mit Slide‑Anzeige */
+    body { margin:0; background:#0a0a12; color:#b7c9e2; font-family:'Courier New',monospace; padding:20px; }
+    #mesh { width:100%; height:50vh; background:#1e242c; border-radius:12px; margin-bottom:15px; border:1px solid #2f3542; }
+    .flex { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:6px 0; }
+    .badge { background:#ffd700; color:#000; padding:2px 12px; border-radius:20px; font-size:0.7rem; font-weight:bold; }
+    .badge.slide { background:#00ff88; }
+    .btn { background:#2f3542; border:none; color:#fff; padding:6px 16px; border-radius:4px; cursor:pointer; }
+    .btn:hover { background:#4a5162; }
+    .btn.slide { border-color:#00ff88; color:#00ff88; }
+    .btn.slide:hover { background:#00ff88; color:#000; }
+    #log { background:#1e242c; padding:10px; height:100px; overflow-y:auto; font-size:0.85rem; border:1px solid #2f3542; margin-top:10px; }
+    input[type="range"] { width:100px; background:#222; accent-color:#00ff88; }
+    .status-led { display:flex; gap:20px; align-items:center; }
   </style>
 </head>
 <body>
 
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+  <div class="flex" style="justify-content:space-between;">
     <h1 style="color:#ffd700; font-size:1.2rem;">
       ⚡ MASTER‑RUNTIME 
-      <span class="master-badge">sli.ready ● aktiv</span>
+      <span class="badge">sli.ready ● aktiv</span>
+      <span id="slideBadge" class="badge slide" style="display:none;">● SLIDE</span>
     </h1>
-    <span id="master-status" style="color:#7bed9f;">🌀 Zentral · eine Runtime</span>
+    <div class="status-led">
+      <span id="slideStatus" style="color:#666;">⏸ Slide aus</span>
+      <span id="masterStatus" style="color:#7bed9f;">🌀 zentral</span>
+    </div>
   </div>
 
-  <!-- ===== KERN‑UI ===== -->
+  <!-- MESH -->
   <div id="mesh"></div>
 
-  <div id="stats">
+  <!-- STATS -->
+  <div class="flex">
     <div>SCORE: <span id="score">0</span></div>
     <div>TICK: <span id="tick">0</span></div>
     <div>GEAR: <span id="gear">0</span></div>
     <div>PLUGINS: <span id="plugins">0</span></div>
   </div>
 
-  <div id="controls">
-    <input id="attackInput" placeholder="SHOCK / WAVE / LINK ...">
-    <button onclick="sendAttack()">SENDEN</button>
-    <button onclick="pauseLoop()">PAUSE</button>
-    <button onclick="stepLoop()">SCHRITT</button>
-    <button onclick="resetMesh()">RESET</button>
+  <!-- STEUERUNG + SLIDE -->
+  <div class="flex">
+    <input id="attackInput" placeholder="SHOCK / WAVE / LINK ..." style="flex:1; background:#1e242c; border:1px solid #2f3542; color:#fff; padding:6px;">
+    <button class="btn" onclick="sendAttack()">SENDEN</button>
+    <button class="btn" onclick="pauseLoop()">⏸ PAUSE</button>
+    <button class="btn" onclick="stepLoop()">⏭ SCHRITT</button>
+    <button class="btn" onclick="resetMesh()">⟲ RESET</button>
+    <button class="btn slide" id="slideToggle">🌀 SLIDE</button>
+    <span style="color:#666;font-size:9px;">Speed</span>
+    <input type="range" id="slideSpeed" min="1" max="10" value="3">
+    <span id="slideSpeedLabel" style="font-size:11px;color:#00ff88;">3×</span>
   </div>
 
-  <div id="log">▶ iki1uc · Master‑Runtime initialisiert · sli.ready aktiv</div>
+  <!-- LOG -->
+  <div id="log">▶ iki1uc · Master‑Runtime · slide‑ready aktiv</div>
 
-  <!-- ===== DREI ACHSEN LADEN (Reihenfolge: 3 → 9 → 81) ===== -->
-  <script src="3.js"></script>   <!-- Welt -->
-  <script src="9.js"></script>   <!-- Kraft -->
-  <script src="81.js"></script>  <!-- Leben -->
+  <!-- ===== DREI ACHSEN LADEN ===== -->
+  <script src="3.js"></script>
+  <script src="9.js"></script>
+  <script src="81.js"></script>
 
-  <!-- ===== MASTER‑BOOT ===== -->
+  <!-- ===== MASTER‑BOOT + SLIDE‑LOGIK ===== -->
   <script>
     (function() {
       'use strict';
 
-      // ---- Prüfe, ob sli.ready existiert (zur Info) ----
-      // Da wir im Dateisystem sind, nutzen wir einfach einen Marker.
-      // Du kannst auch eine leere Datei 'sli.ready' im selben Ordner anlegen.
-      const sliReady = true; // ← Setze dies auf false, um Multi‑Runtime zu aktivieren
-      document.getElementById('master-status').textContent = sliReady ? '🌀 Zentral · eine Runtime' : '🌐 Verteilte Runtime';
+      // ─── SLIDE‑STATE ────────────────────────────────────────────
+      let slideActive = false;
+      let slideInterval = null;
+      const slideSpeedSlider = document.getElementById('slideSpeed');
+      const slideSpeedLabel = document.getElementById('slideSpeedLabel');
+      const slideToggle = document.getElementById('slideToggle');
+      const slideBadge = document.getElementById('slideBadge');
+      const slideStatus = document.getElementById('slideStatus');
 
-      // ---- Fallback‑Hooks ----
+      // ─── SLIDE‑TOGGLE ──────────────────────────────────────────
+      function toggleSlide() {
+        slideActive = !slideActive;
+        if (slideActive) {
+          startSlide();
+          slideToggle.textContent = '⏸ SLIDE';
+          slideToggle.style.borderColor = '#ffd700';
+          slideToggle.style.color = '#ffd700';
+          slideBadge.style.display = 'inline-block';
+          slideStatus.textContent = '▶ Slide aktiv';
+          slideStatus.style.color = '#00ff88';
+          log('🌀 SLIDE aktiviert – System gleitet als Einheit');
+        } else {
+          stopSlide();
+          slideToggle.textContent = '🌀 SLIDE';
+          slideToggle.style.borderColor = '#00ff88';
+          slideToggle.style.color = '#00ff88';
+          slideBadge.style.display = 'none';
+          slideStatus.textContent = '⏸ Slide aus';
+          slideStatus.style.color = '#666';
+          log('⏸ SLIDE deaktiviert');
+        }
+      }
+
+      function startSlide() {
+        if (slideInterval) clearInterval(slideInterval);
+        const speed = parseInt(slideSpeedSlider.value, 10);
+        const delay = Math.max(200, 2000 - speed * 180); // ca. 200–1800ms
+        slideInterval = setInterval(() => {
+          // Führe einen Tick aus (wenn Mesh vorhanden)
+          if (typeof stepTick === 'function') {
+            stepTick();
+          } else if (typeof window.stepOrbit === 'function') {
+            window.stepOrbit();
+          } else {
+            // Fallback: einfach den Tick‑Zähler erhöhen (simuliert)
+            const tickEl = document.getElementById('tick');
+            if (tickEl) tickEl.textContent = parseInt(tickEl.textContent || '0') + 1;
+          }
+          // Aktualisiere Stats (optional)
+          updateStats();
+        }, delay);
+      }
+
+      function stopSlide() {
+        if (slideInterval) {
+          clearInterval(slideInterval);
+          slideInterval = null;
+        }
+      }
+
+      // ─── STATS‑UPDATE (Fallback, falls Engines es nicht tun) ───
+      function updateStats() {
+        // Wenn die Engines globale Objekte setzen, lies sie aus
+        const scoreEl = document.getElementById('score');
+        const tickEl = document.getElementById('tick');
+        const gearEl = document.getElementById('gear');
+        const pluginsEl = document.getElementById('plugins');
+        if (window.MESH) {
+          if (tickEl) tickEl.textContent = window.MESH.tick || 0;
+          if (scoreEl) scoreEl.textContent = window.MESH.score || 0;
+        }
+        if (window.PLUGIN_CORE) {
+          if (pluginsEl) pluginsEl.textContent = Object.keys(window.PLUGIN_CORE).length || 0;
+        }
+        if (window.GEAR) {
+          if (gearEl) gearEl.textContent = window.GEAR || 0;
+        }
+      }
+
+      // ─── SLIDE‑SPEED ───────────────────────────────────────────
+      slideSpeedSlider.addEventListener('input', function() {
+        const val = this.value;
+        slideSpeedLabel.textContent = val + '×';
+        if (slideActive) {
+          // Neustart des Intervalls mit neuer Geschwindigkeit
+          stopSlide();
+          startSlide();
+          log(`🌀 Slide‑Geschwindigkeit auf ${val}× gesetzt`);
+        }
+      });
+
+      // ─── BUTTONS ────────────────────────────────────────────────
+      slideToggle.addEventListener('click', toggleSlide);
+
+      // ─── EXISTIERENDE STEUERUNG (wie vorher) ──────────────────
       window.sendAttack = function() {
         const input = document.getElementById('attackInput');
         if (input && typeof processZEN === 'function') {
@@ -90,30 +176,80 @@
           window.dispatchAttack(input.value);
           input.value = '';
         } else {
-          document.getElementById('log').innerHTML += `<br>⚠️ Keine Attack‑Engine gefunden.`;
+          log('⚠️ Keine Attack‑Engine gefunden.');
         }
       };
-      window.pauseLoop = function() { if (typeof togglePause === 'function') togglePause(); };
-      window.stepLoop = function() { if (typeof stepTick === 'function') stepTick(); };
-      window.resetMesh = function() { if (typeof resetGrid === 'function') resetGrid(); };
+      window.pauseLoop = function() {
+        if (typeof togglePause === 'function') togglePause();
+        else log('⚠️ togglePause() nicht verfügbar');
+      };
+      window.stepLoop = function() {
+        if (typeof stepTick === 'function') { stepTick(); updateStats(); }
+        else log('⚠️ stepTick() nicht verfügbar');
+      };
+      window.resetMesh = function() {
+        if (typeof resetGrid === 'function') { resetGrid(); updateStats(); }
+        else log('⚠️ resetGrid() nicht verfügbar');
+      };
 
-      // ---- Startsequenz ----
-      try {
-        if (typeof initMesh === 'function') initMesh();
-        if (typeof initUI === 'function') initUI();
-        if (typeof initZEN === 'function') initZEN();
-        if (typeof startLoop === 'function') startLoop();
-        document.getElementById('log').innerHTML += `<br>▶ Alle drei Achsen aktiv · Tick‑Loop läuft.`;
-      } catch (e) {
-        document.getElementById('log').innerHTML += `<br>❌ Boot‑Fehler: ${e.message}`;
-        console.error(e);
+      // ─── LOG ────────────────────────────────────────────────────
+      function log(msg) {
+        const logBox = document.getElementById('log');
+        const time = new Date().toLocaleTimeString();
+        const entry = document.createElement('div');
+        entry.textContent = `[${time}] ${msg}`;
+        logBox.appendChild(entry);
+        logBox.scrollTop = logBox.scrollHeight;
+        while (logBox.children.length > 60) logBox.removeChild(logBox.firstChild);
+      }
+      window.log = log; // für Debug
+
+      // ─── INIT ────────────────────────────────────────────────────
+      function boot() {
+        try {
+          if (typeof initMesh === 'function') initMesh();
+          if (typeof initUI === 'function') initUI();
+          if (typeof initZEN === 'function') initZEN();
+          if (typeof startLoop === 'function') startLoop();
+          log('✅ Alle drei Achsen aktiv · Tick‑Loop läuft.');
+        } catch (e) {
+          log('❌ Boot‑Fehler: ' + e.message);
+          console.error(e);
+        }
+        updateStats();
+        // Optional: Prüfe, ob slide.ready existiert (z.B. per fetch)
+        // Hier als Platzhalter: du kannst eine Datei slide.ready im selben Ordner anlegen
+        // und diese Abfrage nutzen, um Slide automatisch zu starten.
+        // Da wir im Browser sind, nutzen wir localStorage als einfachen Marker.
+        if (localStorage.getItem('slide.ready') === 'true') {
+          log('📄 slide.ready gefunden → Slide wird automatisch aktiviert');
+          toggleSlide();
+        }
+        // Tastatur‑Shortcuts
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 's' || e.key === 'S') { e.preventDefault(); toggleSlide(); }
+          if (e.key === ' ') { e.preventDefault(); window.pauseLoop(); }
+        });
       }
 
-      // ---- Aktualisiere Stats (falls die Engines sie nicht selbst tun) ----
-      setInterval(() => {
-        // Wenn die Engines globale Variablen setzen, könntest du sie hier auslesen.
-        // Beispiel: document.getElementById('tick').textContent = window.MESH?.tick || 0;
-      }, 500);
+      // Starte, sobald DOM bereit
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot);
+      } else {
+        boot();
+      }
+
+      // Stats regelmäßig aktualisieren (für Live‑Anzeige)
+      setInterval(updateStats, 500);
+
+      // ─── SLIDE.READY als localStorage‑Schalter ────────────────
+      // Du kannst ihn setzen mit: localStorage.setItem('slide.ready', 'true')
+      // und löschen mit: localStorage.removeItem('slide.ready')
+      // Oder du legst eine leere Datei slide.ready im Ordner ab und liest sie per fetch
+      // (das ist aber aufwändiger; localStorage ist einfacher).
+
+      log('💡 Drücke [S] für Slide‑Toggle, [Leertaste] für Pause');
+      log('🌀 System bereit – viel Freude mit der Bewegung als Einheit!');
 
     })();
   </script>
