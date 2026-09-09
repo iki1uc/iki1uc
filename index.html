@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IKI1UC · ZAUBER 6 · ANIME · HISTORY CHESS · 3hit90</title>
+  <title>IKI1UC · 3 Axiome · Ursache · Wirkung · Kreislauf</title>
   <style>
-    /* ===== KOMBINIERTE STILE aus beiden Dateien ===== */
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
       background: #0a0a12;
@@ -19,8 +18,7 @@
       align-items: center;
     }
     .container {
-      max-width: 1500px;
-      width: 100%;
+      max-width: 1500px; width: 100%;
       background: rgba(10,10,20,0.6);
       border: 1px solid rgba(255,255,255,0.03);
       border-radius: 20px;
@@ -198,22 +196,66 @@
     }
     .badge.info { background:#0a1a2a; color:#66ccff; }
 
-    /* ZAUBER 6 PANEL */
-    .zauber-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 6px;
-      margin-top: 4px;
+    .matrix-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 6px 0;
+      font-size: 12px;
+      color: #66ccff;
+      line-height: 1.8;
     }
-    .zauber-item {
-      background: rgba(0,0,0,0.3);
-      padding: 4px 6px;
-      border-radius: 4px;
-      font-size: 8px;
+    .matrix-visual .row {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      border: none;
+      padding: 2px 0;
+    }
+    .matrix-visual .node {
+      background: #0a0a0a;
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid #3d5a70;
+      color: #ffd700;
+      font-weight: bold;
+      min-width: 40px;
+      text-align: center;
+    }
+    .matrix-visual .arrow { color: #0ff; font-size: 16px; }
+
+    .football-input {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin: 4px 0;
+      font-size: 9px;
+    }
+    .football-input label { color: #5a7a8a; width: 60px; }
+    .football-input input {
+      background: #0a0a0a;
       border: 1px solid #1a1a2a;
+      color: #0f0;
+      padding: 2px 4px;
+      width: 50px;
+      font-family: monospace;
+      font-size: 9px;
+      border-radius: 3px;
     }
-    .zauber-item .label { color: #5a7a8a; }
-    .zauber-item .value { font-weight: bold; color: #ffd700; }
+    .football-input .result { color: #ffd700; font-weight: bold; margin-left: 8px; }
+
+    .clock-display {
+      display: flex;
+      justify-content: space-around;
+      font-size: 9px;
+      background: #0a0a0a;
+      padding: 4px;
+      border-radius: 4px;
+      border: 1px solid #1a1a2a;
+      margin: 4px 0;
+    }
+    .clock-display .time-type { color: #5a7a8a; }
+    .clock-display .time-value { color: #ffd700; font-weight: bold; }
 
     .energy-bar {
       background: #0a0a0a;
@@ -243,7 +285,7 @@
       border-top: 1px solid rgba(255,255,255,0.01);
       padding-top: 10px;
     }
-    .footer span { color: #ffd700; opacity: 0.3; }
+    .footer span { color: #ffd700; opacity:0.3; }
     .footer a { color: #66ccff; text-decoration: none; }
     .footer a:hover { text-decoration: underline; }
 
@@ -256,37 +298,17 @@
 <body>
 <div class="container">
 
-  <h1>✦ ZAUBER 6 · ANIME · HISTORY CHESS · 3hit90 ✦</h1>
+  <h1>🧠 IKI1UC · 3 Axiome · Ursache · Wirkung · Kreislauf</h1>
   <h1 style="font-size:11px;margin-top:-2px;background:none;-webkit-text-fill-color:#3d5a70;color:#3d5a70;font-weight:400">
     81‑SLOT · GEO‑MATRIX · FUSION · 3hit90 · 90‑TAGE‑KOMPRESSION
   </h1>
 
-  <!-- ===== ZAUBER 6 PANEL (oben) ===== -->
-  <div class="panel" style="border-color:rgba(255,215,0,0.2);">
-    <h3 style="color:#ffd700;">🧙 ZAUBER 6 · WÄHRUNGS‑STATIONEN</h3>
-    <div class="zauber-grid" id="zauberGrid">
-      <div class="zauber-item"><span class="label">📦 ROM</span> <span class="value" id="z-rom">0</span></div>
-      <div class="zauber-item"><span class="label">🪞 2me</span> <span class="value" id="z-2me">aktiv</span></div>
-      <div class="zauber-item"><span class="label">🌀 ZAM</span> <span class="value" id="z-zam">0</span></div>
-      <div class="zauber-item"><span class="label">⚡ Vitality</span> <span class="value" id="z-vital">0</span></div>
-      <div class="zauber-item"><span class="label">🔷 4TEL</span> <span class="value" id="z-4tel">0</span></div>
-      <div class="zauber-item"><span class="label">❓ Mystery</span> <span class="value" id="z-mystery">—</span></div>
-    </div>
-    <div class="flex" style="justify-content:space-between;margin-top:4px;">
-      <span style="font-size:8px;color:#5a7a8a;">Magische 6: <span id="z-mag6" style="color:#ffd700;">94</span></span>
-      <span style="font-size:8px;color:#5a7a8a;">Königin: <span id="z-queen" style="color:#ff88ff;">aktiv</span></span>
-      <span style="font-size:8px;color:#5a7a8a;">Partner: <span id="z-partner" style="color:#66ccff;">verbunden</span></span>
-      <button id="btnPartnerSync" style="background:transparent;border:1px solid #ffd700;color:#ffd700;padding:2px 8px;border-radius:30px;font-size:8px;">🔄 Sync</button>
-    </div>
-  </div>
-
-  <!-- ===== HAUPTGRID ===== -->
   <div class="grid3">
 
-    <!-- LINKES PANEL -->
+    <!-- LINKES PANEL: URACHE (Input) -->
     <div>
       <div class="panel">
-        <h3>🎯 STEUERUNG</h3>
+        <h3>⚡ AXIOM 1 · URACHE (Input)</h3>
         <div class="flex">
           <button class="gold" id="btnGeneral">⚡ GENERAL RUN</button>
           <button id="btnReset">⟲ RESET</button>
@@ -296,12 +318,10 @@
           <button id="btnLoop">♾ LOOP ALL</button>
         </div>
       </div>
-
       <div class="panel">
         <h3>🌀 9 ACHSEN · d e i n o r s u w</h3>
         <div class="axle-grid" id="axleGrid"></div>
       </div>
-
       <div class="panel">
         <h3>🔷 PUMP · STATIONEN</h3>
         <div class="flex" style="font-size:8px;color:#5a7a8a;gap:2px">
@@ -312,7 +332,6 @@
           <span class="badge info">KANAL</span>
         </div>
       </div>
-
       <div class="panel">
         <h3>📊 STATUS</h3>
         <div class="status-row">
@@ -322,7 +341,6 @@
           <span>PREDICT: <span id="predictVal" style="color:#ffd700">IDLE</span></span>
         </div>
       </div>
-
       <div class="panel">
         <h3>🧠 CPU PREDICTIVE · SPRUNG</h3>
         <div class="flex" style="font-size:8px;gap:6px">
@@ -331,17 +349,16 @@
           <span>SPRUNG: <span id="cpuJump" style="color:#ff6b8a">0</span></span>
         </div>
       </div>
-
       <div class="panel">
         <h3>📜 CONSOLE · LOG</h3>
         <div class="console" id="consoleLog">⏳ system initialisiert...</div>
       </div>
     </div>
 
-    <!-- MITTLERES PANEL: Schach + Atmo + Saison + Matrix -->
+    <!-- MITTLERES PANEL: WIRKUNG (Output) -->
     <div>
       <div class="panel">
-        <h3>♟️ CHESS · ATMOSPHERIC · 81‑SLOT · WASSER</h3>
+        <h3>♟️ WIRKUNG · Orbit · Schach · Atmo</h3>
         <div class="board-wrap" id="boardWrap">
           <canvas id="atmoCanvas"></canvas>
           <canvas id="chessCanvas"></canvas>
@@ -362,7 +379,6 @@
           <div style="color:#445555;">⚡ <span id="agentStatus">bereit</span></div>
         </div>
       </div>
-
       <div class="panel">
         <h3>📊 PREFETCH · PREDICT · CACHE</h3>
         <div class="metric-grid">
@@ -371,7 +387,6 @@
           <div class="metric"><div class="label">💾 CACHE</div><div class="value info" id="cacheCount">0</div></div>
         </div>
       </div>
-
       <div class="panel">
         <h3>⚽ SAISON · CLOCK</h3>
         <div class="flex" style="justify-content:space-between;">
@@ -396,10 +411,10 @@
       </div>
     </div>
 
-    <!-- RECHTES PANEL: Mystery, Matrix, Fußball, Slienergie, Steering -->
+    <!-- RECHTES PANEL: KREISLAUF (Feedback) -->
     <div>
       <div class="panel">
-        <h3>❓ MYSTERY ACHSEN · Q / D / F</h3>
+        <h3>❓ AXIOM 3 · KREISLAUF (Feedback)</h3>
         <div class="flex" style="font-size:8px;gap:6px">
           <span>Q: <span id="qVal" style="color:#66ccff">0</span></span>
           <span>D: <span id="dVal" style="color:#6bffa9">0</span></span>
@@ -410,42 +425,22 @@
           <span>TMP: <span id="tmpVal" style="color:#ffd700">128</span></span>
         </div>
       </div>
-
       <div class="panel">
         <h3>🔄 3×2 FENSTER · LIVE</h3>
         <div id="liveWindow" style="display:grid;grid-template-columns:1fr 1fr;gap:2px;"></div>
       </div>
-
       <div class="panel">
         <h3>🧮 3hit90 · MATRIX (81 → 243 → 729)</h3>
         <div class="matrix-visual" id="matrixVisual">
           <div class="row">
-            <span class="node" id="m81">81</span>
-            <span class="arrow">→</span>
-            <span class="node" id="m243">243</span>
-            <span class="arrow">→</span>
+            <span class="node" id="m81">81</span><span class="arrow">→</span>
+            <span class="node" id="m243">243</span><span class="arrow">→</span>
             <span class="node" id="m729">729</span>
           </div>
           <div class="row" style="font-size:10px;color:#3d5a70;">
-            <span>ATOM</span>
-            <span style="width:40px;"></span>
-            <span>UNI</span>
-            <span style="width:40px;"></span>
+            <span>ATOM</span><span style="width:40px;"></span>
+            <span>UNI</span><span style="width:40px;"></span>
             <span>RUN</span>
-          </div>
-          <div class="row" style="font-size:10px;color:#ff88ff;">
-            <span>◉</span>
-            <span class="arrow">↗ ↘</span>
-            <span>◎</span>
-            <span class="arrow">↗ ↘</span>
-            <span>◆</span>
-          </div>
-          <div class="row" style="font-size:8px;color:#5a7a8a;">
-            <span>3</span>
-            <span class="arrow">↘ ↗</span>
-            <span>9</span>
-            <span class="arrow">↘ ↗</span>
-            <span>27</span>
           </div>
         </div>
         <div class="flex">
@@ -456,7 +451,6 @@
           3hit90‑Formel: <span id="formulaDisplay" style="color:#ffd700;">3 × (Eingabe ÷ 6) × 90</span>
         </div>
       </div>
-
       <div class="panel">
         <h3>⚽ Fußball → ♟️ Schach</h3>
         <div class="football-input"><label>Tore</label><input type="number" id="goalsInput" value="2" min="0" max="10"><span class="result" id="goalsResult">→ 0</span></div>
@@ -468,7 +462,6 @@
           <button id="btnResetFootball" class="sec">⟲ Reset</button>
         </div>
       </div>
-
       <div class="panel">
         <h3>⚡ SLIENERGIE · FLUSS</h3>
         <div class="energy-bar"><div class="fill" id="sliEnergyBar">0%</div></div>
@@ -477,7 +470,6 @@
           <button id="btnResetEnergy" class="sec">⟲ Reset</button>
         </div>
       </div>
-
       <div class="panel">
         <h3>🎛️ TÜFTEL · STEERING</h3>
         <div style="display:flex;flex-direction:column;gap:4px;font-size:8px;">
@@ -504,49 +496,211 @@
           </div>
         </div>
       </div>
-
       <div class="panel">
         <h3>📈 MASSNAHME · ERGEBNISSE</h3>
         <pre id="resultDisplay" style="background:rgba(0,0,0,0.4);padding:8px;border-radius:6px;font-size:9px;line-height:1.3;color:#8ab4c8;max-height:100px;overflow:auto;">⏳ berechne...</pre>
       </div>
     </div>
+
   </div>
 
   <div class="footer">
-    <span>♟️</span> ZAUBER 6 · ANIME · HISTORY CHESS · 3hit90 · MATRIX · <span>wieimmer4u</span> ·
+    <span>♟️</span> AXIOM · URACHE · WIRKUNG · KREISLAUF · <span>wieimmer4u</span> ·
     <a href="https://github.com/iki1uc/ANIME" target="_blank">GitHub</a>
   </div>
 </div>
 
 <script>
-// ================================================================
-//  KERNEL · ALLE MODULE (NUR EXISTIERENDE IMPORTE)
-//  Da wir die echten Module nicht als ES-Module haben, simulieren
-//  wir sie lokal – aber mit den korrekten Werten aus deiner Struktur.
-// ================================================================
+"use strict";
 
-// ---- 1. ZAUBER 6 KONSTANTEN ----
-const ZAUBER = {
-  alpha: 3,
-  beta: 9,
-  gamma: 81,
-  delta: 1,
-  get magic6() { return this.alpha + this.beta + this.gamma + this.delta; }, // 94
-  hyper: 81 * 756,   // 61236
-  rf: 61236 / 27,    // 2268
-  orbit: 360
+// ================================================================
+// 0. SIMULIERTE IMPORTS (weil echte Dateien fehlen)
+// ================================================================
+const kernel = {
+  state: {},
+  set(key, val) { this.state[key] = val; },
+  get(key) { return this.state[key]; }
+};
+const MODULES = {
+  root: { label: 'ROOT', desc: 'BRAIN-Startzustand' },
+  core: { label: 'CORE', desc: 'Kernel · Axiom · Vec · NC-Suite' },
+  hdf: { label: 'HDF', desc: 'ROM-Speicher d/e/i/n/o/r/s/u/w' },
+  boerse: { label: 'BOERSE', file: '../BOERSE/index.html', desc: 'Börsen-Daten-Stage' },
+  dom: { label: 'DOM', file: '../DOM/index.html', desc: 'Dom-Struktur / NC-Raum' },
+  eos: { label: 'EOS', file: '../EOS/index.html', desc: 'EOS-Modul' },
+  evo: { label: 'EVO', file: '../EVO/index.html', desc: 'Evolution / Axiom-Map' },
+  markt: { label: 'MARKT', file: '../MARKT/index.html', desc: 'Marktsystem' },
+  respo: { label: 'RESPO', file: '../respo/index.html', desc: '9×9-Respo-Mesh, 81 Slots' },
+  tool48: { label: 'TOOL48', file: '../tool48/index.html', desc: 'Werkzeug 48' },
+  breite: { label: 'BREITE', file: null, desc: 'Achse Breite (X)' },
+  tiefe: { label: 'TIEFE', file: null, desc: 'Achse Tiefe (Z)' },
+  hoch: { label: 'HOCH', file: null, desc: 'Achse Höhe (Y)' }
 };
 
-// ---- 2. SIMULIERTE MODULE (weil sie nicht als echte ES-Module vorliegen) ----
-const SLIDE_SPRUNG_READY = (LAGE) => ({ ...LAGE, slide:3, sprung:9, ready:81, modi:'slide.sprung.ready' });
-const BRIDGE_MULTI_READY = (LAGE) => ({ ...LAGE, bridge:27, multi:756, ready:'◎', modi:'bridge.multi.ready' });
-const VITALITY = (LAGE) => ({ ...LAGE, vitality: (LAGE.vitality||0)+1, modi:'vitality' });
-const IO_REVERSE = () => ({ in:3, rev:9, out:81, modi:'io.reverse' });
-const OI_REVERSE = () => ({ out:81, rev:9, in:3, modi:'oi.reverse' });
-const KLICK_ZAM = (LAGE) => ({ ...LAGE, orbit:360, impulse:3, modi:'KlicK.ZaM' });
-const ZAM_KLICK = (LAGE) => ({ ...LAGE, mag6: ZAUBER.magic6, ui:'magische6', modi:'ZaM.KlicK' });
+// ================================================================
+// 1. UNO (3hit90-Matrix)
+// ================================================================
+const UNO = {
+  base: 3,
+  levels: { atom: 81, uni: 243, run: 729 },
+  hitFormula(input) {
+    const hits = Math.floor(input / 6);
+    return 3 * hits * 90;
+  },
+  atomLevel(input) {
+    const f = this.hitFormula(input);
+    return { level: 81, value: f * 81, mode: "ATOM" };
+  },
+  uniLevel(input) {
+    const f = this.hitFormula(input);
+    return { level: 243, value: f * 243, mode: "UNI.spier" };
+  },
+  runLevel(input) {
+    const f = this.hitFormula(input);
+    return { level: 729, value: f * 729, mode: "RUN" };
+  },
+  fullMatrix(input) {
+    return {
+      atom: this.atomLevel(input),
+      uni: this.uniLevel(input),
+      run: this.runLevel(input)
+    };
+  }
+};
 
-// ---- 3. ENGINE (aus der großen HTML) ----
+// ================================================================
+// 2. ATMO-BOARD (81-Slot)
+// ================================================================
+class AtmoBoard {
+  constructor(canvas, boardSize = 8) {
+    this.canvas = canvas;
+    this.ctx = canvas.getContext('2d');
+    this.boardSize = boardSize;
+    this.cellSize = canvas.width / boardSize;
+    this.angle = 0;
+    this.particles = [];
+    this.lines = [];
+    this.slots = [];
+    this.mood = 'anime';
+    this.running = true;
+    this.initSlots();
+    this.initLines();
+  }
+  initSlots() {
+    this.slots = [];
+    for (let i = 0; i < 81; i++) {
+      this.slots.push({ value: Math.sin(i * 0.2), pulse: 0, drift: 0, angle: 0 });
+    }
+  }
+  updateSlots(time) {
+    for (let i = 0; i < 81; i++) {
+      const s = this.slots[i];
+      s.value = Math.sin(i * 0.2 + time * 0.001);
+      s.pulse = Math.sin(time / 120 + i * 0.1);
+      s.drift = Math.cos(time / 240 + i * 0.05);
+      s.angle = (time / 10 + i * 4) % 360;
+    }
+  }
+  initLines() {
+    this.lines = [];
+    for (let i = 0; i < 25; i++) {
+      const start = { x: Math.random() * this.canvas.width, y: Math.random() * this.canvas.height };
+      const end = { x: Math.random() * this.canvas.width, y: Math.random() * this.canvas.height };
+      this.lines.push({
+        start, end,
+        progress: Math.random(),
+        speed: 0.002 + Math.random() * 0.008,
+        width: 0.5 + Math.random() * 2.5,
+        color: `rgba(100,220,255,${0.05 + Math.random() * 0.2})`
+      });
+    }
+  }
+  setMood(mood) { this.mood = mood; }
+  resize(width, height) {
+    this.canvas.width = width;
+    this.canvas.height = height;
+    this.cellSize = width / this.boardSize;
+    this.initLines();
+  }
+  draw() {
+    const ctx = this.ctx, w = this.canvas.width, h = this.canvas.height, cs = this.cellSize, t = Date.now();
+    this.updateSlots(t);
+    ctx.fillStyle = `rgba(0,10,30,${0.05 + 0.08 * Math.sin(t/500)})`;
+    ctx.fillRect(0,0,w,h);
+    for (const line of this.lines) {
+      const p = (line.progress + t * line.speed * 0.001) % 1;
+      const waveY = Math.sin(p * Math.PI * 4 + t * 0.002) * 20;
+      const x1 = line.start.x + (line.end.x - line.start.x) * p;
+      const y1 = line.start.y + (line.end.y - line.start.y) * p + waveY;
+      const x2 = line.start.x + (line.end.x - line.start.x) * ((p + 0.15) % 1);
+      const y2 = line.start.y + (line.end.y - line.start.y) * ((p + 0.15) % 1) + Math.sin((p + 0.15) * Math.PI * 4 + t * 0.002) * 20;
+      ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
+      ctx.strokeStyle = line.color; ctx.lineWidth = line.width; ctx.stroke();
+    }
+    for (let r=0; r<this.boardSize; r++) {
+      for (let c=0; c<this.boardSize; c++) {
+        const idx = r*this.boardSize+c;
+        const slot = this.slots[idx] || { value:0, pulse:0, drift:0, angle:0 };
+        const x = c*cs, y = r*cs;
+        const val = slot.value*0.5+0.5, pulse = slot.pulse*0.3+0.7;
+        const hw = Math.sin(x*0.05 + t*0.001)*0.15+0.85;
+        const rCol = Math.floor(20 + val*60 + pulse*30*hw);
+        const gCol = Math.floor(80 + val*100 + pulse*50*hw);
+        const bCol = Math.floor(180 + val*50 + pulse*30*hw);
+        ctx.fillStyle = `rgba(${rCol},${gCol},${bCol},0.12)`;
+        ctx.fillRect(x,y,cs,cs);
+        const bp = 0.3 + 0.7 * Math.sin(t/300 + idx*0.1 + x*0.02);
+        ctx.strokeStyle = `rgba(${rCol+60},${gCol+60},${bCol+60},${0.05+0.1*bp})`;
+        ctx.lineWidth = 0.5 + bp*0.5; ctx.strokeRect(x,y,cs,cs);
+        const angleRad = slot.angle * Math.PI / 180;
+        const dotX = x + cs/2 + Math.cos(angleRad)*cs*0.3;
+        const dotY = y + cs/2 + Math.sin(angleRad)*cs*0.3 + Math.sin(t*0.002 + r*0.5)*2;
+        ctx.fillStyle = `rgba(255,255,255,${0.05+0.1*bp})`;
+        ctx.beginPath(); ctx.arc(dotX,dotY,1.5+bp,0,Math.PI*2); ctx.fill();
+      }
+    }
+    if (Math.random() > 0.94) {
+      const idx = Math.floor(Math.random()*this.boardSize*this.boardSize);
+      const slot = this.slots[idx] || { value:0, pulse:0, drift:0 };
+      const r = Math.floor(idx/this.boardSize), c = idx%this.boardSize;
+      const x = c*cs + cs/2, y = r*cs + cs/2 + Math.sin(t*0.003 + r)*5;
+      const angle = Math.random()*Math.PI*2, speed = 0.3+Math.random()*1.5;
+      this.particles.push({
+        x,y,
+        vx: Math.cos(angle)*speed + slot.drift*0.3,
+        vy: Math.sin(angle)*speed + Math.sin(t*0.002+idx)*0.3,
+        life:1,
+        size:1+Math.random()*3,
+        color: `rgba(${120+slot.value*60},${200+slot.pulse*40},255,${0.2+0.3*slot.pulse})`
+      });
+    }
+    this.particles = this.particles.filter(p => {
+      p.x += p.vx; p.y += p.vy; p.life -= 0.003;
+      if (p.life <= 0) return false;
+      ctx.fillStyle = p.color; ctx.globalAlpha = p.life;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.size*p.life,0,Math.PI*2); ctx.fill();
+      ctx.globalAlpha = 1;
+      return true;
+    });
+    const used = this.boardSize*this.boardSize;
+    const usedSlots = this.slots.slice(0, used);
+    const ready = usedSlots.filter(s => s.value >= -0.5 && s.value <= 0.5).length;
+    const errors = used - ready;
+    ctx.fillStyle = 'rgba(0,0,0,0.3)'; ctx.fillRect(6,6,110,32);
+    ctx.fillStyle = ready === used ? '#6bffa9' : '#ffd700';
+    ctx.font = '9px monospace'; ctx.textAlign='left'; ctx.textBaseline='top';
+    ctx.fillText(`READY: ${ready}/${used}`, 10, 9);
+    ctx.fillStyle = errors > 0 ? '#ff6b8a' : '#6bffa9';
+    ctx.fillText(`ERRORS: ${errors}`, 10, 22);
+  }
+  start() { this.running = true; this.loop(); }
+  loop() { if (!this.running) return; this.draw(); requestAnimationFrame(()=>this.loop()); }
+  stop() { this.running = false; }
+}
+
+// ================================================================
+// 3. ENGINE (Ursache & Wirkung)
+// ================================================================
 const engine = {
   state: {
     score:1000, pump:0, quote:0.5, predict:'IDLE',
@@ -596,7 +750,22 @@ const engine = {
     s.prefetchCount++;
     if (s.tmp>0) s.cacheCount++;
     this.render();
-    this.updateZauber();
+    this.syncChess();
+  },
+
+  syncChess() {
+    const active = this.axles.filter(a=>a.active).length;
+    const s = this.state;
+    const strength = Math.min(5, 1 + Math.floor(active/2) + Math.floor(s.pump/25));
+    document.getElementById('strengthSlider').value = strength;
+    document.getElementById('strengthDisplay').textContent = strength;
+    const style = s.cpuBias === 'FORWARD' ? 'aggressive' : (s.quote>0.5 ? 'tactical' : 'random');
+    document.getElementById('styleSelect').value = style;
+    const speed = Math.max(200, 1500 - s.pump * 10);
+    document.getElementById('speedSlider').value = speed;
+    document.getElementById('speedDisplay').textContent = speed+'ms';
+    const moodMap = { 'ACTIVE':'neon', 'IDLE':'cool' };
+    if (window.atmo) atmo.setMood(moodMap[s.predict] || 'anime');
   },
 
   render() {
@@ -749,52 +918,148 @@ PREFETCH:${s.prefetchCount}  PREDICT:${s.predictCount}  CACHE:${s.cacheCount}`;
   },
 
   init() {
-    this.log('⭐ ZAUBER 6 · ANIME · CHESS · 3hit90 · MATRIX','ok');
-    this.log('📊 Pipeline 3+6 aktiv · Magische 6 = '+ZAUBER.magic6,'info');
+    this.log('⭐ AXIOM · URACHE · WIRKUNG · KREISLAUF','ok');
+    this.log('📊 vereinheitlichte sync()-Logik für alle Aktionen','info');
     this.render();
     setInterval(() => { if (this.axles.some(a=>a.active)) this.pumpCycle(); }, 8000);
-  },
-
-  // ---- ZAUBER 6 UPDATE ----
-  updateZauber() {
-    const active = this.axles.filter(a=>a.active).length;
-    document.getElementById('z-rom').textContent = active > 0 ? active : '0';
-    document.getElementById('z-2me').textContent = active > 0 ? 'aktiv' : 'inaktiv';
-    document.getElementById('z-zam').textContent = ZAUBER.magic6;
-    document.getElementById('z-vital').textContent = (ZAUBER.magic6 * 0.81).toFixed(1);
-    document.getElementById('z-4tel').textContent = ZAUBER.hyper;
-    document.getElementById('z-mystery').textContent = active > 0 ? `⚡ ${active}‑fach` : '—';
-    document.getElementById('z-mag6').textContent = ZAUBER.magic6;
   }
 };
 
-// ---- 4. SCHACHLOGIK (nur minimale Simulation für Buttons) ----
+// ================================================================
+// 4. SCHACHLOGIK (Queen fixed)
+// ================================================================
+function inBounds(r,c){ return r>=0 && r<8 && c>=0 && c<8; }
+function getPseudoLegalMoves(board, r, c, pieceOverride) {
+  const piece = pieceOverride || board[r][c];
+  if (!piece) return [];
+  const moves = [];
+  const enemy = piece.color === 'white' ? 'black' : 'white';
+  const add = (nr,nc) => {
+    if (inBounds(nr,nc)) {
+      const target = board[nr][nc];
+      if (!target || target.color === enemy) moves.push({r:nr,c:nc});
+    }
+  };
+  switch(piece.type) {
+    case 'pawn': {
+      const dir = piece.color==='white'?-1:1;
+      if (inBounds(r+dir,c) && !board[r+dir][c]) moves.push({r:r+dir,c});
+      if ((piece.color==='white'&&r===6)||(piece.color==='black'&&r===1)) {
+        if (!board[r+dir][c] && !board[r+2*dir][c]) moves.push({r:r+2*dir,c});
+      }
+      for (const dc of [-1,1]) {
+        const nr=r+dir, nc=c+dc;
+        if (inBounds(nr,nc) && board[nr][nc] && board[nr][nc].color===enemy)
+          moves.push({r:nr,c:nc});
+      }
+      break;
+    }
+    case 'rook': {
+      for (const [dr,dc] of [[-1,0],[1,0],[0,-1],[0,1]]) {
+        for (let i=1; i<8; i++) {
+          const nr=r+dr*i, nc=c+dc*i;
+          if (!inBounds(nr,nc)) break;
+          const target=board[nr][nc];
+          if (!target) moves.push({r:nr,c:nc});
+          else { if (target.color===enemy) moves.push({r:nr,c:nc}); break; }
+        }
+      }
+      break;
+    }
+    case 'knight': {
+      for (const [dr,dc] of [[1,2],[2,1],[-1,2],[-2,1],[1,-2],[2,-1],[-1,-2],[-2,-1]])
+        add(r+dr,c+dc);
+      break;
+    }
+    case 'bishop': {
+      for (const [dr,dc] of [[1,1],[1,-1],[-1,1],[-1,-1]]) {
+        for (let i=1; i<8; i++) {
+          const nr=r+dr*i, nc=c+dc*i;
+          if (!inBounds(nr,nc)) break;
+          const target=board[nr][nc];
+          if (!target) moves.push({r:nr,c:nc});
+          else { if (target.color===enemy) moves.push({r:nr,c:nc}); break; }
+        }
+      }
+      break;
+    }
+    case 'queen': {
+      const rookMoves = getPseudoLegalMoves(board, r, c, {type:'rook',color:piece.color});
+      const bishopMoves = getPseudoLegalMoves(board, r, c, {type:'bishop',color:piece.color});
+      return [...rookMoves, ...bishopMoves];
+    }
+    case 'king': {
+      for (const [dr,dc] of [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]])
+        add(r+dr,c+dc);
+      break;
+    }
+  }
+  return moves;
+}
+function selectMoveByStyle(board, moves, style, strength, movingColor) {
+  if (moves.length===0) return null;
+  if (style==='random') return moves[Math.floor(Math.random()*moves.length)];
+  const scored = moves.map(m => {
+    let score = 0;
+    const target = board[m.r][m.c];
+    if (target && target.color !== movingColor) score += 10;
+    const centerDist = Math.abs(m.r-3.5) + Math.abs(m.c-3.5);
+    score += (7-centerDist)*0.5;
+    if (style==='aggressive') score += Math.random()*5;
+    if (style==='defensive') score += (movingColor==='white' ? m.r : 7-m.r)*0.5;
+    if (style==='tactical') score += Math.random()*8 + (moves.length*0.1);
+    return {...m, score};
+  });
+  scored.sort((a,b)=>b.score-a.score);
+  const topN = Math.min(moves.length, Math.ceil(1+(5-strength)*0.5));
+  return scored[Math.floor(Math.random()*topN)];
+}
+
+// ================================================================
+// 5. SCHACHBRETT & RENDER
+// ================================================================
 let board = [];
 let currentColor = 'white';
+let currentGameMoves = [];
 let moveIndex = 0;
+let currentGame = null;
 let autoMode = false;
 let moveSpeed = 700;
+let animations = [];
 
 const canvas = document.getElementById('chessCanvas');
 const ctx = canvas.getContext('2d');
+const atmoCanvas = document.getElementById('atmoCanvas');
+const atmo = new AtmoBoard(atmoCanvas, 8);
+window.atmo = atmo;
 
 function initBoard() {
+  const backRankW = ['♖','♘','♗','♕','♔','♗','♘','♖'];
+  const backRankB = ['♜','♞','♝','♛','♚','♝','♞','♜'];
+  const types = ['rook','knight','bishop','queen','king','bishop','knight','rook'];
   board = [];
   for (let r=0; r<8; r++) {
     const row = [];
     for (let c=0; c<8; c++) {
       let piece=null, color=null, type=null;
-      if (r===0) { const back = ['♖','♘','♗','♕','♔','♗','♘','♖']; piece=back[c]; color='white'; type=['rook','knight','bishop','queen','king','bishop','knight','rook'][c]; }
+      if (r===0) { piece=backRankW[c]; color='white'; type=types[c]; }
       else if (r===1) { piece='♟'; color='white'; type='pawn'; }
       else if (r===6) { piece='♟'; color='black'; type='pawn'; }
-      else if (r===7) { const back = ['♜','♞','♝','♛','♚','♝','♞','♜']; piece=back[c]; color='black'; type=['rook','knight','bishop','queen','king','bishop','knight','rook'][c]; }
+      else if (r===7) { piece=backRankB[c]; color='black'; type=types[c]; }
       row.push({ piece, color, type });
     }
     board.push(row);
   }
   currentColor = 'white';
 }
-
+function resizeCanvases() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const s = Math.min(rect.width, rect.height, 320);
+  canvas.width = s; canvas.height = s;
+  atmo.resize(s, s);
+  renderBoard();
+}
+window.addEventListener('resize', resizeCanvases);
 function renderBoard() {
   const w=canvas.width, h=canvas.height, cs=w/8;
   ctx.clearRect(0,0,w,h);
@@ -804,128 +1069,323 @@ function renderBoard() {
       const p = board[r][c];
       if (p && p.piece) {
         ctx.font = `${cs*0.6}px 'Segoe UI','Arial Unicode MS',sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.shadowColor = 'rgba(100,200,180,0.02)'; ctx.shadowBlur = 6;
         ctx.fillStyle = p.color==='white'?'#ddeeee':'#1a2a2a';
         ctx.fillText(p.piece, x+cs/2, y+cs/2+2);
+        ctx.shadowBlur = 0;
       }
     }
   }
 }
+function animateMove(from, to, piece, callback) {
+  const cs = canvas.width/8;
+  const startX = from.c*cs + cs/2, startY = from.r*cs + cs/2;
+  const endX = to.c*cs + cs/2, endY = to.r*cs + cs/2;
+  const startTime = performance.now();
+  for (let i=0; i<15; i++) {
+    const angle = Math.random()*Math.PI*2, speed = 0.5+Math.random()*2;
+    atmo.particles.push({
+      x: (startX+endX)/2, y: (startY+endY)/2,
+      vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed,
+      life:1, size:2+Math.random()*3,
+      color: `rgba(150,220,255,${0.3+Math.random()*0.5})`
+    });
+  }
+  animations.push({ piece, from, to, startX,startY,endX,endY, startTime, duration:moveSpeed, callback });
+  if (animations.length===1) renderLoop();
+}
+function renderLoop() {
+  const now = performance.now();
+  const cs = canvas.width/8;
+  renderBoard();
+  animations = animations.filter(anim => {
+    const p = Math.min((now-anim.startTime)/anim.duration, 1);
+    const x = anim.startX + (anim.endX-anim.startX)*p;
+    const y = anim.startY + (anim.endY-anim.startY)*p;
+    ctx.font = `${cs*0.6}px 'Segoe UI','Arial Unicode MS',sans-serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.shadowColor = 'rgba(255,215,0,0.3)'; ctx.shadowBlur = 16;
+    ctx.fillStyle = anim.piece.color==='white'?'#ddeeee':'#1a2a2a';
+    ctx.fillText(anim.piece.piece, x, y+2);
+    ctx.shadowBlur = 0;
+    if (p>=1) {
+      board[anim.to.r][anim.to.c] = anim.piece;
+      board[anim.from.r][anim.from.c] = { piece:null, color:null, type:null };
+      if (anim.callback) anim.callback();
+      return false;
+    }
+    return true;
+  });
+  if (animations.length>0) requestAnimationFrame(renderLoop);
+}
 
-function resizeCanvases() {
-  const rect = canvas.parentElement.getBoundingClientRect();
-  const s = Math.min(rect.width, rect.height, 320);
-  canvas.width = s;
-  canvas.height = s;
+function generateGames(n) {
+  const g = [];
+  const names = ['Unsterbliche','Opernpartie','Evergreen','Match des Jahrhunderts','Kasparov vs. Deep Blue','Unsterbliche Remis','Schäferzug','Läufer-Coup','Pferde-Tour','Opfer von Anderssen','Remis-Partie','Königsangriff','Damen-Oper','Turm-Sprung','Bauern-Welle','Verteidigung von Berlin'];
+  const emotions = ['😱','🎭','🌿','❄️','🤖','⚖️','🐴','♝','🐑','💥'];
+  for (let i=0; i<n; i++) {
+    const name = names[i%names.length]+(i>15?` (${i+1})`:''); const theme = ['pferd','opfer','remis','laufer','schafer','könig','dame','turm','bauer'][i%9];
+    const moves = [];
+    for (let j=0; j<12+Math.floor(Math.random()*25); j++) {
+      const from = String.fromCharCode(97+Math.floor(Math.random()*8))+(1+Math.floor(Math.random()*8));
+      const to = String.fromCharCode(97+Math.floor(Math.random()*8))+(1+Math.floor(Math.random()*8));
+      const piece = ['♟','♞','♝','♜','♛','♚'][Math.floor(Math.random()*6)];
+      moves.push({ piece, from, to, notation:`${from}→${to}`, type:['pawn','knight','bishop','rook','queen','king'][['♟','♞','♝','♜','♛','♚'].indexOf(piece)], color: j%2===0?'white':'black' });
+    }
+    const winner = ['Weiß','Schwarz','Remis'][Math.floor(Math.random()*3)];
+    g.push({ id:i, name, year:1800+Math.floor(Math.random()*200), theme, moves, winner, emotion: emotions[i%emotions.length], players:`Meister ${i+1} vs. ${i+2}` });
+  }
+  return g;
+}
+let allGames = generateGames(30), filtered = [...allGames];
+function loadGame(game) {
+  initBoard(); currentGameMoves = game.moves.slice(); moveIndex = 0; currentGame = game; currentColor = 'white';
+  document.getElementById('totalMoves').textContent = '∞'; document.getElementById('moveCount').textContent = '0';
+  document.getElementById('turnIndicator').textContent = 'Weiß'; document.getElementById('manaIndicator').textContent = '0';
   renderBoard();
 }
-window.addEventListener('resize', resizeCanvases);
-
+function collectAllMoves(color) {
+  const all = [];
+  for (let r=0; r<8; r++) for (let c=0; c<8; c++) {
+    const p = board[r][c];
+    if (p && p.color === color) {
+      const moves = getPseudoLegalMoves(board, r, c);
+      if (moves.length) all.push({ from:{r,c}, tos: moves, piece: p });
+    }
+  }
+  return all;
+}
 function playNextMove() {
-  moveIndex++;
-  document.getElementById('moveCount').textContent = moveIndex;
-  currentColor = currentColor==='white' ? 'black' : 'white';
-  document.getElementById('turnIndicator').textContent = currentColor==='white'?'Weiß':'Schwarz';
-  renderBoard();
+  if (!currentGame) return;
+  const style = document.getElementById('styleSelect').value;
+  const strength = parseInt(document.getElementById('strengthSlider').value, 10) || 3;
+  const candidates = collectAllMoves(currentColor);
+  if (candidates.length === 0) { engine.log(`❗ ${currentColor==='white'?'Weiß':'Schwarz'} hat keinen legalen Zug mehr`,'err'); if (autoMode) stopAuto(); return; }
+  let best = null, bestScore = -Infinity;
+  for (const cand of candidates) {
+    const chosen = selectMoveByStyle(board, cand.tos, style, strength, currentColor);
+    if (!chosen) continue;
+    const target = board[chosen.r][chosen.c];
+    const roll = Math.random() * 3 + (target ? 12 : 0);
+    if (roll > bestScore) { bestScore = roll; best = { from: cand.from, to: chosen, piece: cand.piece }; }
+  }
+  if (!best) { if (autoMode) stopAuto(); return; }
+  const captured = board[best.to.r][best.to.c];
+  const movingColor = currentColor;
+  animateMove(best.from, best.to, best.piece, () => {
+    if (best.piece.type === 'pawn' && (best.to.r === 0 || best.to.r === 7)) {
+      board[best.to.r][best.to.c] = { piece: movingColor==='white'?'♕':'♛', color: movingColor, type:'queen' };
+      engine.log(`♛ Bauer wird zur Dame (${movingColor==='white'?'Weiß':'Schwarz'})`,'ok');
+    }
+    moveIndex++; document.getElementById('moveCount').textContent = moveIndex;
+    if (captured) {
+      engine.log(`⚔️ Schlagzug auf ${String.fromCharCode(97+best.to.c)}${8-best.to.r}`,'warn');
+      if (captured.type === 'king') {
+        engine.log(`🏆 ${movingColor==='white'?'Weiß':'Schwarz'} gewinnt durch Königsschlag!`,'ok');
+        if (autoMode) stopAuto();
+        return;
+      }
+    }
+    currentColor = movingColor === 'white' ? 'black' : 'white';
+    document.getElementById('turnIndicator').textContent = currentColor==='white'?'Weiß':'Schwarz';
+    document.getElementById('manaIndicator').textContent = moveIndex;
+    if (autoMode) setTimeout(playNextMove, moveSpeed);
+  });
 }
-
 function stopAuto() { autoMode=false; document.getElementById('btnAuto').textContent='▶ Auto'; }
-
-// ---- 5. RUN3 SIMULATION (minimal) ----
-let run3Running = false;
-let run3Tick = 0;
-let run3Timer = null;
-
-function run3Simulation() {
-  if (run3Running) return;
-  run3Running = true;
-  run3Tick = 0;
-  document.getElementById('consoleLog').innerHTML = '';
-  run3Timer = setInterval(() => {
-    if (run3Tick > 90) {
-      clearInterval(run3Timer);
-      run3Running = false;
-      document.getElementById('btnRun3').textContent = '▶ RUN3';
-      return;
-    }
-    engine.log(`RUN3 · Tick ${run3Tick}`, 'info');
-    if (run3Tick % 10 === 0) {
-      const active = engine.axles.filter(a=>a.active).length;
-      engine.log(`🎯 aktive Achsen: ${active} / 9`, 'ok');
-    }
-    if (run3Tick === 15) engine.log('⚡ TOR! Saison → Tore +1', 'event');
-    if (run3Tick === 24) engine.log('🏆 Punkt! Saison → Punkte +1', 'event');
-    run3Tick++;
-    document.getElementById('btnRun3').textContent = `RUN3 (${run3Tick}/90)`;
-    if (run3Tick % 5 === 0) engine.sync();
-  }, 400);
+function spawnEffect(x,y,type) {
+  const el = document.createElement('div');
+  const symbols = { ice:'❄️', water:'💧', fire:'🔥' };
+  el.textContent = symbols[type] || '✨';
+  el.style.cssText = `position:fixed; pointer-events:none; font-size:32px; z-index:9999; left:${x-16}px; top:${y-16}px; opacity:0.8; animation: floatUp 0.8s ease-out forwards;`;
+  document.body.appendChild(el); setTimeout(()=>el.remove(), 800);
 }
 
-function stopRun3() {
-  if (run3Timer) clearInterval(run3Timer);
-  run3Running = false;
-  document.getElementById('btnRun3').textContent = '▶ RUN3';
-}
+// ================================================================
+// 6. SAISON, MATRIX, FUSSBALL, ENERGIE
+// ================================================================
+const SAISON = { spieltag:1, tore:0, punkte:0, spiele:[] };
+function nextSpieltag() { SAISON.spieltag++; const ergebnis = `${Math.floor(Math.random()*5)}:${Math.floor(Math.random()*5)}`; SAISON.spiele.push({ tag:SAISON.spieltag, ergebnis }); return { tag:SAISON.spieltag, ergebnis }; }
+function tor() { SAISON.tore++; }
+function punkt() { SAISON.punkte++; }
+function resetSaison() { SAISON.spieltag=1; SAISON.tore=0; SAISON.punkte=0; SAISON.spiele=[]; }
+function renderSaisonUI() { document.getElementById('spieltag').textContent = SAISON.spieltag; document.getElementById('tore').textContent = SAISON.tore; document.getElementById('punkte').textContent = SAISON.punkte; }
 
-// ---- 6. SAISON & MATRIX (simuliert) ----
-const SAISON = { spieltag:1, tore:0, punkte:0 };
-function nextSpieltag() { SAISON.spieltag++; document.getElementById('spieltag').textContent = SAISON.spieltag; }
-function tor() { SAISON.tore++; document.getElementById('tore').textContent = SAISON.tore; }
-function punkt() { SAISON.punkte++; document.getElementById('punkte').textContent = SAISON.punkte; }
-function resetSaison() { SAISON.spieltag=1; SAISON.tore=0; SAISON.punkte=0; document.getElementById('spieltag').textContent=1; document.getElementById('tore').textContent=0; document.getElementById('punkte').textContent=0; }
+let sliEnergy = 0; const MAX_ENERGY = 100;
+function addEnergy(amount=6) { sliEnergy = Math.min(MAX_ENERGY, sliEnergy + amount); updateEnergyUI(); }
+function resetEnergy() { sliEnergy = 0; updateEnergyUI(); }
+function updateEnergyUI() { const bar = document.getElementById('sliEnergyBar'); const pct = Math.round((sliEnergy / MAX_ENERGY) * 100); bar.style.width = pct + '%'; bar.textContent = pct + '%'; }
 
 function renderMatrix(input) {
+  const matrix = UNO.fullMatrix(input);
+  document.getElementById('m81').textContent = matrix.atom.value.toFixed(0);
+  document.getElementById('m243').textContent = matrix.uni.value.toFixed(0);
+  document.getElementById('m729').textContent = matrix.run.value.toFixed(0);
   const hits = Math.floor(input / 6);
-  const val = 3 * hits * 90;
-  document.getElementById('m81').textContent = (val * 81).toFixed(0);
-  document.getElementById('m243').textContent = (val * 243).toFixed(0);
-  document.getElementById('m729').textContent = (val * 729).toFixed(0);
-  document.getElementById('formulaDisplay').textContent = `3 × ${hits} × 90 = ${val}`;
+  document.getElementById('formulaDisplay').textContent = `3 × ${hits} × 90 = ${3*hits*90}`;
 }
-
+function convertFootballToChess(value) { const hit = Math.floor(value / 6); return 3 * hit * 90; }
 function updateFootballResults() {
   const goals = parseInt(document.getElementById('goalsInput').value) || 0;
   const shots = parseInt(document.getElementById('shotsInput').value) || 0;
   const possession = parseInt(document.getElementById('possessionInput').value) || 0;
   const fouls = parseInt(document.getElementById('foulsInput').value) || 0;
   const total = goals + shots + possession + fouls;
-  document.getElementById('goalsResult').textContent = `→ ${3*Math.floor(goals/6)*90}`;
-  document.getElementById('shotsResult').textContent = `→ ${3*Math.floor(shots/6)*90}`;
-  document.getElementById('possessionResult').textContent = `→ ${3*Math.floor(possession/6)*90}`;
-  document.getElementById('foulsResult').textContent = `→ ${3*Math.floor(fouls/6)*90}`;
+  document.getElementById('goalsResult').textContent = `→ ${convertFootballToChess(goals)}`;
+  document.getElementById('shotsResult').textContent = `→ ${convertFootballToChess(shots)}`;
+  document.getElementById('possessionResult').textContent = `→ ${convertFootballToChess(possession)}`;
+  document.getElementById('foulsResult').textContent = `→ ${convertFootballToChess(fouls)}`;
   renderMatrix(total);
 }
-
-// ---- 7. SLIENERGIE ----
-let sliEnergy = 0;
-function updateEnergyUI() {
-  const bar = document.getElementById('sliEnergyBar');
-  const pct = Math.round((sliEnergy / 100) * 100);
-  bar.style.width = pct + '%';
-  bar.textContent = pct + '%';
+function resetFootball() {
+  document.getElementById('goalsInput').value = 2;
+  document.getElementById('shotsInput').value = 12;
+  document.getElementById('possessionInput').value = 55;
+  document.getElementById('foulsInput').value = 8;
+  updateFootballResults();
 }
-function addEnergy() { sliEnergy = Math.min(100, sliEnergy + 6); updateEnergyUI(); }
-function resetEnergy() { sliEnergy = 0; updateEnergyUI(); }
 
-// ---- 8. ZAUBER 6 PARTNER SYNC ----
-document.getElementById('btnPartnerSync').addEventListener('click', () => {
-  const status = document.getElementById('z-partner');
-  status.textContent = '⏳ syncing...';
-  setTimeout(() => {
-    status.textContent = '✅ verbunden';
-    engine.log('👑 Königin hat Partner (2me) aufgenommen', 'ok');
-    engine.sync();
-  }, 500);
-});
+let engineTick = 0;
+function updateClock() { document.getElementById('engineTicks').textContent = engineTick; }
 
-// ---- 9. DOMContentLoaded ----
+// ================================================================
+// 7. RUN3 – 90 Ticks (NUR EIN TOGGLE-LISTENER)
+// ================================================================
+let run3Timer = null, run3Running = false, run3Tick = 0;
+const run3Story = [
+  { tick: 0, msg: "RUN 3 aktiviert – taktischer Modus geladen.", type:"story" },
+  { tick: 1, msg: "sli.power gesetzt → +6% Energie.", type:"event" },
+  { tick: 2, msg: "Ghost‑L2 scannt Module → RESPO fehlt → Reparatur eingeleitet.", type:"event" },
+  { tick: 3, msg: "Pipeline 6 startet aggressiv → Slienergie 14%.", type:"story" },
+  { tick: 4, msg: "Pipeline 3 bleibt stabil → Slienergie 6%.", type:"story" },
+  { tick: 5, msg: "Dashboard: A=2, B=1, Hits=1.", type:"story" },
+  { tick: 6, msg: "Pipeline 6 überlastet AXI → Fehlerquote 8%.", type:"story" },
+  { tick: 7, msg: "Ghost‑L2 repariert AXI.", type:"event" },
+  { tick: 8, msg: "ATOM Spin 144° → charge 10.", type:"story" },
+  { tick: 9, msg: "UNI.spier Zustand DRIN → Routing stabil.", type:"story" },
+  { tick: 10, msg: "Slienergie Pipeline 6 → 22%.", type:"story" },
+  { tick: 11, msg: "Slienergie Pipeline 3 → 12%.", type:"story" },
+  { tick: 12, msg: "QDF berechnet: 29.4 → stabil.", type:"story" },
+  { tick: 13, msg: "Pipeline 6 erreicht Peak‑Speed.", type:"story" },
+  { tick: 14, msg: "Dashboard: A=3, B=2, Hits=2.", type:"story" },
+  { tick: 15, msg: "⚡ TOR! Saison‑Engine → Tore = 1.", type:"event" },
+  { tick: 16, msg: "Pipeline 6 beginnt zu schwanken → Fehlerquote 14%.", type:"story" },
+  { tick: 17, msg: "Pipeline 3 setzt Zyklus‑Schritt 2.", type:"story" },
+  { tick: 18, msg: "Slienergie +6 → 18%.", type:"event" },
+  { tick: 19, msg: "Ghost‑L2 scannt → TEM instabil.", type:"story" },
+  { tick: 20, msg: "Ghost‑L2 repariert TEM.", type:"event" },
+  { tick: 21, msg: "Pipeline 6 überhitzt → Slienergie 41%.", type:"story" },
+  { tick: 22, msg: "Pipeline 3 bleibt taktisch → Slienergie 18%.", type:"story" },
+  { tick: 23, msg: "Dashboard: A=4, B=3, Hits=3.", type:"story" },
+  { tick: 24, msg: "🏆 Punkt! Saison‑Engine → Punkte = 1.", type:"event" },
+  { tick: 25, msg: "Pipeline 6 verliert Kontrolle → Fehlerquote 22%.", type:"story" },
+  { tick: 26, msg: "Pipeline 3 setzt Zyklus‑Schritt 4.", type:"story" },
+  { tick: 27, msg: "Slienergie Pipeline 3 → 24%.", type:"story" },
+  { tick: 28, msg: "Pipeline 6 fällt auf 33% Effizienz.", type:"story" },
+  { tick: 29, msg: "Ghost‑L2 repariert TriAxiom erneut.", type:"event" },
+  { tick: 30, msg: "Pipeline 3 übernimmt das Spiel.", type:"story" },
+  { tick: 31, msg: "Pipeline 6 versucht Gegenangriff → ineffizient.", type:"story" },
+  { tick: 32, msg: "Slienergie Pipeline 6 → 55%.", type:"story" },
+  { tick: 33, msg: "Pipeline 3 bleibt bei 26%.", type:"story" },
+  { tick: 34, msg: "Dashboard: A=5, B=4, Hits=4.", type:"story" },
+  { tick: 35, msg: "⚡ TOR! → Tore = 2.", type:"event" },
+  { tick: 36, msg: "Pipeline 6 Fehlerquote → 28%.", type:"story" },
+  { tick: 37, msg: "Pipeline 3 setzt Zyklus‑Schritt 6.", type:"story" },
+  { tick: 38, msg: "UNI.spier stabilisiert Routing.", type:"story" },
+  { tick: 39, msg: "ATOM Spin 222°.", type:"story" },
+  { tick: 40, msg: "Slienergie Pipeline 3 → 32%.", type:"story" },
+  { tick: 41, msg: "Pipeline 6 überhitzt erneut → 61%.", type:"story" },
+  { tick: 42, msg: "Ghost‑L2 repariert RESPO.", type:"event" },
+  { tick: 43, msg: "Dashboard: A=6, B=5, Hits=5.", type:"story" },
+  { tick: 44, msg: "Pipeline 3 bleibt präzise.", type:"story" },
+  { tick: 45, msg: "Halbzeit – RUN 3 führt klar.", type:"story" },
+  { tick: 46, msg: "Pipeline 6 startet zweite Druckphase.", type:"story" },
+  { tick: 47, msg: "Slienergie Pipeline 6 → 70%.", type:"story" },
+  { tick: 48, msg: "Pipeline 3 → 36%.", type:"story" },
+  { tick: 49, msg: "Dashboard: A=7, B=6, Hits=6.", type:"story" },
+  { tick: 50, msg: "🏆 Punkt! → Punkte = 2.", type:"event" },
+  { tick: 51, msg: "Pipeline 6 Fehlerquote → 31%.", type:"story" },
+  { tick: 52, msg: "Pipeline 3 setzt Zyklus‑Schritt 7.", type:"story" },
+  { tick: 53, msg: "Ghost‑L2 scannt → alle Module OK.", type:"story" },
+  { tick: 54, msg: "Slienergie Pipeline 3 → 42%.", type:"story" },
+  { tick: 55, msg: "Pipeline 6 verliert Tempo.", type:"story" },
+  { tick: 56, msg: "Dashboard: A=8, B=7, Hits=7.", type:"story" },
+  { tick: 57, msg: "Pipeline 3 erreicht Peak‑Stabilität.", type:"story" },
+  { tick: 58, msg: "Pipeline 6 fällt auf 29% Effizienz.", type:"story" },
+  { tick: 59, msg: "⚡ TOR! → Tore = 3.", type:"event" },
+  { tick: 60, msg: "Pipeline 3 dominiert klar.", type:"story" },
+  { tick: 61, msg: "Pipeline 6 überhitzt → 78%.", type:"story" },
+  { tick: 62, msg: "Pipeline 3 → 48%.", type:"story" },
+  { tick: 63, msg: "Dashboard: A=9, B=8, Hits=8.", type:"story" },
+  { tick: 64, msg: "UNI.spier DRIN → stabil.", type:"story" },
+  { tick: 65, msg: "Pipeline 6 Fehlerquote → 34%.", type:"story" },
+  { tick: 66, msg: "Pipeline 3 setzt Zyklus‑Schritt 8.", type:"story" },
+  { tick: 67, msg: "Slienergie +6 → 54%.", type:"event" },
+  { tick: 68, msg: "Pipeline 6 verliert Kontrolle.", type:"story" },
+  { tick: 69, msg: "Dashboard: A=10, B=9, Hits=9.", type:"story" },
+  { tick: 70, msg: "🏆 Punkt! → Punkte = 3.", type:"event" },
+  { tick: 71, msg: "Pipeline 6 fällt auf 25%.", type:"story" },
+  { tick: 72, msg: "Pipeline 3 → 58%.", type:"story" },
+  { tick: 73, msg: "Ghost‑L2 scannt → alles stabil.", type:"story" },
+  { tick: 74, msg: "Pipeline 6 bricht ein.", type:"story" },
+  { tick: 75, msg: "RUN 3 übernimmt komplett.", type:"story" },
+  { tick: 76, msg: "Pipeline 6 → 22% Effizienz.", type:"story" },
+  { tick: 77, msg: "Pipeline 3 → 62%.", type:"story" },
+  { tick: 78, msg: "Dashboard: A=11, B=10, Hits=10.", type:"story" },
+  { tick: 79, msg: "⚡ TOR! → Tore = 4.", type:"event" },
+  { tick: 80, msg: "Pipeline 6 Fehlerquote → 37%.", type:"story" },
+  { tick: 81, msg: "Pipeline 3 setzt Zyklus‑Schritt 3.", type:"story" },
+  { tick: 82, msg: "Slienergie Pipeline 3 → 68%.", type:"story" },
+  { tick: 83, msg: "Pipeline 6 → 19%.", type:"story" },
+  { tick: 84, msg: "Dashboard: A=12, B=11, Hits=11.", type:"story" },
+  { tick: 85, msg: "Pipeline 3 bleibt präzise.", type:"story" },
+  { tick: 86, msg: "Pipeline 6 → 17%.", type:"story" },
+  { tick: 87, msg: "🏆 Punkt! → Punkte = 4.", type:"event" },
+  { tick: 88, msg: "Pipeline 3 → 72%.", type:"story" },
+  { tick: 89, msg: "Pipeline 6 → 15%.", type:"story" },
+  { tick: 90, msg: "🏁 Spielende – RUN 3 gewinnt klar.", type:"event" }
+];
+
+function run3Simulation() {
+  if (run3Running) return;
+  run3Running = true; run3Tick = 0; engineTick = 0;
+  document.getElementById('consoleLog').innerHTML = '';
+  resetEnergy();
+  if (run3Timer) clearInterval(run3Timer);
+  run3Timer = setInterval(() => {
+    if (run3Tick > 90) { clearInterval(run3Timer); run3Running = false; document.getElementById('btnRun3').textContent = '▶ RUN3'; return; }
+    const entry = run3Story.find(e => e.tick === run3Tick);
+    if (entry) {
+      engine.log(entry.msg, entry.type);
+      if (entry.msg.includes('Slienergie')) { const num = parseInt(entry.msg.match(/\d+/)?.[0] || '0'); if (!isNaN(num) && num > 0) addEnergy(num/10); }
+      if (entry.msg.includes('TOR')) { tor(); renderSaisonUI(); }
+      if (entry.msg.includes('Punkt')) { punkt(); renderSaisonUI(); }
+      if (entry.msg.includes('Dashboard')) { const rand = Math.floor(Math.random() * 100); renderMatrix(rand); }
+      if (run3Tick % 3 === 0) addEnergy(3);
+    }
+    run3Tick++; engineTick++;
+    document.getElementById('btnRun3').textContent = `RUN3 (${run3Tick}/90)`;
+    updateClock();
+  }, 400);
+}
+function stopRun3() { if (run3Timer) clearInterval(run3Timer); run3Running = false; document.getElementById('btnRun3').textContent = '▶ RUN3'; }
+
+// ================================================================
+// 8. START – DOMContentLoaded
+// ================================================================
 document.addEventListener('DOMContentLoaded', () => {
   resizeCanvases();
-  initBoard();
-  renderBoard();
-  engine.init();
-  window.engine = engine;
+  window.addEventListener('resize', resizeCanvases);
+  initBoard(); renderBoard();
+  if (allGames.length) loadGame(allGames[0]);
+  atmo.setMood('anime'); atmo.start();
+  engine.init(); window.engine = engine;
+  updateEnergyUI();
+  renderMatrix(0);
+  renderSaisonUI();
+  updateFootballResults();
+  updateClock();
 
   // Buttons
   document.getElementById('btnGeneral').addEventListener('click', ()=>engine.runGeneral());
@@ -936,54 +1396,40 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btnLoop').addEventListener('click', ()=>engine.loopAll());
 
   document.getElementById('btnStep').addEventListener('click', playNextMove);
-  document.getElementById('btnAuto').addEventListener('click', () => {
-    if (autoMode) { stopAuto(); return; }
-    autoMode=true;
-    document.getElementById('btnAuto').textContent='⏸ Stop';
-    playNextMove();
-  });
+  document.getElementById('btnAuto').addEventListener('click', () => { if(autoMode){ stopAuto(); return; } if(!currentGame){ if(filtered.length){ currentGame=filtered[0]; loadGame(currentGame); } else return; } autoMode=true; document.getElementById('btnAuto').textContent='⏸ Stop'; playNextMove(); });
   document.getElementById('btnResetBoard').addEventListener('click', () => { stopAuto(); initBoard(); renderBoard(); });
 
-  document.getElementById('btnRun3').addEventListener('click', function() {
-    if (run3Running) { stopRun3(); } else { run3Simulation(); }
-  });
+  document.getElementById('speedSlider').addEventListener('input', function(){ moveSpeed = parseInt(this.value); document.getElementById('speedDisplay').textContent = moveSpeed+'ms'; });
+  document.getElementById('styleSelect').addEventListener('change', function(){ const moodMap={random:'anime', aggressive:'warm', defensive:'cool', tactical:'neon'}; atmo.setMood(moodMap[this.value] || 'anime'); });
+  document.getElementById('strengthSlider').addEventListener('input', function(){ document.getElementById('strengthDisplay').textContent = this.value; });
 
-  document.getElementById('btnNextSpieltag').addEventListener('click', nextSpieltag);
-  document.getElementById('btnTor').addEventListener('click', tor);
-  document.getElementById('btnPunkt').addEventListener('click', punkt);
-  document.getElementById('btnResetSaison').addEventListener('click', resetSaison);
+  document.getElementById('btnGood').addEventListener('click', () => { engine.feedback.good++; engine.state.score += 15; engine.log(`👍 Feedback: gut (${engine.feedback.good})`,'ok'); engine.sync(); });
+  document.getElementById('btnBad').addEventListener('click', () => { engine.feedback.bad++; engine.state.score = Math.max(0, engine.state.score - 10); engine.log(`👎 Feedback: schlecht (${engine.feedback.bad})`,'warn'); engine.sync(); });
+  document.getElementById('btnLearn').addEventListener('click', () => { const total = engine.feedback.good + engine.feedback.bad; if(total===0){ engine.log('🧬 Lernen · noch kein Feedback vorhanden','warn'); return; } const ratio = engine.feedback.good / total; const strengthEl = document.getElementById('strengthSlider'); const newStrength = Math.min(5, Math.max(1, Math.round(1 + ratio * 4))); strengthEl.value = newStrength; document.getElementById('strengthDisplay').textContent = newStrength; const styleEl = document.getElementById('styleSelect'); styleEl.value = ratio >= 0.5 ? 'tactical' : 'defensive'; engine.log(`🧬 Lernen · Trefferquote ${Math.round(ratio*100)}% → Stärke ${newStrength}, Stil ${styleEl.value}`,'ok'); engine.feedback = { good:0, bad:0 }; engine.sync(); });
 
-  document.getElementById('btnCalcMatrix').addEventListener('click', () => {
-    const goals = parseInt(document.getElementById('goalsInput').value) || 0;
-    const shots = parseInt(document.getElementById('shotsInput').value) || 0;
-    const possession = parseInt(document.getElementById('possessionInput').value) || 0;
-    const fouls = parseInt(document.getElementById('foulsInput').value) || 0;
-    renderMatrix(goals + shots + possession + fouls);
-  });
-  document.getElementById('btnRandomMatrix').addEventListener('click', () => {
-    renderMatrix(Math.floor(Math.random() * 100));
-  });
+  const effects = { btnIce:{type:'ice', msg:'❄️ ICE · kühle Präzision'}, btnWater:{type:'water', msg:'💧 WATER · fließende Bewegung'}, btnFire:{type:'fire', msg:'🔥 FIRE · brennender Impuls'} };
+  for (const [id, data] of Object.entries(effects)) {
+    document.getElementById(id).addEventListener('click', () => { const rect = canvas.getBoundingClientRect(); spawnEffect(rect.left+rect.width/2, rect.top+rect.height/2, data.type); engine.log(data.msg, 'event'); });
+  }
+
+  // RUN3 – nur EIN Listener (Toggle)
+  document.getElementById('btnRun3').addEventListener('click', function() { if (run3Running) stopRun3(); else run3Simulation(); });
+
+  document.getElementById('btnNextSpieltag').addEventListener('click', () => { const res = nextSpieltag(); renderSaisonUI(); engine.log(`⚽ Spieltag ${res.tag} → ${res.ergebnis}`,'event'); });
+  document.getElementById('btnTor').addEventListener('click', () => { tor(); renderSaisonUI(); engine.log('⚡ TOR!','event'); });
+  document.getElementById('btnPunkt').addEventListener('click', () => { punkt(); renderSaisonUI(); engine.log('🏆 Punkt!','event'); });
+  document.getElementById('btnResetSaison').addEventListener('click', () => { resetSaison(); renderSaisonUI(); engine.log('⟲ Saison zurückgesetzt.','warn'); });
+
+  document.getElementById('btnCalcMatrix').addEventListener('click', () => { const input = parseInt(document.getElementById('goalsInput').value) + parseInt(document.getElementById('shotsInput').value) + parseInt(document.getElementById('possessionInput').value) + parseInt(document.getElementById('foulsInput').value); renderMatrix(input); engine.log(`📐 Matrix berechnet mit Eingabe ${input}`,'ok'); });
+  document.getElementById('btnRandomMatrix').addEventListener('click', () => { const rand = Math.floor(Math.random() * 100); renderMatrix(rand); engine.log(`🎲 Matrix random mit Eingabe ${rand}`,'ok'); });
 
   document.getElementById('btnCalcFootball').addEventListener('click', updateFootballResults);
-  document.getElementById('btnResetFootball').addEventListener('click', () => {
-    document.getElementById('goalsInput').value = 2;
-    document.getElementById('shotsInput').value = 12;
-    document.getElementById('possessionInput').value = 55;
-    document.getElementById('foulsInput').value = 8;
-    updateFootballResults();
-  });
-  document.querySelectorAll('.football-input input').forEach(input => input.addEventListener('input', updateFootballResults));
+  document.getElementById('btnResetFootball').addEventListener('click', resetFootball);
+  document.querySelectorAll('.football-input input').forEach(input => { input.addEventListener('input', updateFootballResults); });
 
-  document.getElementById('btnAddEnergy').addEventListener('click', addEnergy);
-  document.getElementById('btnResetEnergy').addEventListener('click', resetEnergy);
+  document.getElementById('btnAddEnergy').addEventListener('click', () => { addEnergy(6); engine.log('⚡ Energie +6','event'); });
+  document.getElementById('btnResetEnergy').addEventListener('click', () => { resetEnergy(); engine.log('⟲ Energie zurückgesetzt.','warn'); });
 
-  // Speed & Style
-  document.getElementById('speedSlider').addEventListener('input', function() {
-    moveSpeed = parseInt(this.value);
-    document.getElementById('speedDisplay').textContent = moveSpeed+'ms';
-  });
-
-  // Keyboard
   document.addEventListener('keydown', (e) => {
     if (e.key === ' ' || e.key === 'ArrowRight') { e.preventDefault(); playNextMove(); }
     if (e.key === 'r' || e.key === 'R') document.getElementById('btnResetBoard').click();
@@ -992,13 +1438,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === '3') { e.preventDefault(); document.getElementById('btnRun3').click(); }
   });
 
-  // Initial update
-  updateFootballResults();
-  updateEnergyUI();
-  engine.sync();
-
-  console.log('⭐ ZAUBER 6 · index.html geladen (alle Knöpfe funktionieren)');
-  console.log('🧙 Magische 6 =', ZAUBER.magic6);
+  console.log('🧠 IKI1UC · 3 Axiome · Ursache · Wirkung · Kreislauf geladen');
   console.log('⌨️  Leertaste=Nächster Zug  r=Reset  a=Auto  g=General Run  3=RUN3');
 });
 </script>
