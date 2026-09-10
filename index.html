@@ -1,729 +1,1117 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>⚛️ IKI1UC · PHYSICS ENGINE · 3‑9‑81‑Φ4</title>
-  <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      background: #0a0a12;
-      color: #d0d9e6;
-      font-family: 'Consolas', monospace;
-      padding: 16px;
-      min-height: 100vh;
-      background: radial-gradient(ellipse at 20% 30%, #0c0c1a, #000);
-      overflow-x: hidden;
-    }
-    .container { max-width: 1600px; margin: 0 auto; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>⚖️ NC · WAAGSCHALE · ZENTRUM · ROOT · iki1uc</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  :root{
+    --bg1:#040810; --bg2:#0a1524;
+    --cyan:#7fdcff; --cyan2:#c8f0ff;
+    --gold:#f0c878; --gold2:#ffe9b0;
+    --violet:#a888ff;
+    --green:#8cf0d0;
+    --line:rgba(127,220,255,0.12);
+    --serif:'Yu Mincho','Hiragino Mincho ProN','Times New Roman',serif;
+  }
+  html,body{height:100%;}
+  body{
+    background:
+      radial-gradient(ellipse at 50% 40%, #0c1a2c 0%, #060d18 55%, #020409 100%);
+    color:#c8d8e8;
+    font-family:'Consolas','Courier New',monospace;
+    height:100vh; overflow:hidden;
+    display:flex; flex-direction:column;
+  }
 
-    /* HEADER */
-    .header {
-      display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; border-bottom: 2px solid #ffd700; padding-bottom: 12px; margin-bottom: 20px;
-    }
-    .header h1 {
-      font-size: 28px; letter-spacing: 4px;
-      background: linear-gradient(90deg, #ffd700, #66ccff, #ff66ff, #00ff88);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-    .header .sub { font-size: 11px; color: #3d5a70; letter-spacing: 2px; }
-    .status-led { display: flex; gap: 16px; font-size: 11px; align-items:center; }
-    .led { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; }
-    .led.green { background: #4f4; box-shadow: 0 0 8px #4f4; }
-    .led.yellow { background: #ffa; box-shadow: 0 0 8px #ffa; }
-    .led.purple { background: #a78bfa; box-shadow: 0 0 8px #a78bfa; }
-    .led.red { background: #f66; box-shadow: 0 0 8px #f66; }
-    #sys-clock { color: #666; }
+  /* ── HEADER ─────────────────────────────────── */
+  header{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:10px 20px;
+    border-bottom:1px solid var(--line);
+    background:rgba(4,8,16,0.85);
+    backdrop-filter:blur(14px);
+    flex-wrap:wrap; gap:10px; z-index:10;
+  }
+  header h1{
+    font-size:15px; font-weight:300; letter-spacing:4px;
+    background:linear-gradient(135deg,#c8f0ff,#7fdcff,#a888ff);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    font-family:var(--serif);
+  }
+  header h1 small{
+    font-size:9px; color:#5a7288;
+    -webkit-text-fill-color:#5a7288;
+    letter-spacing:2px; margin-left:8px;
+    font-family:'Consolas',monospace;
+  }
+  header h1 .tag{
+    font-size:8px; letter-spacing:3px;
+    -webkit-text-fill-color:#f0c878;
+    border:1px solid rgba(240,200,120,0.4);
+    border-radius:4px; padding:1px 7px; margin-left:8px;
+    font-family:'Consolas',monospace;
+  }
+  .stats{
+    display:flex; gap:14px; font-size:9.5px;
+    color:#6a8098; align-items:center; flex-wrap:wrap;
+  }
+  .stats .v-cyan{color:#7fdcff;font-weight:bold;}
+  .stats .v-gold{color:#f0c878;font-weight:bold;}
+  .stats .v-violet{color:#a888ff;font-weight:bold;}
+  .stats .v-green{color:#8cf0d0;font-weight:bold;}
 
-    /* PHYSICS CANVAS */
-    .physics-panel {
-      background: rgba(10,10,20,0.7);
-      border: 1px solid #1a1a2a;
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 16px;
-      position: relative;
-    }
-    .physics-panel h2 {
-      color: #ffd700;
-      font-size: 13px;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      padding-bottom: 6px;
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-    }
-    #physicsCanvas {
-      width: 100%;
-      height: auto;
-      aspect-ratio: 16/9;
-      background: #06060a;
-      border-radius: 8px;
-      border: 1px solid #1a1a2a;
-      display: block;
-      cursor: crosshair;
-    }
+  /* ── STAGE ──────────────────────────────────── */
+  #stage{
+    flex:1; position:relative; overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #scaleCanvas{
+    display:block; width:100%; height:100%;
+    cursor:pointer;
+  }
 
-    /* METRIK GRID (4 Achsen) */
-    .grid-4 {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-      margin-bottom: 16px;
-    }
-    @media (max-width: 1000px) { .grid-4 { grid-template-columns: 1fr 1fr; } }
-    @media (max-width: 600px) { .grid-4 { grid-template-columns: 1fr; } }
+  /* ── SEAL (oben links) ──────────────────────── */
+  #seal{
+    position:absolute; top:20px; left:22px;
+    font-family:var(--serif);
+    font-size:11px; letter-spacing:6px;
+    color:rgba(127,220,255,0.55);
+    text-transform:uppercase;
+    z-index:6; pointer-events:none;
+    text-align:center;
+  }
+  #seal .glyph{
+    font-size:34px; display:block; line-height:1;
+    color:rgba(200,240,255,0.75);
+    text-shadow:0 0 20px rgba(127,220,255,0.5);
+  }
+  #seal .sub{
+    font-size:8px; letter-spacing:5px; margin-top:6px;
+    font-family:'Consolas',monospace;
+    color:rgba(240,200,120,0.6);
+  }
 
-    .card {
-      background: rgba(10,10,20,0.75);
-      border: 1px solid #1a1a2a;
-      border-radius: 12px;
-      padding: 14px;
-      backdrop-filter: blur(4px);
-      transition: border-color 0.3s;
-    }
-    .card:hover { border-color: #ffd70055; }
-    .card h3 {
-      color: #ffd700;
-      font-size: 13px;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      padding-bottom: 4px;
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-    }
-    .card h3 .badge { font-size: 9px; background: #1a1a2a; padding: 2px 10px; border-radius: 20px; color: #888; }
-    .metric-row {
-      display: flex; justify-content: space-between;
-      font-size: 11px; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.03);
-    }
-    .metric-row .label { color: #666; }
-    .metric-row .value { font-weight: bold; }
-    .value.gold { color: #ffd700; }
-    .value.cyan { color: #66ccff; }
-    .value.pink { color: #ff66ff; }
-    .value.green { color: #4f4; }
-    .value.orange { color: #ff8c00; }
-    .value.purple { color: #a78bfa; }
-    .value.mystery { color: #00ff88; }
+  /* ── BALANCE READOUT (oben rechts) ──────────── */
+  #balanceBox{
+    position:absolute; top:20px; right:22px;
+    padding:10px 16px;
+    background:rgba(4,8,16,0.75);
+    border:1px solid var(--line);
+    border-left:2px solid var(--cyan);
+    border-radius:6px;
+    font-size:10px;
+    letter-spacing:1.5px;
+    z-index:6; pointer-events:none;
+    min-width:150px;
+  }
+  #balanceBox .row{
+    display:flex; justify-content:space-between;
+    padding:2px 0;
+  }
+  #balanceBox .lbl{color:#6a8098;}
+  #balanceBox .val{font-weight:bold;color:#c8f0ff;}
+  #balanceBox .val.gold{color:#f0c878;}
+  #balanceBox .val.violet{color:#a888ff;}
+  #balanceBox .title{
+    font-family:var(--serif);
+    font-size:11px;
+    letter-spacing:3px;
+    color:#7fdcff;
+    border-bottom:1px solid var(--line);
+    padding-bottom:5px; margin-bottom:6px;
+    display:flex; justify-content:space-between;
+  }
+  #balanceBox .title .mode{
+    font-size:8px;
+    color:#f0c878;
+    border:1px solid rgba(240,200,120,0.3);
+    border-radius:3px;
+    padding:0 5px;
+    letter-spacing:1px;
+  }
 
-    /* LOG / STEUERUNG */
-    .deutung {
-      background: rgba(10,10,20,0.7);
-      border: 1px solid #1a1a2a;
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 14px;
-    }
-    .deutung h2 {
-      color: #ffd700;
-      font-size: 13px;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      padding-bottom: 6px;
-      margin-bottom: 8px;
-    }
-    #log {
-      background: #06060a;
-      border-radius: 6px;
-      padding: 10px;
-      font-size: 10px;
-      max-height: 120px;
-      overflow-y: auto;
-      white-space: pre-wrap;
-      color: #88ddbb;
-      border: 1px solid #1a1a2a;
-      line-height: 1.6;
-    }
+  /* ── CONTROLS ───────────────────────────────── */
+  #controls{
+    display:flex; gap:8px; align-items:center;
+    padding:11px 20px;
+    border-top:1px solid var(--line);
+    background:rgba(4,8,16,0.92);
+    backdrop-filter:blur(14px);
+    flex-wrap:wrap;
+    font-size:10px; z-index:10;
+  }
+  #controls button{
+    background:rgba(8,16,28,0.9);
+    border:1px solid rgba(127,220,255,0.28);
+    color:var(--cyan);
+    padding:6px 15px;
+    border-radius:5px;
+    font-family:inherit; font-size:10px;
+    letter-spacing:2px;
+    cursor:pointer; transition:.2s;
+    text-transform:uppercase;
+  }
+  #controls button:hover{
+    background:rgba(127,220,255,0.1);
+    border-color:var(--cyan);
+    color:#fff;
+    box-shadow:0 0 16px rgba(127,220,255,0.35);
+  }
+  #controls button.active{
+    background:rgba(127,220,255,0.2);
+    color:#fff;
+    border-color:var(--cyan);
+    box-shadow:0 0 20px rgba(127,220,255,0.5);
+  }
+  #controls button.gold{
+    border-color:rgba(240,200,120,0.35);
+    color:var(--gold);
+  }
+  #controls button.gold:hover,
+  #controls button.gold.active{
+    background:rgba(240,200,120,0.15);
+    border-color:var(--gold);
+    color:#fff;
+    box-shadow:0 0 16px rgba(240,200,120,0.5);
+  }
+  #controls button.violet{
+    border-color:rgba(168,136,255,0.35);
+    color:var(--violet);
+  }
+  #controls button.violet:hover,
+  #controls button.violet.active{
+    background:rgba(168,136,255,0.15);
+    border-color:var(--violet);
+    color:#fff;
+    box-shadow:0 0 16px rgba(168,136,255,0.5);
+  }
+  #controls .sep{
+    width:1px; height:22px;
+    background:var(--line);
+    margin:0 6px;
+  }
+  #controls .lbl{
+    color:#5a7288; font-size:9px; letter-spacing:2px;
+  }
+  #controls input[type=range]{
+    -webkit-appearance:none; appearance:none;
+    width:90px; height:3px;
+    background:linear-gradient(90deg,var(--cyan),var(--gold));
+    border-radius:2px; outline:none;
+  }
+  #controls input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    width:14px; height:14px; border-radius:50%;
+    background:#fff;
+    border:2px solid var(--cyan);
+    box-shadow:0 0 10px var(--cyan);
+    cursor:pointer;
+  }
 
-    .controls {
-      display: flex; flex-wrap: wrap; gap: 8px;
-      background: rgba(10,10,20,0.5); border-radius: 10px; padding: 12px;
-      margin-bottom: 14px; border: 1px solid #1a1a2a; align-items: center;
-    }
-    .controls button {
-      background: #111; color: #d0d9e6; border: 1px solid #333;
-      padding: 6px 16px; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 10px;
-      transition: 0.2s;
-    }
-    .controls button:hover { border-color: #ffd700; background: #1a1a2a; }
-    .controls button.primary { border-color: #ffd700; color: #ffd700; }
-    .controls button.primary:hover { background: #ffd700; color: #000; }
-    .controls button.attack { border-color: #ff8c00; color: #ff8c00; }
-    .controls button.attack:hover { background: #ff8c00; color: #000; }
-    .controls button.meta { border-color: #a78bfa; color: #a78bfa; }
-    .controls button.meta:hover { background: #a78bfa; color: #000; }
-    .controls input {
-      background: #1e242c; border: 1px solid #2f3542; color: #fff;
-      padding: 6px 12px; border-radius: 4px; font-family: inherit; font-size: 10px;
-      flex: 1; min-width: 140px;
-    }
-    .controls input::placeholder { color: #445555; }
+  /* ── ROOT LOG (unten links) ─────────────────── */
+  #logBox{
+    position:absolute; bottom:14px; left:14px;
+    max-width:340px; max-height:110px;
+    padding:8px 14px;
+    background:rgba(4,8,16,0.75);
+    border:1px solid var(--line);
+    border-left:2px solid var(--gold);
+    border-radius:5px;
+    font-family:var(--serif);
+    font-size:11px;
+    line-height:1.55;
+    color:#c8d8e8;
+    overflow-y:auto;
+    z-index:6; pointer-events:none;
+    font-style:italic;
+  }
+  #logBox .time{
+    color:#4a5a70;
+    font-family:'Consolas',monospace;
+    font-style:normal;
+    font-size:8.5px;
+    margin-right:6px;
+  }
+  #logBox .root{ color:#7fdcff; font-style:normal; }
+  #logBox .scale{ color:#f0c878; font-style:normal; }
+  #logBox .node{ color:#a888ff; font-style:normal; }
+  #logBox .whisper{ color:#8cf0d0; }
 
-    /* MATRIX VISUAL */
-    .matrix-visual {
-      display: flex; flex-direction: column; align-items: center; margin: 6px 0;
-    }
-    .matrix-row {
-      display: flex; justify-content: center; gap: 30px; padding: 4px 0;
-    }
-    .matrix-node {
-      background: #0a0a0a; padding: 4px 14px; border-radius: 6px;
-      border: 1px solid #3d5a70; color: #ffd700; font-weight: bold; min-width: 50px; text-align: center;
-    }
-    .matrix-arrow { color: #0ff; font-size: 16px; }
-    .matrix-label { font-size: 9px; color: #3d5a70; margin-top: 2px; }
+  /* ── ROOT MODE OVERLAY ──────────────────────── */
+  #rootIndicator{
+    position:absolute; bottom:22px; left:50%;
+    transform:translateX(-50%) translateY(20px);
+    font-family:var(--serif);
+    font-size:13px;
+    letter-spacing:8px;
+    color:rgba(240,200,120,0.6);
+    text-transform:uppercase;
+    opacity:0;
+    transition:.6s;
+    pointer-events:none;
+    z-index:7;
+  }
+  #rootIndicator.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+  }
+  #rootIndicator .glyph{
+    display:block; font-size:24px; letter-spacing:0;
+    color:rgba(200,240,255,0.9);
+    text-shadow:0 0 24px rgba(127,220,255,0.6);
+    margin-bottom:4px;
+  }
 
-    .footer {
-      margin-top: 20px; padding: 8px 12px; background: rgba(0,0,0,0.3);
-      border-radius: 6px; font-size: 9px; color: #445555;
-      display: flex; justify-content: space-between; flex-wrap: wrap;
-    }
-    .footer .gold { color: #ffd700; }
-    .footer .purple { color: #a78bfa; }
-  </style>
+  @media(max-width:720px){
+    header h1{font-size:12px;letter-spacing:2px;}
+    #controls{padding:8px 12px; gap:5px;}
+    #controls button{padding:5px 10px; font-size:9px; letter-spacing:1px;}
+    #logBox{max-width:220px; font-size:10px;}
+    #balanceBox{padding:7px 11px; font-size:9px; min-width:120px;}
+    #seal{font-size:9px;}
+    #seal .glyph{font-size:24px;}
+  }
+</style>
 </head>
 <body>
-<div class="container">
 
-  <!-- HEADER -->
-  <div class="header">
-    <div>
-      <h1>⚛️ IKI1UC · PHYSICS ENGINE</h1>
-      <div class="sub">3‑9‑81‑Φ4 · Echtzeit‑Orbit · Gravitation · Energie · Feld</div>
-    </div>
-    <div class="status-led">
-      <span><span class="led green"></span> NET.online</span>
-      <span><span class="led purple"></span> Φ4 aktiv</span>
-      <span id="pause-led"><span class="led green" id="pause-dot"></span> <span id="pause-label">läuft</span></span>
-      <span id="sys-clock">⏱️ --:--</span>
-    </div>
+<header>
+  <h1>⚖️ NC · WAAGSCHALE
+    <small>iki1uc · 起 · 中の軸 · 全てから全てへ</small>
+    <span class="tag">ROOT·ZENTRUM</span>
+  </h1>
+  <div class="stats">
+    <span>Balance <b class="v-cyan" id="sBal">0.00</b></span>
+    <span>Knoten <b class="v-violet" id="sNodes">6</b></span>
+    <span>Last L <b class="v-gold" id="sL">0</b></span>
+    <span>Last R <b class="v-gold" id="sR">0</b></span>
+    <span>Root <b class="v-green" id="sRoot">aus</b></span>
+    <span id="sClock" style="color:#4a5a70;">⏱️ --:--</span>
+  </div>
+</header>
+
+<div id="stage">
+  <canvas id="scaleCanvas"></canvas>
+
+  <!-- Siegel -->
+  <div id="seal">
+    <span class="glyph">衡</span>
+    <span class="sub">NC · AXIS</span>
   </div>
 
-  <!-- PHYSICS CANVAS – das Herzstück -->
-  <div class="physics-panel">
-    <h2>🌌 ORBIT · FELD · VERTEX <span style="font-size:9px;color:#3d5a70;font-weight:400;">3‑9‑81‑Φ4 · Live‑Physik</span></h2>
-    <canvas id="physicsCanvas" width="1600" height="900"></canvas>
+  <!-- Balance-Anzeige -->
+  <div id="balanceBox">
+    <div class="title">
+      <span>WAAGE</span>
+      <span class="mode" id="modeBadge">CENTER</span>
+    </div>
+    <div class="row"><span class="lbl">Neigung</span><span class="val" id="bTilt">0.0°</span></div>
+    <div class="row"><span class="lbl">Mitte X</span><span class="val gold" id="bMid">0</span></div>
+    <div class="row"><span class="lbl">Kraft</span><span class="val violet" id="bForce">0</span></div>
+    <div class="row"><span class="lbl">Fluss</span><span class="val" id="bFlow">0/s</span></div>
   </div>
 
-  <!-- VIER ACHSEN (Metriken) -->
-  <div class="grid-4">
-    <div class="card">
-      <h3>🌍 WELT <span class="badge">3</span></h3>
-      <div class="metric-row"><span class="label">Router</span><span class="value gold" id="welt-router">aktiv</span></div>
-      <div class="metric-row"><span class="label">Stage</span><span class="value cyan" id="welt-stage">3D</span></div>
-      <div class="metric-row"><span class="label">Plugins</span><span class="value pink" id="welt-plugins">13</span></div>
-      <div class="metric-row"><span class="label">Badges</span><span class="value orange" id="welt-badges">0</span></div>
-    </div>
-    <div class="card">
-      <h3>⚡ KRAFT <span class="badge">9</span></h3>
-      <div class="metric-row"><span class="label">Queue</span><span class="value cyan" id="kraft-queue">0</span></div>
-      <div class="metric-row"><span class="label">ZEN</span><span class="value gold" id="kraft-zen">bereit</span></div>
-      <div class="metric-row"><span class="label">Dispatcher</span><span class="value green" id="kraft-input">aktiv</span></div>
-      <div class="metric-row"><span class="label">Befehle</span><span class="value orange" id="kraft-cmds">0</span></div>
-    </div>
-    <div class="card">
-      <h3>🧬 LEBEN <span class="badge">81</span></h3>
-      <div class="metric-row"><span class="label">Zellen</span><span class="value pink" id="leben-zellen">81</span></div>
-      <div class="metric-row"><span class="label">Tick</span><span class="value gold" id="leben-tick">0</span></div>
-      <div class="metric-row"><span class="label">Vital</span><span class="value green" id="leben-vital">0.00</span></div>
-      <div class="metric-row"><span class="label">Drift</span><span class="value cyan" id="leben-drift">0.00</span></div>
-    </div>
-    <div class="card" style="border-color:#a78bfa44;">
-      <h3>🌀 MYSTERY <span class="badge">Φ4</span></h3>
-      <div class="metric-row"><span class="label">Momentum</span><span class="value purple" id="myst-momentum">0.00</span></div>
-      <div class="metric-row"><span class="label">Orbit</span><span class="value purple" id="myst-orbit">0.00</span></div>
-      <div class="metric-row"><span class="label">Fix</span><span class="value purple" id="myst-fix">0.70</span></div>
-      <div class="metric-row"><span class="label">Tiefe</span><span class="value mystery" id="myst-depth">0.00</span></div>
-    </div>
+  <!-- Root-Indikator -->
+  <div id="rootIndicator">
+    <span class="glyph">根</span>
+    ROOT MODUS
   </div>
 
-  <!-- MATRIX VISUAL -->
-  <div class="deutung" style="border-color:#a78bfa44;">
-    <h2>🧮 3‑9‑81‑Φ4 · MATRIX <span style="font-size:9px;color:#3d5a70;font-weight:400;">Atomare Überlegenheit</span></h2>
-    <div class="matrix-visual">
-      <div class="matrix-row">
-        <span class="matrix-node" id="m81">81</span>
-        <span class="matrix-arrow">→</span>
-        <span class="matrix-node" id="m243">243</span>
-        <span class="matrix-arrow">→</span>
-        <span class="matrix-node" id="m729">729</span>
-        <span class="matrix-arrow">→</span>
-        <span class="matrix-node" id="mPhi4" style="border-color:#a78bfa;">Φ4</span>
-      </div>
-      <div class="matrix-label" id="formulaDisplay">3 × (0 ÷ 6) × 90 = 0 | Φ4 = (Welt × Kraft × Leben) / (Mystery + 1)</div>
-    </div>
-  </div>
-
-  <!-- LOG / DEUTUNG -->
-  <div class="deutung">
-    <h2>📖 DEUTUNG · Physik‑Log</h2>
-    <div id="log">▶ IKI1UC · PHYSICS ENGINE · Orbit‑Simulation aktiv …</div>
-  </div>
-
-  <!-- STEUERUNG -->
-  <div class="controls">
-    <input id="cmdInput" placeholder="SHOCK / WAVE / LINK / PUSH / GROW / MOVE / BREAK / MYSTERY" />
-    <button class="attack" onclick="sendCmd()">⚡ SENDEN</button>
-    <button class="primary" onclick="toggleAuto()">▶ AUTO</button>
-    <button onclick="stepTick()">⏭ SCHRITT</button>
-    <button class="meta" onclick="toggleMystery()">🌀 MYSTERY</button>
-    <button onclick="resetAll()">⟲ RESET</button>
-    <span style="color:#666;font-size:9px;">Speed:</span>
-    <input type="range" id="speedSlider" min="1" max="10" value="3" style="width:80px;background:#1e242c;" />
-  </div>
-
-  <div class="footer">
-    <span>⚛️ IKI1UC · <span class="gold">PHYSICS ENGINE</span> · <span class="purple">Φ4</span></span>
-    <span>3‑9‑81 · Echtzeit‑Orbit · Gravitation · Feld</span>
-    <span>⌨️  Leertaste=Auto · Enter=Befehl · m=Mystery‑Toggle</span>
+  <!-- Log -->
+  <div id="logBox">
+    <div><span class="time">[init]</span><span class="scale">⚖️ Waagschale bereit — alle zu allen.</span></div>
   </div>
 </div>
 
+<div id="controls">
+  <button id="btnRoot" class="gold">🌱 ROOT</button>
+  <button id="btnAuto" class="active">⏸ AUTO</button>
+  <button id="btnShift">⇄ SHIFT</button>
+  <button id="btnAll2All" class="violet">✦ ALL→ALL</button>
+  <span class="sep"></span>
+  <span class="lbl">LAST</span>
+  <input type="range" id="load" min="1" max="10" value="3">
+  <span class="sep"></span>
+  <button id="btnReset">⟲ Reset</button>
+</div>
+
 <script>
-  // ================================================================
-  // IKI1UC · PHYSICS ENGINE – 3‑9‑81‑Φ4
-  // ================================================================
+"use strict";
+// ═══════════════════════════════════════════════════════════════════
+// ⚖️ NC · WAAGSCHALE · ZENTRUM · ROOT
+// Das schönste System: alles fließt zur Mitte, die Mitte fließt zu allen.
+// 6 NC-Knoten als Schalen um einen Waagepunkt.
+// Alle zu allen — 15 Verbindungen, keine Hierarchie.
+// ═══════════════════════════════════════════════════════════════════
 
-  // ---- CANVAS SETUP ----
-  const canvas = document.getElementById('physicsCanvas');
-  const ctx = canvas.getContext('2d');
-
-  function resizeCanvas() {
-    const rect = canvas.parentElement.getBoundingClientRect();
-    const w = Math.min(rect.width * 0.95, 1600);
-    canvas.width = w * 1.2;
-    canvas.height = (w * 0.6) * 1.2;
-  }
-  window.addEventListener('resize', resizeCanvas);
-  resizeCanvas();
-
-  // ---- R-KERNEL (Mystery-Achse) ----
-  const R_KERNEL = {
-    mystery: {
-      momentum: 0.5,
-      orbit: 0.5,
-      fix: 0.7,
-      depth: 0.4,
-      active: true,  // standardmäßig aktiv
-    },
-    transform(welt, kraft, leben) {
-      const m = this.mystery;
-      const raw = (welt * kraft * leben) / (m.depth + 1);
-      return Math.min(1, Math.max(0, raw / 1000));
-    },
-    calcDepth() {
-      const m = this.mystery;
-      m.depth = (m.momentum * 0.4) + (m.orbit * 0.3) + (m.fix * 0.3);
-      return m.depth;
-    },
-    toggle() {
-      this.mystery.active = !this.mystery.active;
-      if (this.mystery.active) {
-        this.mystery.momentum = 0.5 + (Math.random() - 0.5) * 0.3;
-        this.mystery.orbit = 0.5 + (Math.random() - 0.5) * 0.3;
-        this.mystery.fix = 0.5 + Math.random() * 0.3;
-      } else {
-        this.mystery.momentum = 0.5;
-        this.mystery.orbit = 0.5;
-        this.mystery.fix = 0.7;
-      }
-      this.calcDepth();
-      return this.mystery.active;
-    },
-    update(welt, kraft, leben) {
-      if (this.mystery.active) {
-        this.mystery.momentum += (Math.random() - 0.5) * 0.02;
-        this.mystery.orbit += (Math.random() - 0.5) * 0.02;
-        this.mystery.fix += (Math.random() - 0.5) * 0.01;
-        this.mystery.fix = Math.min(0.95, Math.max(0.15, this.mystery.fix));
-        this.calcDepth();
-      }
-      const phi4 = this.transform(welt, kraft, leben);
-      return { phi4, depth: this.mystery.depth, active: this.mystery.active };
+// ─── KOMPAT-LAYER (identisch zu KLICK / ZaM / MAINBOARD) ───────
+const MASTER_KEY='iki1uc-master-respo';
+const BC_NAME='iki1uc-orbit';
+let masterChannel=null, isMasterConnected=false;
+const localMaster={
+  stations:{}, klick:0, zack:0, zam:'idle', zoll:'offen',
+  me2:{allow:true,boost:false,slow:false,override:false},
+  score:0, lastUpdate:Date.now()
+};
+try{
+  const s=localStorage.getItem(MASTER_KEY);
+  if(s) Object.assign(localMaster,JSON.parse(s));
+}catch(_){}
+try{
+  masterChannel=new BroadcastChannel(BC_NAME);
+  masterChannel.onmessage=(ev)=>{
+    const d=ev.data; if(!d||!d.type) return;
+    if(d.type==='master:state'&&d.payload){Object.assign(localMaster,d.payload);isMasterConnected=true;}
+    if(d.type==='mainboard:done'&&d.payload){
+      // Mainboard gibt uns Werte → wir verteilen sie als Last auf die Schalen
+      const w=d.payload.compat||50;
+      distributeLoad(w/100);
+      log(`📊 MAINBOARD → Waage: Kompat ${w.toFixed(0)}%`,'node');
     }
   };
+}catch(_){}
+function persistMaster(){try{localStorage.setItem(MASTER_KEY,JSON.stringify(localMaster));}catch(_){}}
+function sendToMaster(type,payload){
+  localMaster.lastUpdate=Date.now(); persistMaster();
+  if(masterChannel){try{masterChannel.postMessage({type,from:'NC-SCALE',payload,ts:Date.now()});}catch(_){}}
+}
 
-  // ---- HAUPT-ENGINE ----
-  const NET = {
-    tick: 0,
-    paused: false,
-    auto: false,
-    speed: 3,
+// ─── DIE 6 NC-KNOTEN ───────────────────────────────────────────
+// ces / in / me / run / sec / u — die 6 NC-Achsen
+const NC_NODES=[
+  { id:'ces', name:'NC·CES',  kanji:'切', label:'Cäsur · Schnitt',   color:'#7fdcff' },
+  { id:'in',  name:'NC·IN',   kanji:'内', label:'Innen · Kern',      color:'#8cf0d0' },
+  { id:'me',  name:'NC·ME',   kanji:'我', label:'Ich · Meta',        color:'#f0c878' },
+  { id:'run', name:'NC·RUN',  kanji:'走', label:'Lauf · Bewegung',   color:'#a888ff' },
+  { id:'sec', name:'NC·SEC',  kanji:'護', label:'Schutz · Sekunde',  color:'#ff9ec4' },
+  { id:'u',   name:'NC·U',    kanji:'宇', label:'Union · Universum', color:'#c8f0ff' },
+];
 
-    welt: { router: 'aktiv', stage: '3D', plugins: 13, badges: 0 },
-    kraft: { queue: 0, zen: 'bereit', dispatcher: 'aktiv', cmds: 0 },
-    leben: { zellen: 81, tick: 0, vital: 0.5, drift: 0.1 },
+// Jedem Knoten wird ein Winkel zugewiesen (Ring um das Zentrum)
+NC_NODES.forEach((n,i)=>{
+  n.angle = (i/NC_NODES.length)*Math.PI*2 - Math.PI/2;
+  // x/y werden in der Resize-Funktion berechnet
+  n.x=0; n.y=0;
+  n.load=0;       // aktuelle Last (Gewicht)
+  n.targetLoad=0; // Ziel-Last
+  n.pulse=0;      // visueller Impuls
+});
 
-    matrix: { atom: 81, uni: 243, run: 729, phi4: 0 },
-    commands: [],
-    log: [],
-    maxLog: 50,
+// ─── STATE ─────────────────────────────────────────────────────
+const S={
+  tick:0,
+  auto:true,
+  root:false,
+  rate:3,
+  loadL:0,       // Last linke Schale (Summe in-Nodes)
+  loadR:0,       // Last rechte Schale (Summe u-Nodes)
+  tilt:0,        // -1 .. 1 (Balken-Neigung)
+  force:0,       // Gesamtkraft
+  flow:0,        // Events pro Sekunde
+  // Visuals
+  links:[],      // Alle-zu-alle Verbindungen
+  sparks:[],
+  wisps:[],      // sanfte Partikel zwischen Knoten
+  rootBranches:[], // beim Root-Modus wachsende Äste
+  lastFlowTick:0,
+  flowCount:0,
+};
 
-    init() {
-      this.logMsg('⚛️ IKI1UC · PHYSICS ENGINE · Orbit‑Simulation gestartet');
-      this.logMsg('💡 Befehle: SHOCK, WAVE, LINK, PUSH, GROW, MOVE, BREAK, MYSTERY');
-      this.updateUI();
-      this.updateMatrix(0);
-      this.updateMysteryUI();
-      this.drawPhysics();
-    },
+// ─── CANVAS ────────────────────────────────────────────────────
+const cv=document.getElementById('scaleCanvas');
+const ctx=cv.getContext('2d');
+let W,H,CX,CY,R,DPR;
 
-    tickStep(force) {
-      if (this.paused && !force) return;
-      this.tick++;
-      this.leben.tick = this.tick;
-      this.leben.vital = 0.5 + 0.3 * Math.sin(this.tick * 0.05);
-      this.leben.drift = 0.1 + 0.05 * Math.cos(this.tick * 0.07);
-      this.kraft.zen = this.tick % 10 < 3 ? '⚡ aktiv' : 'bereit';
-      this.kraft.queue = Math.max(0, this.kraft.queue - 0.2);
-      this.welt.badges = Math.floor(this.tick / 20) % 10;
+function resize(){
+  const r=cv.parentElement.getBoundingClientRect();
+  DPR=window.devicePixelRatio||1;
+  W=r.width; H=r.height;
+  cv.width=W*DPR; cv.height=H*DPR;
+  cv.style.width=W+'px'; cv.style.height=H+'px';
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  CX=W/2;
+  CY=H/2;
+  R=Math.min(W,H)*0.30;
 
-      if (this.commands.length > 0) {
-        const cmd = this.commands.shift();
-        this.processCmd(cmd);
-      }
+  // Knoten-Positionen setzen
+  NC_NODES.forEach(n=>{
+    n.x = CX + Math.cos(n.angle)*R;
+    n.y = CY + Math.sin(n.angle)*R;
+  });
 
-      const r = R_KERNEL.update(this.welt.badges + 1, this.kraft.queue + 1, this.leben.vital * 10);
-      this.matrix.phi4 = r.phi4;
-      this.updateMysteryUI();
-      this.updateUI();
-      this.calcMatrix();
-      this.drawPhysics();
-    },
+  // Verbindungen (alle-zu-alle) vorbereiten
+  S.links=[];
+  for(let i=0;i<NC_NODES.length;i++){
+    for(let j=i+1;j<NC_NODES.length;j++){
+      S.links.push({
+        a:NC_NODES[i], b:NC_NODES[j],
+        strength:0,
+        targetStrength:0,
+        lastPulse:0,
+      });
+    }
+  }
 
-    processCmd(cmd) {
-      const u = cmd.toUpperCase();
-      this.logMsg(`⚡ Befehl: ${u}`);
-      this.kraft.cmds++;
-      if (u.includes('SHOCK')) {
-        this.kraft.queue += 5;
-        this.leben.vital = Math.min(1, this.leben.vital + 0.1);
-        this.logMsg('💥 SHOCK → Queue +5, Vital +0.1');
-      } else if (u.includes('WAVE')) {
-        this.kraft.queue += 3;
-        this.leben.drift += 0.05;
-        this.logMsg('🌊 WAVE → Drift +0.05');
-      } else if (u.includes('LINK')) {
-        this.welt.badges = Math.min(20, this.welt.badges + 3);
-        this.logMsg('🔗 LINK → Badges +3');
-      } else if (u.includes('PUSH')) {
-        this.kraft.queue = Math.max(0, this.kraft.queue - 2);
-        this.logMsg('📌 PUSH → Queue -2');
-      } else if (u.includes('GROW')) {
-        this.leben.zellen = Math.min(243, this.leben.zellen + 10);
-        this.logMsg('🌱 GROW → Zellen +10');
-      } else if (u.includes('MOVE')) {
-        this.leben.drift = Math.max(0, this.leben.drift - 0.03);
-        this.logMsg('🚀 MOVE → Drift -0.03');
-      } else if (u.includes('BREAK')) {
-        this.kraft.queue = 0;
-        this.leben.vital = 0.3;
-        this.logMsg('💔 BREAK → Queue 0, Vital 0.3');
-      } else if (u.includes('MYSTERY')) {
-        const active = R_KERNEL.toggle();
-        this.logMsg(active ? '🌀 Mystery aktiviert (Chaos-Modus)' : '🌀 Mystery deaktiviert (Ordnung-Modus)');
-      } else {
-        this.logMsg(`⚠️ Unbekannt: ${u}`);
-      }
-    },
+  buildRootBranches();
+}
+window.addEventListener('resize',resize);
+if(window.ResizeObserver) new ResizeObserver(resize).observe(cv.parentElement);
 
-    updateMatrix(input) {
-      const hits = Math.floor(input / 6);
-      const val = 3 * hits * 90;
-      this.matrix.atom = val * 81;
-      this.matrix.uni = val * 243;
-      this.matrix.run = val * 729;
-      document.getElementById('m81').textContent = this.matrix.atom.toFixed(0);
-      document.getElementById('m243').textContent = this.matrix.uni.toFixed(0);
-      document.getElementById('m729').textContent = this.matrix.run.toFixed(0);
-      document.getElementById('mPhi4').textContent = 'Φ' + (this.matrix.phi4 * 100).toFixed(0);
-      document.getElementById('formulaDisplay').textContent =
-        `3 × ${hits} × 90 = ${val} | Φ4 = (${(this.welt.badges+1)} × ${(this.kraft.queue+1).toFixed(1)} × ${(this.leben.vital*10).toFixed(1)}) / (${R_KERNEL.mystery.depth.toFixed(2)} + 1) = ${(this.matrix.phi4 * 100).toFixed(0)}%`;
-    },
+// ─── ALLE-ZU-ALLE VERBINDUNGEN ─────────────────────────────────
+function pulseLink(nodeA,nodeB,strength){
+  const l=S.links.find(x=>
+    (x.a===nodeA&&x.b===nodeB)||(x.a===nodeB&&x.b===nodeA)
+  );
+  if(l){
+    l.targetStrength = Math.min(1, l.targetStrength + (strength||0.6));
+    l.lastPulse=S.tick;
+  }
+}
 
-    updateUI() {
-      document.getElementById('welt-router').textContent = this.welt.router;
-      document.getElementById('welt-stage').textContent = this.welt.stage;
-      document.getElementById('welt-plugins').textContent = this.welt.plugins;
-      document.getElementById('welt-badges').textContent = this.welt.badges;
-      document.getElementById('kraft-queue').textContent = this.kraft.queue.toFixed(1);
-      document.getElementById('kraft-zen').textContent = this.kraft.zen;
-      document.getElementById('kraft-input').textContent = this.kraft.dispatcher;
-      document.getElementById('kraft-cmds').textContent = this.kraft.cmds;
-      document.getElementById('leben-zellen').textContent = this.leben.zellen;
-      document.getElementById('leben-tick').textContent = this.leben.tick;
-      document.getElementById('leben-vital').textContent = this.leben.vital.toFixed(2);
-      document.getElementById('leben-drift').textContent = this.leben.drift.toFixed(2);
-    },
+// ─── LAST VERTEILEN ────────────────────────────────────────────
+function distributeLoad(factor){
+  // factor 0..1 → alle Nodes bekommen etwas, aber unterschiedlich
+  // Die linken Nodes (ces, me, sec) und rechten (in, run, u) werden
+  // gegensätzlich belastet, um die Waage zu neigen
+  NC_NODES.forEach((n,i)=>{
+    const base = 0.3 + Math.random()*0.7;
+    // je nach Winkel: linke/rechte Hälfte unterschiedlich gewichten
+    const side = Math.cos(n.angle); // -1..1
+    n.targetLoad = Math.max(0, Math.min(1,
+      base * factor + side * 0.15
+    ));
+  });
+  S.flowCount++;
+}
 
-    updateMysteryUI() {
-      const m = R_KERNEL.mystery;
-      document.getElementById('myst-momentum').textContent = m.momentum.toFixed(2);
-      document.getElementById('myst-orbit').textContent = m.orbit.toFixed(2);
-      document.getElementById('myst-fix').textContent = m.fix.toFixed(2);
-      document.getElementById('myst-depth').textContent = m.depth.toFixed(2);
-      const dot = document.getElementById('pause-dot');
-      const label = document.getElementById('pause-label');
-      dot.className = 'led ' + (this.paused ? 'red' : (R_KERNEL.mystery.active ? 'purple' : 'green'));
-      label.textContent = this.paused ? 'eingefroren' : (R_KERNEL.mystery.active ? 'Chaos' : 'Ordnung');
-    },
+// ─── AUTO-AKTIVITÄT ────────────────────────────────────────────
+function autoTick(now){
+  const interval=Math.max(150, 900 - S.rate*70);
+  if(now - S.lastFlowTick < interval) return;
+  S.lastFlowTick=now;
 
-    logMsg(msg) {
-      const time = new Date().toLocaleTimeString();
-      this.log.push({ time, msg });
-      if (this.log.length > this.maxLog) this.log.shift();
-      this.renderLog();
-    },
+  // Ein zufälliger Knoten sendet einen Impuls zu einem anderen
+  const i=Math.floor(Math.random()*NC_NODES.length);
+  let j=Math.floor(Math.random()*NC_NODES.length);
+  if(j===i) j=(j+1)%NC_NODES.length;
+  const a=NC_NODES[i], b=NC_NODES[j];
+  pulseLink(a,b,0.5+Math.random()*0.5);
 
-    renderLog() {
-      const out = document.getElementById('log');
-      out.innerHTML = this.log.map(e => `[${e.time}] ${e.msg}`).join('\n');
-      out.scrollTop = out.scrollHeight;
-    },
+  // Ein sanfter Wisp wandert
+  spawnWisp(a,b);
 
-    sendCmd(cmd) {
-      if (!cmd) {
-        const input = document.getElementById('cmdInput');
-        cmd = input.value.trim();
-        if (!cmd) return;
-        input.value = '';
-      }
-      this.commands.push(cmd);
-    },
+  // kleine Last-Verschiebung
+  a.targetLoad = Math.min(1, a.targetLoad + 0.1);
+  b.targetLoad = Math.max(0, b.targetLoad - 0.05);
 
-    stepTick() {
-      this.paused = true;
-      this.logMsg('⏭ Schritt (danach pausiert)');
-      this.tickStep(true);
-    },
+  S.flowCount++;
+}
 
-    resumeRun() {
-      this.paused = false;
-      this.logMsg('▶ Weiter');
-    },
+// ─── WISP (sanfte Partikel zwischen Knoten) ────────────────────
+function spawnWisp(from,to){
+  S.wisps.push({
+    ax:from.x, ay:from.y,
+    bx:to.x, by:to.y,
+    t:0,
+    life:0,
+    maxLife:80,
+    color:from.color,
+    size:1.6,
+  });
+}
 
-    resetAll() {
-      this.tick = 0;
-      this.kraft.queue = 0;
-      this.kraft.cmds = 0;
-      this.leben.zellen = 81;
-      this.leben.vital = 0.5;
-      this.leben.drift = 0.1;
-      this.welt.badges = 0;
-      this.commands = [];
-      this.log = [];
-      this.paused = false;
-      R_KERNEL.mystery = { momentum: 0.5, orbit: 0.5, fix: 0.7, depth: 0.4, active: true };
-      this.logMsg('⟲ ALLES zurückgesetzt');
-      this.updateUI();
-      this.updateMatrix(0);
-      this.updateMysteryUI();
-    },
+// ─── SPARK (Impuls-Bursts) ─────────────────────────────────────
+function spawnSpark(x,y,color){
+  for(let i=0;i<10;i++){
+    const a=Math.random()*Math.PI*2;
+    const sp=0.5+Math.random()*1.8;
+    S.sparks.push({
+      x,y,
+      vx:Math.cos(a)*sp, vy:Math.sin(a)*sp,
+      life:0, maxLife:25+Math.random()*30,
+      color:color||'#7fdcff',
+      size:0.8+Math.random()*1.2,
+    });
+  }
+}
 
-    toggleAuto() {
-      this.auto = !this.auto;
-      if (this.auto) this.paused = false;
-      this.logMsg(this.auto ? '▶ AUTO an' : '⏸ AUTO aus');
-      if (this.auto) {
-        const speed = parseInt(document.getElementById('speedSlider').value) || 3;
-        this.speed = speed;
-        if (this._autoInt) clearInterval(this._autoInt);
-        const delay = Math.max(200, 2000 / speed);
-        this._autoInt = setInterval(() => {
-          if (this.auto && !this.paused) this.tickStep();
-        }, delay);
-      } else {
-        if (this._autoInt) { clearInterval(this._autoInt); this._autoInt = null; }
-      }
-    },
+// ─── ROOT-MODUS ────────────────────────────────────────────────
+function buildRootBranches(){
+  S.rootBranches=[];
+  NC_NODES.forEach(n=>{
+    const branch={
+      from:{x:CX,y:CY},
+      to:{x:n.x,y:n.y},
+      growth:0,
+      targetGrowth:0,
+      node:n,
+    };
+    S.rootBranches.push(branch);
+  });
+}
+function toggleRoot(){
+  S.root=!S.root;
+  document.getElementById('btnRoot').classList.toggle('active',S.root);
+  document.getElementById('rootIndicator').classList.toggle('show',S.root);
+  document.getElementById('modeBadge').textContent = S.root?'ROOT':'CENTER';
+  document.getElementById('sRoot').textContent = S.root?'an':'aus';
+  if(S.root){
+    S.rootBranches.forEach(b=>b.targetGrowth=1);
+    log('🌱 ROOT erwacht — die Waage wird zur Wurzel.','root');
+  } else {
+    S.rootBranches.forEach(b=>b.targetGrowth=0);
+    log('⚖️ zurück zum Zentrum.','scale');
+  }
+}
 
-    calcMatrix() {
-      const input = this.kraft.cmds + this.kraft.queue + this.welt.badges;
-      this.updateMatrix(input);
-    },
+// ─── ZEICHNEN ──────────────────────────────────────────────────
+function draw(){
+  ctx.clearRect(0,0,W,H);
 
-    toggleMystery() {
-      const active = R_KERNEL.toggle();
-      this.logMsg(active ? '🌀 Mystery aktiviert (Chaos)' : '🌀 Mystery deaktiviert (Ordnung)');
-      this.updateMysteryUI();
-      this.calcMatrix();
-    },
+  // ── Hintergrund: subtiler Radial-Glow um die Mitte
+  const bg=ctx.createRadialGradient(CX,CY,0,CX,CY,Math.max(W,H)*0.6);
+  bg.addColorStop(0,'rgba(12,26,44,0.9)');
+  bg.addColorStop(0.6,'rgba(6,13,24,0.6)');
+  bg.addColorStop(1,'rgba(2,4,9,0)');
+  ctx.fillStyle=bg;
+  ctx.fillRect(0,0,W,H);
 
-    // ---- PHYSIK-ZEICHNUNG (Canvas) ----
-    drawPhysics() {
-      const w = canvas.width;
-      const h = canvas.height;
-      ctx.clearRect(0, 0, w, h);
+  // ── ROOT-Zweige (nur wenn Root-Modus aktiv)
+  if(S.root || S.rootBranches.some(b=>b.growth>0.01)){
+    drawRootBranches();
+  }
 
-      // Hintergrund-Sterne
-      ctx.fillStyle = '#0a0a12';
-      ctx.fillRect(0, 0, w, h);
-      for (let i = 0; i < 80; i++) {
-        if (i % 2 === 0) continue;
-        ctx.fillStyle = `rgba(255,255,255,${0.05 + Math.random()*0.1})`;
+  // ── RING (die äußere Umlaufbahn)
+  ctx.beginPath();
+  ctx.arc(CX,CY,R,0,Math.PI*2);
+  ctx.strokeStyle='rgba(127,220,255,0.08)';
+  ctx.lineWidth=1;
+  ctx.stroke();
+
+  // ── INNERER RING
+  ctx.beginPath();
+  ctx.arc(CX,CY,R*0.6,0,Math.PI*2);
+  ctx.strokeStyle='rgba(127,220,255,0.05)';
+  ctx.setLineDash([4,8]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // ── ALLE-ZU-ALLE LINKS
+  S.links.forEach(l=>{
+    const strength = l.strength;
+    if(strength<0.02) return;
+    ctx.beginPath();
+    ctx.moveTo(l.a.x, l.a.y);
+    // leichte Wölbung zur Mitte
+    const midX=(l.a.x+l.b.x)/2;
+    const midY=(l.a.y+l.b.y)/2;
+    const ctrlX=midX + (CX-midX)*0.35;
+    const ctrlY=midY + (CY-midY)*0.35;
+    ctx.quadraticCurveTo(ctrlX, ctrlY, l.b.x, l.b.y);
+    // Farb-Gradient zwischen den beiden Knoten
+    const grad=ctx.createLinearGradient(l.a.x,l.a.y,l.b.x,l.b.y);
+    grad.addColorStop(0, l.a.color + Math.round(strength*120).toString(16).padStart(2,'0'));
+    grad.addColorStop(0.5, 'rgba(200,240,255,'+(strength*0.4)+')');
+    grad.addColorStop(1, l.b.color + Math.round(strength*120).toString(16).padStart(2,'0'));
+    ctx.strokeStyle=grad;
+    ctx.lineWidth=0.6 + strength*2.2;
+    ctx.stroke();
+  });
+
+  // ── ZENTRUM: DIE WAAGE
+  drawScale();
+
+  // ── NC-KNOTEN
+  NC_NODES.forEach(n=>drawNode(n));
+
+  // ── WISPS (Partikel zwischen Knoten)
+  S.wisps.forEach(w=>{
+    const t=w.t;
+    const x=w.ax+(w.bx-w.ax)*t;
+    const y=w.ay+(w.by-w.ay)*t;
+    const a=1-Math.abs(t-0.5)*2;
+    ctx.beginPath();
+    ctx.arc(x,y,w.size*(0.5+a*0.5),0,Math.PI*2);
+    ctx.fillStyle=w.color;
+    ctx.globalAlpha=a*0.85;
+    ctx.shadowColor=w.color; ctx.shadowBlur=8;
+    ctx.fill();
+    ctx.shadowBlur=0; ctx.globalAlpha=1;
+  });
+
+  // ── SPARKS
+  S.sparks.forEach(s=>{
+    const a=1-s.life/s.maxLife;
+    ctx.globalAlpha=a;
+    ctx.fillStyle=s.color;
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.size*(0.4+a*0.6),0,Math.PI*2);
+    ctx.fill();
+    ctx.globalAlpha=1;
+  });
+}
+
+// ─── WAAGE (Zentrum) ───────────────────────────────────────────
+function drawScale(){
+  const pulse=1+0.05*Math.sin(S.tick*0.04);
+  const beamLen=R*0.55*pulse;
+  const tiltAngle = S.tilt * 0.18; // rad
+  const bx=CX, by=CY;
+
+  // ── Äußerer Glow des Zentrums
+  const g=ctx.createRadialGradient(bx,by,0,bx,by,R*0.9);
+  g.addColorStop(0,'rgba(127,220,255,0.25)');
+  g.addColorStop(0.5,'rgba(168,136,255,0.08)');
+  g.addColorStop(1,'rgba(168,136,255,0)');
+  ctx.fillStyle=g;
+  ctx.beginPath(); ctx.arc(bx,by,R*0.9,0,Math.PI*2); ctx.fill();
+
+  // ── Zentraler Kern: kleines Sechseck (Symbol der 6 NC)
+  ctx.save();
+  ctx.translate(bx,by);
+  ctx.rotate(S.tick*0.004);
+  ctx.beginPath();
+  for(let i=0;i<6;i++){
+    const a=(i/6)*Math.PI*2;
+    const px=Math.cos(a)*10;
+    const py=Math.sin(a)*10;
+    if(i===0) ctx.moveTo(px,py);
+    else ctx.lineTo(px,py);
+  }
+  ctx.closePath();
+  ctx.strokeStyle='rgba(200,240,255,0.7)';
+  ctx.lineWidth=1.4;
+  ctx.shadowColor='#7fdcff'; ctx.shadowBlur=14;
+  ctx.stroke();
+  ctx.shadowBlur=0;
+  ctx.restore();
+
+  // ── Waagebalken (rotiert mit tilt)
+  ctx.save();
+  ctx.translate(bx,by);
+  ctx.rotate(tiltAngle);
+
+  // Der Balken
+  ctx.beginPath();
+  ctx.moveTo(-beamLen,0);
+  ctx.lineTo(beamLen,0);
+  ctx.strokeStyle='rgba(240,200,120,0.85)';
+  ctx.lineWidth=1.6;
+  ctx.shadowColor='#f0c878'; ctx.shadowBlur=12;
+  ctx.stroke();
+  ctx.shadowBlur=0;
+
+  // Schalen (links/rechts)
+  drawPan(-beamLen,0,S.loadL,'#7fdcff');
+  drawPan( beamLen,0,S.loadR,'#a888ff');
+
+  ctx.restore();
+
+  // ── Mittelpfeiler (senkrecht)
+  ctx.beginPath();
+  ctx.moveTo(bx,by-6);
+  ctx.lineTo(bx,by+R*0.35);
+  ctx.strokeStyle='rgba(200,240,255,0.28)';
+  ctx.lineWidth=1;
+  ctx.stroke();
+
+  // ── Waage-Fuß
+  ctx.beginPath();
+  ctx.moveTo(bx-14, by+R*0.35);
+  ctx.lineTo(bx+14, by+R*0.35);
+  ctx.strokeStyle='rgba(200,240,255,0.5)';
+  ctx.lineWidth=1.6;
+  ctx.stroke();
+}
+
+function drawPan(px,py,load,color){
+  // Ein Tropfen / eine Schale hängt an einem Faden vom Balken-Ende
+  const threadLen = 18;
+  const panR = 6 + load*8;
+
+  ctx.beginPath();
+  ctx.moveTo(px,py);
+  ctx.lineTo(px,py+threadLen);
+  ctx.strokeStyle='rgba(200,240,255,0.35)';
+  ctx.lineWidth=0.8;
+  ctx.stroke();
+
+  // Schale (Halbkreis)
+  ctx.beginPath();
+  ctx.arc(px, py+threadLen, panR, 0, Math.PI);
+  ctx.strokeStyle=color;
+  ctx.lineWidth=1.4;
+  ctx.shadowColor=color; ctx.shadowBlur=10;
+  ctx.stroke();
+  ctx.shadowBlur=0;
+
+  // kleine Füllung je nach Last
+  if(load>0.02){
+    ctx.beginPath();
+    ctx.arc(px, py+threadLen, panR*0.8, Math.PI*load, Math.PI);
+    ctx.strokeStyle=color+'88';
+    ctx.lineWidth=2;
+    ctx.stroke();
+  }
+}
+
+// ─── KNOTEN (NC-Sektionen) ─────────────────────────────────────
+function drawNode(n){
+  const pulse = 1 + n.pulse*0.6;
+  const radius = 20 + n.load*14 + n.pulse*4;
+
+  // Glow
+  const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,radius*2.4);
+  g.addColorStop(0, n.color+'cc');
+  g.addColorStop(0.4, n.color+'44');
+  g.addColorStop(1, n.color+'00');
+  ctx.fillStyle=g;
+  ctx.beginPath(); ctx.arc(n.x,n.y,radius*2.4,0,Math.PI*2); ctx.fill();
+
+  // Kreis
+  ctx.beginPath();
+  ctx.arc(n.x,n.y,radius,0,Math.PI*2);
+  ctx.fillStyle='rgba(4,10,20,0.85)';
+  ctx.fill();
+  ctx.strokeStyle=n.color;
+  ctx.lineWidth=1.6;
+  ctx.shadowColor=n.color; ctx.shadowBlur=12;
+  ctx.stroke();
+  ctx.shadowBlur=0;
+
+  // Innerer Puls-Ring
+  if(n.pulse>0.05){
+    ctx.beginPath();
+    ctx.arc(n.x,n.y,radius*(1+n.pulse*0.8),0,Math.PI*2);
+    ctx.strokeStyle=n.color+'55';
+    ctx.lineWidth=1;
+    ctx.stroke();
+  }
+
+  // Kanji
+  ctx.fillStyle=n.color;
+  ctx.font=`bold ${Math.round(radius*0.85)}px "Yu Mincho","Hiragino Mincho ProN",serif`;
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(n.kanji, n.x, n.y);
+
+  // Label unter dem Knoten
+  ctx.fillStyle='rgba(200,220,240,0.55)';
+  ctx.font='8.5px Consolas';
+  ctx.textAlign='center'; ctx.textBaseline='top';
+  ctx.fillText(n.name, n.x, n.y + radius + 4);
+
+  // Lastbalken
+  if(n.load>0.02){
+    const barW=radius*1.8;
+    const barX=n.x-barW/2;
+    const barY=n.y + radius + 16;
+    ctx.fillStyle='rgba(0,0,0,0.5)';
+    ctx.fillRect(barX, barY, barW, 2);
+    ctx.fillStyle=n.color;
+    ctx.fillRect(barX, barY, barW*n.load, 2);
+  }
+}
+
+// ─── ROOT ZWEIGE ───────────────────────────────────────────────
+function drawRootBranches(){
+  S.rootBranches.forEach(b=>{
+    if(b.growth<0.01) return;
+    // Wurzel wächst vom Zentrum nach außen
+    const ex=b.from.x + (b.to.x-b.from.x)*b.growth;
+    const ey=b.from.y + (b.to.y-b.from.y)*b.growth;
+    ctx.beginPath();
+    ctx.moveTo(b.from.x, b.from.y);
+    // leichte Krümmung
+    const ctrlX=b.from.x + (b.to.x-b.from.x)*0.5 + Math.sin(S.tick*0.02)*6;
+    const ctrlY=b.from.y + (b.to.y-b.from.y)*0.5 + Math.cos(S.tick*0.02)*6;
+    ctx.quadraticCurveTo(ctrlX, ctrlY, ex, ey);
+    ctx.strokeStyle=`rgba(240,200,120,${0.5*b.growth})`;
+    ctx.lineWidth=1+b.growth*1.6;
+    ctx.stroke();
+
+    // Seitenzweige (kleine Härchen)
+    if(b.growth>0.3){
+      const midX=b.from.x+(b.to.x-b.from.x)*0.5;
+      const midY=b.from.y+(b.to.y-b.from.y)*0.5;
+      for(let k=0;k<3;k++){
+        const angle=Math.atan2(b.to.y-b.from.y,b.to.x-b.from.x)
+          + (k-1)*0.6;
+        const l=8*b.growth;
         ctx.beginPath();
-        ctx.arc(Math.random() * w, Math.random() * h, 0.5 + Math.random() * 0.8, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      // Zentrum (Kern)
-      const cx = w * 0.5;
-      const cy = h * 0.5;
-
-      // Werte holen
-      const welt = this.welt.badges + 1;
-      const kraft = this.kraft.queue + 1;
-      const leben = this.leben.vital * 10;
-      const depth = R_KERNEL.mystery.depth || 0.1;
-      const phi4 = this.matrix.phi4 || 0;
-
-      // Orbit-Radien basierend auf Welt, Kraft, Leben
-      const rWelt = 40 + welt * 20;
-      const rKraft = 80 + kraft * 15;
-      const rLeben = 120 + leben * 10;
-      const rPhi = 160 + phi4 * 80;
-
-      // Gravitations-Zentrum
-      ctx.shadowColor = '#ffd700';
-      ctx.shadowBlur = 30;
-      ctx.fillStyle = '#ffd700';
-      ctx.beginPath();
-      ctx.arc(cx, cy, 12 + phi4 * 20, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.shadowBlur = 0;
-
-      // Umlaufbahnen (Kreise)
-      ctx.strokeStyle = 'rgba(255,215,0,0.08)';
-      ctx.lineWidth = 0.5;
-      for (let r of [rWelt, rKraft, rLeben, rPhi]) {
-        ctx.beginPath();
-        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.moveTo(midX,midY);
+        ctx.lineTo(midX+Math.cos(angle)*l, midY+Math.sin(angle)*l);
+        ctx.strokeStyle=`rgba(240,200,120,${0.35*b.growth})`;
+        ctx.lineWidth=0.7;
         ctx.stroke();
       }
-
-      // Winkel basierend auf Tick und Werten
-      const angleWelt = this.tick * 0.02 + welt * 0.1;
-      const angleKraft = this.tick * 0.015 + kraft * 0.08;
-      const angleLeben = this.tick * 0.01 + leben * 0.06;
-      const anglePhi = this.tick * 0.008 + phi4 * 0.12;
-
-      // Planeten zeichnen (mit Größe & Farbe)
-      const planets = [
-        { r: rWelt, angle: angleWelt, color: '#ffd700', label: '3', size: 8 + welt * 0.5 },
-        { r: rKraft, angle: angleKraft, color: '#66ccff', label: '9', size: 10 + kraft * 0.4 },
-        { r: rLeben, angle: angleLeben, color: '#ff66ff', label: '81', size: 12 + leben * 0.3 },
-        { r: rPhi, angle: anglePhi, color: '#a78bfa', label: 'Φ', size: 14 + phi4 * 30 },
-      ];
-
-      for (const p of planets) {
-        const x = cx + p.r * Math.cos(p.angle);
-        const y = cy + p.r * Math.sin(p.angle);
-        ctx.shadowColor = p.color;
-        ctx.shadowBlur = 20;
-        ctx.fillStyle = p.color;
-        ctx.beginPath();
-        ctx.arc(x, y, p.size, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = '#0a0a12';
-        ctx.font = `${p.size * 0.6}px Consolas`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(p.label, x, y);
-      }
-
-      // Verbindungslinien (Gravitations-Felder)
-      ctx.globalAlpha = 0.15;
-      ctx.strokeStyle = '#a78bfa';
-      ctx.lineWidth = 0.5;
-      for (let i = 0; i < planets.length; i++) {
-        for (let j = i + 1; j < planets.length; j++) {
-          const p1 = planets[i];
-          const p2 = planets[j];
-          const x1 = cx + p1.r * Math.cos(p1.angle);
-          const y1 = cy + p1.r * Math.sin(p1.angle);
-          const x2 = cx + p2.r * Math.cos(p2.angle);
-          const y2 = cy + p2.r * Math.sin(p2.angle);
-          ctx.beginPath();
-          ctx.moveTo(x1, y1);
-          ctx.lineTo(x2, y2);
-          ctx.stroke();
-        }
-      }
-      ctx.globalAlpha = 1;
-
-      // Info-Text
-      ctx.fillStyle = '#3d5a70';
-      ctx.font = '12px Consolas';
-      ctx.textAlign = 'left';
-      ctx.textBaseline = 'bottom';
-      ctx.fillText(`Tick: ${this.tick}  |  Welt: ${welt}  Kraft: ${kraft.toFixed(1)}  Leben: ${leben.toFixed(1)}  Φ4: ${(phi4*100).toFixed(0)}%`, 20, h - 20);
-      ctx.textAlign = 'right';
-      ctx.fillText(`Mystery: ${R_KERNEL.mystery.active ? 'ON' : 'OFF'}  |  Depth: ${depth.toFixed(2)}`, w - 20, h - 20);
-    }
-  };
-
-  // ---- Globale Funktionen ----
-  window.sendCmd = function() {
-    const input = document.getElementById('cmdInput');
-    const cmd = input.value.trim();
-    if (cmd) NET.sendCmd(cmd);
-  };
-  window.toggleAuto = function() { NET.toggleAuto(); };
-  window.stepTick = function() { NET.stepTick(); };
-  window.resumeRun = function() { NET.resumeRun(); };
-  window.resetAll = function() { NET.resetAll(); };
-  window.toggleMystery = function() { NET.toggleMystery(); };
-
-  // ---- Tastatur ----
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && document.activeElement === document.getElementById('cmdInput')) {
-      window.sendCmd(); e.preventDefault();
-    }
-    if (e.key === ' ' && e.target === document.body) {
-      e.preventDefault(); window.toggleAuto();
-    }
-    if ((e.key === 'm' || e.key === 'M') && e.target !== document.getElementById('cmdInput')) {
-      window.toggleMystery();
     }
   });
+}
 
-  // ---- Speed Slider ----
-  document.getElementById('speedSlider').addEventListener('input', function() {
-    const speed = parseInt(this.value) || 3;
-    NET.speed = speed;
-    if (NET.auto) {
-      if (NET._autoInt) { clearInterval(NET._autoInt); NET._autoInt = null; }
-      const delay = Math.max(200, 2000 / speed);
-      NET._autoInt = setInterval(() => {
-        if (NET.auto && !NET.paused) NET.tickStep();
-      }, delay);
-    }
+// ─── UPDATE ────────────────────────────────────────────────────
+function updateLinks(){
+  S.links.forEach(l=>{
+    // Aufbauen
+    l.strength += (l.targetStrength - l.strength)*0.08;
+    // Zerfall
+    l.targetStrength *= 0.94;
+    if(l.targetStrength<0.02) l.targetStrength=0;
   });
-
-  // ---- Uhr ----
-  function updateClock() {
-    document.getElementById('sys-clock').textContent = `⏱️ ${new Date().toLocaleTimeString()}`;
+}
+function updateNodes(){
+  NC_NODES.forEach(n=>{
+    n.load += (n.targetLoad - n.load)*0.06;
+    n.pulse *= 0.92;
+    if(n.pulse<0.01) n.pulse=0;
+  });
+  // Waage-Last: linke Hälfte (ces,me,sec) vs rechte Hälfte (in,run,u)
+  const left = NC_NODES.filter(n=>Math.cos(n.angle)<0).reduce((s,n)=>s+n.load,0);
+  const right= NC_NODES.filter(n=>Math.cos(n.angle)>=0).reduce((s,n)=>s+n.load,0);
+  S.loadL=left/3;
+  S.loadR=right/3;
+  S.tilt = Math.max(-1,Math.min(1,(S.loadR-S.loadL)*1.4));
+  S.force = left+right;
+}
+function updateWisps(dt){
+  for(let i=S.wisps.length-1;i>=0;i--){
+    const w=S.wisps[i];
+    w.t += 0.018*(dt/16);
+    w.life++;
+    if(w.t>=1 || w.life>w.maxLife) S.wisps.splice(i,1);
   }
-  setInterval(updateClock, 1000);
-  updateClock();
+}
+function updateSparks(dt){
+  for(let i=S.sparks.length-1;i>=0;i--){
+    const s=S.sparks[i];
+    s.x += s.vx*(dt/16);
+    s.y += s.vy*(dt/16);
+    s.vx *= 0.95; s.vy *= 0.95;
+    s.life++;
+    if(s.life>s.maxLife) S.sparks.splice(i,1);
+  }
+}
+function updateRoot(dt){
+  S.rootBranches.forEach(b=>{
+    b.growth += (b.targetGrowth - b.growth)*0.04;
+  });
+}
 
-  // ---- Hintergrund-Tick ----
-  setInterval(() => {
-    if (!NET.auto && !NET.paused) NET.tickStep();
-  }, 700);
+// ─── LOOP ──────────────────────────────────────────────────────
+let lastT=0;
+function loop(now){
+  const dt=Math.min(48, now-lastT||16);
+  lastT=now;
+  S.tick++;
 
-  // ---- Canvas Resize bei Fensteränderung ----
-  window.addEventListener('resize', () => {
-    resizeCanvas();
-    NET.drawPhysics();
+  if(S.auto) autoTick(now);
+
+  updateLinks();
+  updateNodes();
+  updateWisps(dt);
+  updateSparks(dt);
+  updateRoot(dt);
+
+  // Flow-Zähler: alle 1s zurücksetzen
+  if(now - (S._flowReset||0) > 1000){
+    S._flowReset=now;
+    S._flowRate = S.flowCount;
+    S.flowCount = 0;
+  }
+
+  draw();
+  updateStats();
+  requestAnimationFrame(loop);
+}
+
+// ─── STATS ─────────────────────────────────────────────────────
+function updateStats(){
+  const bal = (1 - Math.abs(S.tilt));
+  document.getElementById('sBal').textContent=bal.toFixed(2);
+  document.getElementById('sL').textContent=S.loadL.toFixed(2);
+  document.getElementById('sR').textContent=S.loadR.toFixed(2);
+  document.getElementById('bTilt').textContent=(S.tilt*10).toFixed(1)+'°';
+  document.getElementById('bMid').textContent=(S.tilt*100).toFixed(0);
+  document.getElementById('bForce').textContent=S.force.toFixed(2);
+  document.getElementById('bFlow').textContent=(S._flowRate||0)+'/s';
+}
+
+// ─── LOG ───────────────────────────────────────────────────────
+function log(msg,cls){
+  const box=document.getElementById('logBox');
+  const entry=document.createElement('div');
+  const t=new Date().toLocaleTimeString('de-DE');
+  entry.innerHTML=`<span class="time">[${t}]</span><span class="${cls||''}">${msg}</span>`;
+  box.appendChild(entry);
+  box.scrollTop=box.scrollHeight;
+  while(box.children.length>30) box.removeChild(box.firstChild);
+}
+
+// ─── BUTTONS ───────────────────────────────────────────────────
+document.getElementById('btnRoot').addEventListener('click',toggleRoot);
+
+document.getElementById('btnAuto').addEventListener('click',(e)=>{
+  S.auto=!S.auto;
+  e.currentTarget.classList.toggle('active',S.auto);
+  e.currentTarget.textContent=(S.auto?'⏸ AUTO':'▶ AUTO');
+  log(`AUTO ${S.auto?'an':'aus'}`,'scale');
+});
+
+document.getElementById('btnShift').addEventListener('click',()=>{
+  // Manueller Impuls: von einem zufälligen zu einem anderen Knoten
+  const i=Math.floor(Math.random()*NC_NODES.length);
+  const j=(i+1+Math.floor(Math.random()*5))%NC_NODES.length;
+  pulseLink(NC_NODES[i],NC_NODES[j],0.9);
+  spawnWisp(NC_NODES[i],NC_NODES[j]);
+  NC_NODES[i].pulse=1;
+  NC_NODES[j].pulse=0.8;
+  spawnSpark(NC_NODES[i].x,NC_NODES[i].y,NC_NODES[i].color);
+  log(`⇄ ${NC_NODES[i].name} → ${NC_NODES[j].name}`,'node');
+});
+
+document.getElementById('btnAll2All').addEventListener('click',()=>{
+  // Jeder Knoten sendet zu jedem anderen
+  NC_NODES.forEach(a=>{
+    NC_NODES.forEach(b=>{
+      if(a!==b){
+        pulseLink(a,b,0.5+Math.random()*0.4);
+        if(Math.random()<0.4) spawnWisp(a,b);
+      }
+    });
+    a.pulse=1;
+    spawnSpark(a.x,a.y,a.color);
+  });
+  log('✦ ALL-TO-ALL — jede Sektion spricht mit jeder.','root');
+  sendToMaster('nc:all2all',{ts:Date.now(),nodes:NC_NODES.length});
+});
+
+document.getElementById('btnReset').addEventListener('click',()=>{
+  NC_NODES.forEach(n=>{n.load=0;n.targetLoad=0;n.pulse=0;});
+  S.links.forEach(l=>{l.strength=0;l.targetStrength=0;});
+  S.wisps=[];S.sparks=[];
+  log('⟲ Waage zur Ruhe gebracht.','scale');
+});
+
+document.getElementById('load').addEventListener('input',(e)=>{
+  S.rate=parseInt(e.target.value,10);
+});
+
+// ─── CLICK auf Canvas: Last an den nächsten Knoten ────────────
+cv.addEventListener('click',(e)=>{
+  const r=cv.getBoundingClientRect();
+  const x=e.clientX-r.left;
+  const y=e.clientY-r.top;
+
+  // Nächsten Knoten finden
+  let nearest=null, bestD=1e9;
+  NC_NODES.forEach(n=>{
+    const d=Math.hypot(x-n.x,y-n.y);
+    if(d<bestD){bestD=d;nearest=n;}
   });
 
-  // ---- Start ----
-  NET.init();
-  console.log('⚛️ IKI1UC · PHYSICS ENGINE · Orbit‑Simulation geladen');
-  console.log('⌨️  Leertaste=Auto, Enter=Befehl, m=Mystery-Toggle');
+  if(nearest && bestD<80){
+    // An diesen Knoten senden
+    nearest.targetLoad=Math.min(1,nearest.targetLoad+0.2);
+    nearest.pulse=1;
+    spawnSpark(nearest.x,nearest.y,nearest.color);
+    // Und von diesem Knoten an alle anderen
+    NC_NODES.forEach(other=>{
+      if(other!==nearest){
+        pulseLink(nearest,other,0.4);
+        if(Math.random()<0.5) spawnWisp(nearest,other);
+      }
+    });
+    log(`⚖️ Last → ${nearest.name} → alle`,'node');
+  } else {
+    // Klick ins Zentrum: Waage kurz aus dem Gleichgewicht bringen
+    S.tilt += (Math.random()-0.5)*0.6;
+    distributeLoad(0.6);
+    spawnSpark(CX,CY,'#f0c878');
+    log('⚖️ Das Zentrum nimmt auf und verteilt.','scale');
+  }
+});
+
+// ─── KEYBOARD ─────────────────────────────────────────────────
+document.addEventListener('keydown',(e)=>{
+  if(e.target.tagName==='INPUT') return;
+  if(e.key===' '){e.preventDefault();document.getElementById('btnShift').click();}
+  if(e.key==='a'||e.key==='A') document.getElementById('btnAll2All').click();
+  if(e.key==='r'||e.key==='R') document.getElementById('btnRoot').click();
+  if(e.key==='p'||e.key==='P') document.getElementById('btnAuto').click();
+});
+
+// ─── CLOCK ────────────────────────────────────────────────────
+function clock(){
+  document.getElementById('sClock').textContent='⏱️ '+new Date().toLocaleTimeString('de-DE');
+}
+setInterval(clock,1000); clock();
+
+// ─── API ──────────────────────────────────────────────────────
+window.NC={
+  scale:{
+    center:()=>({x:CX,y:CY}),
+    load:()=>({L:S.loadL,R:S.loadR,tilt:S.tilt,force:S.force}),
+    distribute:(f)=>distributeLoad(f),
+    shift:(from,to)=>{
+      if(typeof from==='number' && typeof to==='number'){
+        pulseLink(NC_NODES[from],NC_NODES[to],0.9);
+      }
+    },
+  },
+  root:{
+    on:()=>{if(!S.root)toggleRoot();},
+    off:()=>{if(S.root)toggleRoot();},
+    toggle:toggleRoot,
+  },
+  nodes:()=>NC_NODES.map(n=>({
+    id:n.id, name:n.name, kanji:n.kanji,
+    load:n.load, angle:n.angle, x:n.x, y:n.y,
+  })),
+  all2all:()=>document.getElementById('btnAll2All').click(),
+  state:()=>({
+    tick:S.tick, auto:S.auto, root:S.root,
+    loadL:S.loadL, loadR:S.loadR, tilt:S.tilt, force:S.force,
+    flow:S._flowRate||0,
+    links:S.links.filter(l=>l.strength>0.1).length,
+    wisps:S.wisps.length,
+    sparks:S.sparks.length,
+  }),
+  me2:{
+    allow:()=>{localMaster.me2.allow=true;},
+    block:()=>{localMaster.me2.allow=false;},
+  },
+  master:{
+    connected:()=>isMasterConnected,
+    state:()=>({...localMaster}),
+  },
+};
+window.SCALE=window.NC;
+
+// ─── INIT ─────────────────────────────────────────────────────
+resize();
+
+// Erster Impuls: alles zu allem, einmal
+setTimeout(()=>{
+  NC_NODES.forEach(a=>{
+    NC_NODES.forEach(b=>{
+      if(a!==b) pulseLink(a,b,0.3);
+    });
+  });
+  log('✦ Alle zu allen — das Netz ist bereit.','root');
+},600);
+
+// Erstes sanftes Kippen
+setTimeout(()=>distributeLoad(0.5), 1200);
+
+log('⚖️ NC · WAAGSCHALE bereit — Zentrum und Root zugleich.','root');
+log('6 Sektionen: ces · in · me · run · sec · u','node');
+log('Space = Shift · A = All→All · R = Root · P = Auto','scale');
+
+console.log('%c⚖️ NC · WAAGSCHALE geladen','color:#7fdcff;font-weight:bold;font-size:14px;');
+console.log('→ window.NC.all2all() · .root.toggle() · .nodes() · .state()');
+
+requestAnimationFrame(loop);
 </script>
 </body>
 </html>
