@@ -3,40 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>⚖️ NC · WAAGSCHALE · ZENTRUM · ROOT · iki1uc</title>
+<title>⚡ NC · 9×9 · ROOT · MACHT · MYSTERY-LANES · iki1uc</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box;}
   :root{
-    --bg1:#040810; --bg2:#0a1524;
+    --bg:#02040a;
     --cyan:#7fdcff; --cyan2:#c8f0ff;
     --gold:#f0c878; --gold2:#ffe9b0;
     --violet:#a888ff;
     --green:#8cf0d0;
+    --pink:#ff9ec4;
+    --red:#ff5a7a;
     --line:rgba(127,220,255,0.12);
-    --serif:'Yu Mincho','Hiragino Mincho ProN','Times New Roman',serif;
+    --serif:'Yu Mincho','Hiragino Mincho ProN',serif;
+    --mono:'Consolas','Courier New',monospace;
   }
   html,body{height:100%;}
   body{
-    background:
-      radial-gradient(ellipse at 50% 40%, #0c1a2c 0%, #060d18 55%, #020409 100%);
+    background:radial-gradient(ellipse at 50% 30%, #0a1828 0%, #040810 55%, #010205 100%);
     color:#c8d8e8;
-    font-family:'Consolas','Courier New',monospace;
-    height:100vh; overflow:hidden;
-    display:flex; flex-direction:column;
+    font-family:var(--mono);
+    min-height:100vh;
+    overflow-x:hidden;
   }
 
-  /* ── HEADER ─────────────────────────────────── */
+  /* ── HEADER ───────────────────────────────── */
   header{
     display:flex; justify-content:space-between; align-items:center;
-    padding:10px 20px;
+    padding:10px 18px;
     border-bottom:1px solid var(--line);
-    background:rgba(4,8,16,0.85);
+    background:rgba(4,8,16,0.9);
     backdrop-filter:blur(14px);
-    flex-wrap:wrap; gap:10px; z-index:10;
+    flex-wrap:wrap; gap:8px; position:sticky; top:0; z-index:20;
   }
   header h1{
     font-size:15px; font-weight:300; letter-spacing:4px;
-    background:linear-gradient(135deg,#c8f0ff,#7fdcff,#a888ff);
+    background:linear-gradient(135deg,#c8f0ff,#7fdcff,#a888ff,#f0c878);
     -webkit-background-clip:text; -webkit-text-fill-color:transparent;
     font-family:var(--serif);
   }
@@ -44,1074 +46,1040 @@
     font-size:9px; color:#5a7288;
     -webkit-text-fill-color:#5a7288;
     letter-spacing:2px; margin-left:8px;
-    font-family:'Consolas',monospace;
+    font-family:var(--mono);
   }
   header h1 .tag{
     font-size:8px; letter-spacing:3px;
     -webkit-text-fill-color:#f0c878;
     border:1px solid rgba(240,200,120,0.4);
     border-radius:4px; padding:1px 7px; margin-left:8px;
-    font-family:'Consolas',monospace;
+    font-family:var(--mono);
   }
   .stats{
-    display:flex; gap:14px; font-size:9.5px;
+    display:flex; gap:12px; font-size:9.5px;
     color:#6a8098; align-items:center; flex-wrap:wrap;
   }
-  .stats .v-cyan{color:#7fdcff;font-weight:bold;}
-  .stats .v-gold{color:#f0c878;font-weight:bold;}
-  .stats .v-violet{color:#a888ff;font-weight:bold;}
-  .stats .v-green{color:#8cf0d0;font-weight:bold;}
+  .stats b{font-weight:bold;}
+  .v-cyan{color:#7fdcff;} .v-gold{color:#f0c878;}
+  .v-violet{color:#a888ff;} .v-green{color:#8cf0d0;}
+  .v-red{color:#ff5a7a;} .v-pink{color:#ff9ec4;}
 
-  /* ── STAGE ──────────────────────────────────── */
-  #stage{
-    flex:1; position:relative; overflow:hidden;
-    display:flex; align-items:center; justify-content:center;
+  /* ── LAYOUT ──────────────────────────────── */
+  .main{
+    display:grid;
+    grid-template-columns: 1fr 340px;
+    gap:14px;
+    padding:14px;
+    max-width:1600px;
+    margin:0 auto;
   }
-  #scaleCanvas{
-    display:block; width:100%; height:100%;
-    cursor:pointer;
-  }
-
-  /* ── SEAL (oben links) ──────────────────────── */
-  #seal{
-    position:absolute; top:20px; left:22px;
-    font-family:var(--serif);
-    font-size:11px; letter-spacing:6px;
-    color:rgba(127,220,255,0.55);
-    text-transform:uppercase;
-    z-index:6; pointer-events:none;
-    text-align:center;
-  }
-  #seal .glyph{
-    font-size:34px; display:block; line-height:1;
-    color:rgba(200,240,255,0.75);
-    text-shadow:0 0 20px rgba(127,220,255,0.5);
-  }
-  #seal .sub{
-    font-size:8px; letter-spacing:5px; margin-top:6px;
-    font-family:'Consolas',monospace;
-    color:rgba(240,200,120,0.6);
+  @media(max-width:1100px){
+    .main{grid-template-columns:1fr;}
   }
 
-  /* ── BALANCE READOUT (oben rechts) ──────────── */
-  #balanceBox{
-    position:absolute; top:20px; right:22px;
-    padding:10px 16px;
-    background:rgba(4,8,16,0.75);
+  .panel{
+    background:rgba(6,12,22,0.7);
     border:1px solid var(--line);
-    border-left:2px solid var(--cyan);
-    border-radius:6px;
-    font-size:10px;
-    letter-spacing:1.5px;
-    z-index:6; pointer-events:none;
-    min-width:150px;
+    border-radius:10px;
+    padding:12px;
+    backdrop-filter:blur(8px);
   }
-  #balanceBox .row{
-    display:flex; justify-content:space-between;
-    padding:2px 0;
-  }
-  #balanceBox .lbl{color:#6a8098;}
-  #balanceBox .val{font-weight:bold;color:#c8f0ff;}
-  #balanceBox .val.gold{color:#f0c878;}
-  #balanceBox .val.violet{color:#a888ff;}
-  #balanceBox .title{
+  .panel h3{
+    font-size:10px; letter-spacing:3px;
+    color:var(--cyan);
+    text-transform:uppercase;
+    margin-bottom:8px;
     font-family:var(--serif);
-    font-size:11px;
-    letter-spacing:3px;
-    color:#7fdcff;
-    border-bottom:1px solid var(--line);
-    padding-bottom:5px; margin-bottom:6px;
-    display:flex; justify-content:space-between;
+    display:flex; justify-content:space-between; align-items:center;
   }
-  #balanceBox .title .mode{
-    font-size:8px;
-    color:#f0c878;
+  .panel h3 .badge{
+    font-family:var(--mono);
+    font-size:8px; letter-spacing:1px;
+    color:var(--gold);
     border:1px solid rgba(240,200,120,0.3);
-    border-radius:3px;
-    padding:0 5px;
-    letter-spacing:1px;
+    border-radius:3px; padding:1px 6px;
   }
 
-  /* ── CONTROLS ───────────────────────────────── */
-  #controls{
-    display:flex; gap:8px; align-items:center;
-    padding:11px 20px;
-    border-top:1px solid var(--line);
-    background:rgba(4,8,16,0.92);
-    backdrop-filter:blur(14px);
-    flex-wrap:wrap;
-    font-size:10px; z-index:10;
+  /* ── 9×9 GRID ───────────────────────────── */
+  .grid9-wrap{
+    display:flex; align-items:center; justify-content:center;
+    padding:8px;
   }
-  #controls button{
+  #grid9{
+    display:grid;
+    grid-template-columns:repeat(9,1fr);
+    grid-template-rows:repeat(9,1fr);
+    gap:2px;
+    width:100%;
+    max-width:560px;
+    aspect-ratio:1/1;
+    background:#02040a;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px;
+  }
+  .cell9{
+    background:#0a1420;
+    border:1px solid #101c2c;
+    border-radius:3px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:9px;
+    color:#3a4a5a;
+    cursor:pointer;
+    transition:.15s;
+    position:relative;
+    user-select:none;
+  }
+  .cell9:hover{border-color:var(--cyan);color:var(--cyan);}
+  .cell9.on{background:#0a2418;border-color:#0f6;color:#8cf0d0;}
+  .cell9.root{background:#2a1a04;border-color:var(--gold);color:var(--gold2);box-shadow:0 0 12px rgba(240,200,120,0.5);}
+  .cell9.macht{background:#1a0828;border-color:var(--violet);color:#c8a8ff;box-shadow:0 0 10px rgba(168,136,255,0.4);}
+  .cell9.mystery{background:#2a0418;border-color:var(--pink);color:#ff9ec4;box-shadow:0 0 10px rgba(255,158,196,0.3);}
+  .cell9.core{font-weight:bold;font-size:11px;}
+
+  /* ── CONTROLS ───────────────────────────── */
+  .ctrl{
+    display:flex; flex-wrap:wrap; gap:6px;
+    margin-top:10px;
+  }
+  button{
     background:rgba(8,16,28,0.9);
     border:1px solid rgba(127,220,255,0.28);
     color:var(--cyan);
-    padding:6px 15px;
+    padding:5px 12px;
     border-radius:5px;
     font-family:inherit; font-size:10px;
-    letter-spacing:2px;
+    letter-spacing:1.5px;
     cursor:pointer; transition:.2s;
     text-transform:uppercase;
   }
-  #controls button:hover{
-    background:rgba(127,220,255,0.1);
+  button:hover{
+    background:rgba(127,220,255,0.12);
     border-color:var(--cyan);
     color:#fff;
-    box-shadow:0 0 16px rgba(127,220,255,0.35);
+    box-shadow:0 0 14px rgba(127,220,255,0.35);
   }
-  #controls button.active{
-    background:rgba(127,220,255,0.2);
+  button.active{
+    background:rgba(127,220,255,0.25);
     color:#fff;
     border-color:var(--cyan);
-    box-shadow:0 0 20px rgba(127,220,255,0.5);
+    box-shadow:0 0 18px rgba(127,220,255,0.5);
   }
-  #controls button.gold{
-    border-color:rgba(240,200,120,0.35);
-    color:var(--gold);
+  button.gold{border-color:rgba(240,200,120,0.4);color:var(--gold);}
+  button.gold:hover,button.gold.active{background:rgba(240,200,120,0.15);border-color:var(--gold);color:#fff;box-shadow:0 0 14px rgba(240,200,120,0.5);}
+  button.violet{border-color:rgba(168,136,255,0.4);color:var(--violet);}
+  button.violet:hover,button.violet.active{background:rgba(168,136,255,0.15);border-color:var(--violet);color:#fff;box-shadow:0 0 14px rgba(168,136,255,0.5);}
+  button.pink{border-color:rgba(255,158,196,0.4);color:var(--pink);}
+  button.pink:hover,button.pink.active{background:rgba(255,158,196,0.15);border-color:var(--pink);color:#fff;box-shadow:0 0 14px rgba(255,158,196,0.5);}
+  button.red{border-color:rgba(255,90,122,0.4);color:var(--red);}
+  button.red:hover{background:rgba(255,90,122,0.15);border-color:var(--red);color:#fff;}
+
+  /* ── METRICS ────────────────────────────── */
+  .metrics{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:6px;
+    margin-top:8px;
   }
-  #controls button.gold:hover,
-  #controls button.gold.active{
-    background:rgba(240,200,120,0.15);
-    border-color:var(--gold);
-    color:#fff;
-    box-shadow:0 0 16px rgba(240,200,120,0.5);
+  .metric{
+    background:#060c16;
+    border:1px solid #101c2c;
+    border-radius:5px;
+    padding:6px 10px;
+    display:flex; justify-content:space-between;
+    font-size:10px;
   }
-  #controls button.violet{
-    border-color:rgba(168,136,255,0.35);
-    color:var(--violet);
+  .metric .lbl{color:#5a7288;}
+  .metric .val{font-weight:bold;color:var(--cyan2);}
+  .metric .val.gold{color:var(--gold);}
+  .metric .val.violet{color:var(--violet);}
+  .metric .val.green{color:var(--green);}
+  .metric .val.pink{color:var(--pink);}
+
+  /* ── LANES (Paths 1/3/6) ───────────────── */
+  .lanes{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:6px;
+    margin-top:8px;
   }
-  #controls button.violet:hover,
-  #controls button.violet.active{
-    background:rgba(168,136,255,0.15);
-    border-color:var(--violet);
-    color:#fff;
-    box-shadow:0 0 16px rgba(168,136,255,0.5);
+  .lane{
+    background:#060c16;
+    border:1px solid #101c2c;
+    border-radius:5px;
+    padding:8px;
+    text-align:center;
+    transition:.2s;
   }
-  #controls .sep{
-    width:1px; height:22px;
-    background:var(--line);
-    margin:0 6px;
+  .lane.active{
+    border-color:var(--cyan);
+    box-shadow:0 0 14px rgba(127,220,255,0.3);
   }
-  #controls .lbl{
-    color:#5a7288; font-size:9px; letter-spacing:2px;
+  .lane.l1.active{border-color:var(--green);box-shadow:0 0 14px rgba(140,240,208,0.4);}
+  .lane.l3.active{border-color:var(--gold);box-shadow:0 0 14px rgba(240,200,120,0.4);}
+  .lane.l6.active{border-color:var(--violet);box-shadow:0 0 14px rgba(168,136,255,0.4);}
+  .lane .num{
+    font-size:20px; font-weight:bold;
+    font-family:var(--serif);
   }
-  #controls input[type=range]{
+  .lane .num.green{color:var(--green);}
+  .lane .num.gold{color:var(--gold);}
+  .lane .num.violet{color:var(--violet);}
+  .lane .lbl{
+    font-size:8px; letter-spacing:2px;
+    color:#5a7288; text-transform:uppercase;
+    margin-top:2px;
+  }
+  .lane .val{
+    font-size:11px; font-weight:bold;
+    color:var(--cyan2); margin-top:4px;
+  }
+  .lane .bar{
+    height:3px; background:#0a1420; border-radius:2px;
+    margin-top:6px; overflow:hidden;
+  }
+  .lane .bar .fill{
+    height:100%; width:0%;
+    transition:width .3s;
+  }
+  .lane.l1 .bar .fill{background:linear-gradient(90deg,#0a5a3a,#8cf0d0);}
+  .lane.l3 .bar .fill{background:linear-gradient(90deg,#5a3a0a,#f0c878);}
+  .lane.l6 .bar .fill{background:linear-gradient(90deg,#2a0a5a,#a888ff);}
+
+  /* ── MYSTERY PANEL ─────────────────────── */
+  .mystery-row{
+    display:flex; justify-content:space-between;
+    padding:5px 0;
+    border-bottom:1px dashed #101c2c;
+    font-size:10px;
+  }
+  .mystery-row:last-child{border-bottom:none;}
+  .mystery-row .k{color:#5a7288;}
+  .mystery-row .v{font-weight:bold;}
+  .mystery-row .v.q{color:var(--cyan);}
+  .mystery-row .v.d{color:var(--green);}
+  .mystery-row .v.f{color:var(--gold);}
+  .mystery-row .v.root{color:var(--gold2);}
+  .mystery-row .v.macht{color:var(--violet);}
+  .mystery-row .v.mys{color:var(--pink);}
+
+  /* ── LOG ─────────────────────────────── */
+  #log{
+    background:#02040a;
+    border:1px solid #101c2c;
+    border-radius:5px;
+    padding:8px 10px;
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:11px;
+    line-height:1.5;
+    max-height:180px;
+    overflow-y:auto;
+    color:#c8d8e8;
+  }
+  #log .time{
+    color:#3a4a5a; font-family:var(--mono);
+    font-style:normal; font-size:8.5px; margin-right:5px;
+  }
+  #log .root{color:var(--gold);font-style:normal;}
+  #log .macht{color:var(--violet);font-style:normal;}
+  #log .mys{color:var(--pink);font-style:normal;}
+  #log .ok{color:var(--green);font-style:normal;}
+  #log .warn{color:var(--red);font-style:normal;}
+
+  /* ── ROOT OVERLAY ──────────────────────── */
+  #rootOverlay{
+    position:fixed; inset:0;
+    background:radial-gradient(circle at 50% 50%, rgba(240,200,120,0.08), transparent 60%);
+    pointer-events:none;
+    opacity:0; transition:.6s;
+    z-index:15;
+  }
+  #rootOverlay.on{opacity:1;}
+
+  /* ── FOOTER ─────────────────────────── */
+  footer{
+    text-align:center;
+    padding:14px;
+    color:#2a3a4a;
+    font-size:9px;
+    letter-spacing:2px;
+    border-top:1px solid #0a1420;
+  }
+  footer span{color:var(--gold);opacity:.4;}
+
+  /* ── CLOCK ─────────────────────────── */
+  #clock{color:#4a5a70;font-size:9px;}
+
+  /* Slider */
+  input[type=range]{
     -webkit-appearance:none; appearance:none;
-    width:90px; height:3px;
+    width:100%; height:3px;
     background:linear-gradient(90deg,var(--cyan),var(--gold));
     border-radius:2px; outline:none;
   }
-  #controls input[type=range]::-webkit-slider-thumb{
+  input[type=range]::-webkit-slider-thumb{
     -webkit-appearance:none;
-    width:14px; height:14px; border-radius:50%;
+    width:12px; height:12px; border-radius:50%;
     background:#fff;
     border:2px solid var(--cyan);
-    box-shadow:0 0 10px var(--cyan);
+    box-shadow:0 0 8px var(--cyan);
     cursor:pointer;
   }
 
-  /* ── ROOT LOG (unten links) ─────────────────── */
-  #logBox{
-    position:absolute; bottom:14px; left:14px;
-    max-width:340px; max-height:110px;
-    padding:8px 14px;
-    background:rgba(4,8,16,0.75);
-    border:1px solid var(--line);
-    border-left:2px solid var(--gold);
-    border-radius:5px;
-    font-family:var(--serif);
-    font-size:11px;
-    line-height:1.55;
-    color:#c8d8e8;
-    overflow-y:auto;
-    z-index:6; pointer-events:none;
-    font-style:italic;
-  }
-  #logBox .time{
-    color:#4a5a70;
-    font-family:'Consolas',monospace;
-    font-style:normal;
-    font-size:8.5px;
-    margin-right:6px;
-  }
-  #logBox .root{ color:#7fdcff; font-style:normal; }
-  #logBox .scale{ color:#f0c878; font-style:normal; }
-  #logBox .node{ color:#a888ff; font-style:normal; }
-  #logBox .whisper{ color:#8cf0d0; }
-
-  /* ── ROOT MODE OVERLAY ──────────────────────── */
-  #rootIndicator{
-    position:absolute; bottom:22px; left:50%;
-    transform:translateX(-50%) translateY(20px);
-    font-family:var(--serif);
-    font-size:13px;
-    letter-spacing:8px;
-    color:rgba(240,200,120,0.6);
-    text-transform:uppercase;
-    opacity:0;
-    transition:.6s;
-    pointer-events:none;
-    z-index:7;
-  }
-  #rootIndicator.show{
-    opacity:1;
-    transform:translateX(-50%) translateY(0);
-  }
-  #rootIndicator .glyph{
-    display:block; font-size:24px; letter-spacing:0;
-    color:rgba(200,240,255,0.9);
-    text-shadow:0 0 24px rgba(127,220,255,0.6);
-    margin-bottom:4px;
-  }
-
   @media(max-width:720px){
+    .main{padding:8px;gap:8px;}
     header h1{font-size:12px;letter-spacing:2px;}
-    #controls{padding:8px 12px; gap:5px;}
-    #controls button{padding:5px 10px; font-size:9px; letter-spacing:1px;}
-    #logBox{max-width:220px; font-size:10px;}
-    #balanceBox{padding:7px 11px; font-size:9px; min-width:120px;}
-    #seal{font-size:9px;}
-    #seal .glyph{font-size:24px;}
+    header h1 small{display:none;}
+    .cell9{font-size:8px;}
   }
 </style>
 </head>
 <body>
 
+<div id="rootOverlay"></div>
+
 <header>
-  <h1>⚖️ NC · WAAGSCHALE
-    <small>iki1uc · 起 · 中の軸 · 全てから全てへ</small>
-    <span class="tag">ROOT·ZENTRUM</span>
+  <h1>
+    ⚡ NC · 9×9 · SYSTEM
+    <small>root · macht · mystery-lanes · 1//3//6</small>
+    <span class="tag">iki1uc</span>
   </h1>
   <div class="stats">
-    <span>Balance <b class="v-cyan" id="sBal">0.00</b></span>
-    <span>Knoten <b class="v-violet" id="sNodes">6</b></span>
-    <span>Last L <b class="v-gold" id="sL">0</b></span>
-    <span>Last R <b class="v-gold" id="sR">0</b></span>
-    <span>Root <b class="v-green" id="sRoot">aus</b></span>
-    <span id="sClock" style="color:#4a5a70;">⏱️ --:--</span>
+    <span>Root <b class="v-gold" id="sRoot">aus</b></span>
+    <span>Macht <b class="v-violet" id="sMacht">0</b></span>
+    <span>Service <b class="v-green" id="sService">0</b></span>
+    <span>Cluster <b class="v-cyan" id="sCluster">0</b></span>
+    <span>Entropie <b class="v-pink" id="sEntropy">0.00</b></span>
+    <span id="clock">⏱️ --:--</span>
   </div>
 </header>
 
-<div id="stage">
-  <canvas id="scaleCanvas"></canvas>
+<div class="main">
 
-  <!-- Siegel -->
-  <div id="seal">
-    <span class="glyph">衡</span>
-    <span class="sub">NC · AXIS</span>
-  </div>
-
-  <!-- Balance-Anzeige -->
-  <div id="balanceBox">
-    <div class="title">
-      <span>WAAGE</span>
-      <span class="mode" id="modeBadge">CENTER</span>
+  <!-- LINKS: 9×9 Grid + Controls -->
+  <div>
+    <div class="panel">
+      <h3>◉ 9×9 MATRIX · 81 FELDER <span class="badge" id="badgeBooked">0/81</span></h3>
+      <div class="grid9-wrap">
+        <div id="grid9"></div>
+      </div>
+      <div class="ctrl">
+        <button id="btnRoot" class="gold">🌱 ROOT</button>
+        <button id="btnMacht" class="violet">⚡ MACHT</button>
+        <button id="btnMystery" class="pink">🔮 MYSTERY</button>
+        <button id="btnL1" class="gold">1 // ATOM</button>
+        <button id="btnL3" class="gold">3 // UNI</button>
+        <button id="btnL6" class="gold">6 // RUN</button>
+        <button id="btnAuto" class="active">⏸ AUTO</button>
+        <button id="btnShift">⇄ SHIFT</button>
+        <button id="btnAll">✦ ALL→ALL</button>
+        <button id="btnReset" class="red">⟲ RESET</button>
+      </div>
+      <div style="margin-top:10px;display:flex;align-items:center;gap:8px;font-size:9px;color:#5a7288;">
+        <span>RATE</span>
+        <input type="range" id="rate" min="1" max="10" value="4">
+        <span id="rateVal" style="color:var(--cyan);font-weight:bold;">4</span>
+      </div>
     </div>
-    <div class="row"><span class="lbl">Neigung</span><span class="val" id="bTilt">0.0°</span></div>
-    <div class="row"><span class="lbl">Mitte X</span><span class="val gold" id="bMid">0</span></div>
-    <div class="row"><span class="lbl">Kraft</span><span class="val violet" id="bForce">0</span></div>
-    <div class="row"><span class="lbl">Fluss</span><span class="val" id="bFlow">0/s</span></div>
+
+    <div class="panel" style="margin-top:12px;">
+      <h3>🔷 PATHS · 1 // 3 // 6 <span class="badge">3hit90</span></h3>
+      <div class="lanes">
+        <div class="lane l1" id="lane1">
+          <div class="num green">1</div>
+          <div class="lbl">ATOM · 81</div>
+          <div class="val" id="v1">0</div>
+          <div class="bar"><div class="fill" id="f1"></div></div>
+        </div>
+        <div class="lane l3" id="lane3">
+          <div class="num gold">3</div>
+          <div class="lbl">UNI · 243</div>
+          <div class="val" id="v3">0</div>
+          <div class="bar"><div class="fill" id="f3"></div></div>
+        </div>
+        <div class="lane l6" id="lane6">
+          <div class="num violet">6</div>
+          <div class="lbl">RUN · 729</div>
+          <div class="val" id="v6">0</div>
+          <div class="bar"><div class="fill" id="f6"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:12px;">
+      <h3>📖 NC · LOG</h3>
+      <div id="log">
+        <div><span class="time">[init]</span><span class="ok">⚡ NC · 9×9 System bereit — 81 Felder, 6 Achsen, 3 Pfade.</span></div>
+      </div>
+    </div>
   </div>
 
-  <!-- Root-Indikator -->
-  <div id="rootIndicator">
-    <span class="glyph">根</span>
-    ROOT MODUS
+  <!-- RECHTS: Metriken + Mystery -->
+  <div>
+    <div class="panel">
+      <h3>📊 METRIKEN <span class="badge">LIVE</span></h3>
+      <div class="metrics">
+        <div class="metric"><span class="lbl">Booked</span><span class="val" id="mBooked">0</span></div>
+        <div class="metric"><span class="lbl">Service</span><span class="val green" id="mService">0</span></div>
+        <div class="metric"><span class="lbl">Score</span><span class="val gold" id="mScore">0.00</span></div>
+        <div class="metric"><span class="lbl">Cluster</span><span class="val" id="mCluster">0</span></div>
+        <div class="metric"><span class="lbl">Masse</span><span class="val violet" id="mMasse">0</span></div>
+        <div class="metric"><span class="lbl">Kraft</span><span class="val violet" id="mKraft">0</span></div>
+        <div class="metric"><span class="lbl">Waage</span><span class="val gold" id="mWaage">0.50</span></div>
+        <div class="metric"><span class="lbl">Energie</span><span class="val green" id="mEnergie">0</span></div>
+        <div class="metric"><span class="lbl">Entropie</span><span class="val pink" id="mEntropy">0.00</span></div>
+        <div class="metric"><span class="lbl">Macht</span><span class="val violet" id="mMacht">0</span></div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:12px;">
+      <h3>❓ MYSTERY LANES · Q/D/F <span class="badge">ROOT</span></h3>
+      <div class="mystery-row"><span class="k">Q · Quelle</span><span class="v q" id="mvQ">0</span></div>
+      <div class="mystery-row"><span class="k">D · Dimension</span><span class="v d" id="mvD">0</span></div>
+      <div class="mystery-row"><span class="k">F · Fluss</span><span class="v f" id="mvF">0</span></div>
+      <div class="mystery-row"><span class="k">ROOT</span><span class="v root" id="mvRoot">0</span></div>
+      <div class="mystery-row"><span class="k">MACHT</span><span class="v macht" id="mvMacht">0</span></div>
+      <div class="mystery-row"><span class="k">MYSTERY</span><span class="v mys" id="mvMys">0</span></div>
+      <div class="mystery-row"><span class="k">ACHSE</span><span class="v q" id="mvAchse">A</span></div>
+      <div class="mystery-row"><span class="k">TMP</span><span class="v f" id="mvTmp">128</span></div>
+    </div>
+
+    <div class="panel" style="margin-top:12px;">
+      <h3>🧮 3hit90 · MATRIX <span class="badge">81→243→729</span></h3>
+      <div style="text-align:center;padding:6px 0;font-size:11px;color:var(--cyan);">
+        <span id="mm81" style="color:var(--green);font-weight:bold;">81</span>
+        <span style="color:#3a4a5a;"> → </span>
+        <span id="mm243" style="color:var(--gold);font-weight:bold;">243</span>
+        <span style="color:#3a4a5a;"> → </span>
+        <span id="mm729" style="color:var(--violet);font-weight:bold;">729</span>
+      </div>
+      <div style="text-align:center;font-size:9px;color:#5a7288;margin-top:4px;">
+        Formel: <span id="formula" style="color:var(--gold);">3 × (Eingabe ÷ 6) × 90</span>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:12px;">
+      <h3>⚙️ SYSTEM · STATE</h3>
+      <div class="mystery-row"><span class="k">Tick</span><span class="v q" id="stTick">0</span></div>
+      <div class="mystery-row"><span class="k">Achsen</span><span class="v d" id="stAchsen">0/6</span></div>
+      <div class="mystery-row"><span class="k">Pfade</span><span class="v f" id="stPfade">1/3/6</span></div>
+      <div class="mystery-row"><span class="k">Root</span><span class="v root" id="stRoot">aus</span></div>
+      <div class="mystery-row"><span class="k">Auto</span><span class="v macht" id="stAuto">an</span></div>
+      <div class="mystery-row"><span class="k">Verb.</span><span class="v mys" id="stVerb">—</span></div>
+    </div>
   </div>
 
-  <!-- Log -->
-  <div id="logBox">
-    <div><span class="time">[init]</span><span class="scale">⚖️ Waagschale bereit — alle zu allen.</span></div>
-  </div>
 </div>
 
-<div id="controls">
-  <button id="btnRoot" class="gold">🌱 ROOT</button>
-  <button id="btnAuto" class="active">⏸ AUTO</button>
-  <button id="btnShift">⇄ SHIFT</button>
-  <button id="btnAll2All" class="violet">✦ ALL→ALL</button>
-  <span class="sep"></span>
-  <span class="lbl">LAST</span>
-  <input type="range" id="load" min="1" max="10" value="3">
-  <span class="sep"></span>
-  <button id="btnReset">⟲ Reset</button>
-</div>
+<footer>
+  <span>⚡</span> NC · 9×9 · ROOT · MACHT · MYSTERY-LANES · 1//3//6 · <span>iki1uc</span>
+</footer>
 
 <script>
 "use strict";
-// ═══════════════════════════════════════════════════════════════════
-// ⚖️ NC · WAAGSCHALE · ZENTRUM · ROOT
-// Das schönste System: alles fließt zur Mitte, die Mitte fließt zu allen.
-// 6 NC-Knoten als Schalen um einen Waagepunkt.
-// Alle zu allen — 15 Verbindungen, keine Hierarchie.
-// ═══════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// NC · 9×9 · ROOT · MACHT · MYSTERY-LANES
+// Alles-in-einem: 81 Felder, 6 Achsen, 3 Pfade, Root-Modus, Macht.
+// ═══════════════════════════════════════════════════════════════
 
-// ─── KOMPAT-LAYER (identisch zu KLICK / ZaM / MAINBOARD) ───────
-const MASTER_KEY='iki1uc-master-respo';
-const BC_NAME='iki1uc-orbit';
-let masterChannel=null, isMasterConnected=false;
-const localMaster={
-  stations:{}, klick:0, zack:0, zam:'idle', zoll:'offen',
-  me2:{allow:true,boost:false,slow:false,override:false},
-  score:0, lastUpdate:Date.now()
-};
-try{
-  const s=localStorage.getItem(MASTER_KEY);
-  if(s) Object.assign(localMaster,JSON.parse(s));
-}catch(_){}
-try{
-  masterChannel=new BroadcastChannel(BC_NAME);
-  masterChannel.onmessage=(ev)=>{
-    const d=ev.data; if(!d||!d.type) return;
-    if(d.type==='master:state'&&d.payload){Object.assign(localMaster,d.payload);isMasterConnected=true;}
-    if(d.type==='mainboard:done'&&d.payload){
-      // Mainboard gibt uns Werte → wir verteilen sie als Last auf die Schalen
-      const w=d.payload.compat||50;
-      distributeLoad(w/100);
-      log(`📊 MAINBOARD → Waage: Kompat ${w.toFixed(0)}%`,'node');
-    }
-  };
-}catch(_){}
-function persistMaster(){try{localStorage.setItem(MASTER_KEY,JSON.stringify(localMaster));}catch(_){}}
-function sendToMaster(type,payload){
-  localMaster.lastUpdate=Date.now(); persistMaster();
-  if(masterChannel){try{masterChannel.postMessage({type,from:'NC-SCALE',payload,ts:Date.now()});}catch(_){}}
-}
-
-// ─── DIE 6 NC-KNOTEN ───────────────────────────────────────────
-// ces / in / me / run / sec / u — die 6 NC-Achsen
-const NC_NODES=[
-  { id:'ces', name:'NC·CES',  kanji:'切', label:'Cäsur · Schnitt',   color:'#7fdcff' },
-  { id:'in',  name:'NC·IN',   kanji:'内', label:'Innen · Kern',      color:'#8cf0d0' },
-  { id:'me',  name:'NC·ME',   kanji:'我', label:'Ich · Meta',        color:'#f0c878' },
-  { id:'run', name:'NC·RUN',  kanji:'走', label:'Lauf · Bewegung',   color:'#a888ff' },
-  { id:'sec', name:'NC·SEC',  kanji:'護', label:'Schutz · Sekunde',  color:'#ff9ec4' },
-  { id:'u',   name:'NC·U',    kanji:'宇', label:'Union · Universum', color:'#c8f0ff' },
+// ─── 6 NC-Achsen (Mystery-Lanes) ─────────────────────────────
+const NC_AXES = [
+  { id:'ces', kanji:'切', name:'CES', color:'#7fdcff' },
+  { id:'in',  kanji:'内', name:'IN',  color:'#8cf0d0' },
+  { id:'me',  kanji:'我', name:'ME',  color:'#f0c878' },
+  { id:'run', kanji:'走', name:'RUN', color:'#a888ff' },
+  { id:'sec', kanji:'護', name:'SEC', color:'#ff9ec4' },
+  { id:'u',   kanji:'宇', name:'U',   color:'#c8f0ff' },
 ];
 
-// Jedem Knoten wird ein Winkel zugewiesen (Ring um das Zentrum)
-NC_NODES.forEach((n,i)=>{
-  n.angle = (i/NC_NODES.length)*Math.PI*2 - Math.PI/2;
-  // x/y werden in der Resize-Funktion berechnet
-  n.x=0; n.y=0;
-  n.load=0;       // aktuelle Last (Gewicht)
-  n.targetLoad=0; // Ziel-Last
-  n.pulse=0;      // visueller Impuls
-});
-
-// ─── STATE ─────────────────────────────────────────────────────
-const S={
-  tick:0,
-  auto:true,
-  root:false,
-  rate:3,
-  loadL:0,       // Last linke Schale (Summe in-Nodes)
-  loadR:0,       // Last rechte Schale (Summe u-Nodes)
-  tilt:0,        // -1 .. 1 (Balken-Neigung)
-  force:0,       // Gesamtkraft
-  flow:0,        // Events pro Sekunde
-  // Visuals
-  links:[],      // Alle-zu-alle Verbindungen
-  sparks:[],
-  wisps:[],      // sanfte Partikel zwischen Knoten
-  rootBranches:[], // beim Root-Modus wachsende Äste
-  lastFlowTick:0,
-  flowCount:0,
+// ─── 3 Pfade (1 // 3 // 6) ───────────────────────────────────
+const PATHS = {
+  1: { name:'ATOM', base:81,  mult:81,  color:'#8cf0d0' },
+  3: { name:'UNI',  base:243, mult:243, color:'#f0c878' },
+  6: { name:'RUN',  base:729, mult:729, color:'#a888ff' },
 };
 
-// ─── CANVAS ────────────────────────────────────────────────────
-const cv=document.getElementById('scaleCanvas');
-const ctx=cv.getContext('2d');
-let W,H,CX,CY,R,DPR;
+// ─── 9×9 GRID STATE ──────────────────────────────────────────
+const N = 9;
+const TOTAL = N * N; // 81
+let grid = []; // { booked, root, macht, mystery, value, axis }
+let gridEls = [];
 
-function resize(){
-  const r=cv.parentElement.getBoundingClientRect();
-  DPR=window.devicePixelRatio||1;
-  W=r.width; H=r.height;
-  cv.width=W*DPR; cv.height=H*DPR;
-  cv.style.width=W+'px'; cv.style.height=H+'px';
-  ctx.setTransform(DPR,0,0,DPR,0,0);
-  CX=W/2;
-  CY=H/2;
-  R=Math.min(W,H)*0.30;
+// ─── GLOBAL STATE ────────────────────────────────────────────
+const S = {
+  tick: 0,
+  auto: true,
+  root: false,
+  macht: false,
+  mystery: false,
+  rate: 4,
+  lastAuto: 0,
+  flow: 0,
+  flowCount: 0,
+  flowReset: 0,
+  cluster: 0,
+  entropy: 0,
+  service: 0,
+  score: 0,
+  masse: 0,
+  kraft: 0,
+  waage: 0.5,
+  energie: 0,
+  machtVal: 0,
+  rootVal: 0,
+  mysVal: 0,
+  q: 27, d: 81, f: 243,
+  achse: 'A',
+  tmp: 128,
+  lanes: { 1:0, 3:0, 6:0 },
+  // BroadcastChannel-Kompat
+  bcConnected: false,
+};
 
-  // Knoten-Positionen setzen
-  NC_NODES.forEach(n=>{
-    n.x = CX + Math.cos(n.angle)*R;
-    n.y = CY + Math.sin(n.angle)*R;
-  });
+// ─── KOMPAT-LAYER (BroadcastChannel) ─────────────────────────
+let bc = null;
+try {
+  bc = new BroadcastChannel('iki1uc-nc9x9');
+  bc.onmessage = (ev) => {
+    const d = ev.data;
+    if (!d || !d.type) return;
+    if (d.type === 'nc:ping') {
+      S.bcConnected = true;
+      bc.postMessage({ type:'nc:pong', from:'9x9', ts:Date.now() });
+    }
+    if (d.type === 'nc:macht') {
+      S.machtVal = Math.min(9999, S.machtVal + (d.payload?.amount || 10));
+      log(`⚡ Macht-Empfang: +${d.payload?.amount || 10}`, 'macht');
+    }
+    if (d.type === 'nc:root') {
+      toggleRoot(true);
+    }
+  };
+} catch(_) {}
 
-  // Verbindungen (alle-zu-alle) vorbereiten
-  S.links=[];
-  for(let i=0;i<NC_NODES.length;i++){
-    for(let j=i+1;j<NC_NODES.length;j++){
-      S.links.push({
-        a:NC_NODES[i], b:NC_NODES[j],
-        strength:0,
-        targetStrength:0,
-        lastPulse:0,
+function sendBC(type, payload) {
+  if (bc) { try { bc.postMessage({ type, from:'9x9', payload, ts:Date.now() }); } catch(_) {} }
+}
+
+// ─── GRID INIT ───────────────────────────────────────────────
+function initGrid() {
+  grid = [];
+  for (let r = 0; r < N; r++) {
+    for (let c = 0; c < N; c++) {
+      const idx = r * N + c;
+      // Kernfiguren: Ω, ◉, ♚, ♛ an den 4 Ecken + Zentrum
+      const isCore =
+        (r === 0 && c === 0) || // Ω
+        (r === 0 && c === N-1) || // ◉
+        (r === N-1 && c === 0) || // ♚
+        (r === N-1 && c === N-1) || // ♛
+        (r === 4 && c === 4); // Zentrum
+      let glyph = '';
+      if (r === 0 && c === 0) glyph = 'Ω';
+      else if (r === 0 && c === N-1) glyph = '◉';
+      else if (r === N-1 && c === 0) glyph = '♚';
+      else if (r === N-1 && c === N-1) glyph = '♛';
+      else if (r === 4 && c === 4) glyph = '◈';
+      else glyph = String(((r + c) % 9) + 1);
+      grid.push({
+        r, c, idx,
+        booked: isCore,
+        root: false,
+        macht: false,
+        mystery: false,
+        core: isCore,
+        glyph,
+        value: isCore ? 9 : ((r + c) % 9) + 1,
       });
     }
   }
-
-  buildRootBranches();
 }
-window.addEventListener('resize',resize);
-if(window.ResizeObserver) new ResizeObserver(resize).observe(cv.parentElement);
 
-// ─── ALLE-ZU-ALLE VERBINDUNGEN ─────────────────────────────────
-function pulseLink(nodeA,nodeB,strength){
-  const l=S.links.find(x=>
-    (x.a===nodeA&&x.b===nodeB)||(x.a===nodeB&&x.b===nodeA)
-  );
-  if(l){
-    l.targetStrength = Math.min(1, l.targetStrength + (strength||0.6));
-    l.lastPulse=S.tick;
+// ─── RENDER GRID ─────────────────────────────────────────────
+function renderGrid() {
+  const el = document.getElementById('grid9');
+  el.innerHTML = '';
+  gridEls = [];
+  for (let i = 0; i < TOTAL; i++) {
+    const cell = document.createElement('div');
+    const g = grid[i];
+    cell.className = 'cell9';
+    if (g.core) cell.classList.add('core');
+    cell.textContent = g.glyph;
+    cell.onclick = () => toggleCell(i);
+    el.appendChild(cell);
+    gridEls.push(cell);
+  }
+  updateCellClasses();
+}
+
+function updateCellClasses() {
+  for (let i = 0; i < TOTAL; i++) {
+    const g = grid[i], el = gridEls[i];
+    el.classList.toggle('on', g.booked && !g.core);
+    el.classList.toggle('root', g.root || (g.core && S.root));
+    el.classList.toggle('macht', g.macht);
+    el.classList.toggle('mystery', g.mystery);
+    // Glyph zurück auf Wert setzen, wenn nicht Kern
+    if (!g.core) el.textContent = g.glyph;
+    else el.textContent = g.glyph;
   }
 }
 
-// ─── LAST VERTEILEN ────────────────────────────────────────────
-function distributeLoad(factor){
-  // factor 0..1 → alle Nodes bekommen etwas, aber unterschiedlich
-  // Die linken Nodes (ces, me, sec) und rechten (in, run, u) werden
-  // gegensätzlich belastet, um die Waage zu neigen
-  NC_NODES.forEach((n,i)=>{
-    const base = 0.3 + Math.random()*0.7;
-    // je nach Winkel: linke/rechte Hälfte unterschiedlich gewichten
-    const side = Math.cos(n.angle); // -1..1
-    n.targetLoad = Math.max(0, Math.min(1,
-      base * factor + side * 0.15
-    ));
-  });
-  S.flowCount++;
-}
-
-// ─── AUTO-AKTIVITÄT ────────────────────────────────────────────
-function autoTick(now){
-  const interval=Math.max(150, 900 - S.rate*70);
-  if(now - S.lastFlowTick < interval) return;
-  S.lastFlowTick=now;
-
-  // Ein zufälliger Knoten sendet einen Impuls zu einem anderen
-  const i=Math.floor(Math.random()*NC_NODES.length);
-  let j=Math.floor(Math.random()*NC_NODES.length);
-  if(j===i) j=(j+1)%NC_NODES.length;
-  const a=NC_NODES[i], b=NC_NODES[j];
-  pulseLink(a,b,0.5+Math.random()*0.5);
-
-  // Ein sanfter Wisp wandert
-  spawnWisp(a,b);
-
-  // kleine Last-Verschiebung
-  a.targetLoad = Math.min(1, a.targetLoad + 0.1);
-  b.targetLoad = Math.max(0, b.targetLoad - 0.05);
-
-  S.flowCount++;
-}
-
-// ─── WISP (sanfte Partikel zwischen Knoten) ────────────────────
-function spawnWisp(from,to){
-  S.wisps.push({
-    ax:from.x, ay:from.y,
-    bx:to.x, by:to.y,
-    t:0,
-    life:0,
-    maxLife:80,
-    color:from.color,
-    size:1.6,
-  });
-}
-
-// ─── SPARK (Impuls-Bursts) ─────────────────────────────────────
-function spawnSpark(x,y,color){
-  for(let i=0;i<10;i++){
-    const a=Math.random()*Math.PI*2;
-    const sp=0.5+Math.random()*1.8;
-    S.sparks.push({
-      x,y,
-      vx:Math.cos(a)*sp, vy:Math.sin(a)*sp,
-      life:0, maxLife:25+Math.random()*30,
-      color:color||'#7fdcff',
-      size:0.8+Math.random()*1.2,
-    });
-  }
-}
-
-// ─── ROOT-MODUS ────────────────────────────────────────────────
-function buildRootBranches(){
-  S.rootBranches=[];
-  NC_NODES.forEach(n=>{
-    const branch={
-      from:{x:CX,y:CY},
-      to:{x:n.x,y:n.y},
-      growth:0,
-      targetGrowth:0,
-      node:n,
-    };
-    S.rootBranches.push(branch);
-  });
-}
-function toggleRoot(){
-  S.root=!S.root;
-  document.getElementById('btnRoot').classList.toggle('active',S.root);
-  document.getElementById('rootIndicator').classList.toggle('show',S.root);
-  document.getElementById('modeBadge').textContent = S.root?'ROOT':'CENTER';
-  document.getElementById('sRoot').textContent = S.root?'an':'aus';
-  if(S.root){
-    S.rootBranches.forEach(b=>b.targetGrowth=1);
-    log('🌱 ROOT erwacht — die Waage wird zur Wurzel.','root');
+// ─── ZELLE TOGGLEN ───────────────────────────────────────────
+function toggleCell(i) {
+  const g = grid[i];
+  if (g.core) {
+    // Kernfiguren sind immer root-verankert
+    g.root = !g.root;
+    log(`🌱 Kern ${g.glyph} → ${g.root ? 'ROOT' : 'frei'}`, 'root');
   } else {
-    S.rootBranches.forEach(b=>b.targetGrowth=0);
-    log('⚖️ zurück zum Zentrum.','scale');
+    g.booked = !g.booked;
+    if (g.booked) {
+      // Zufällig Macht oder Mystery vergeben
+      const r = Math.random();
+      if (S.macht && r < 0.4) g.macht = true;
+      else if (S.mystery && r < 0.7) g.mystery = true;
+    } else {
+      g.macht = false;
+      g.mystery = false;
+    }
   }
+  recompute();
 }
 
-// ─── ZEICHNEN ──────────────────────────────────────────────────
-function draw(){
-  ctx.clearRect(0,0,W,H);
-
-  // ── Hintergrund: subtiler Radial-Glow um die Mitte
-  const bg=ctx.createRadialGradient(CX,CY,0,CX,CY,Math.max(W,H)*0.6);
-  bg.addColorStop(0,'rgba(12,26,44,0.9)');
-  bg.addColorStop(0.6,'rgba(6,13,24,0.6)');
-  bg.addColorStop(1,'rgba(2,4,9,0)');
-  ctx.fillStyle=bg;
-  ctx.fillRect(0,0,W,H);
-
-  // ── ROOT-Zweige (nur wenn Root-Modus aktiv)
-  if(S.root || S.rootBranches.some(b=>b.growth>0.01)){
-    drawRootBranches();
+// ─── CLUSTER (Union-Find) ────────────────────────────────────
+function findClusters() {
+  const parent = Array.from({length:TOTAL}, (_,i) => i);
+  function find(x) {
+    while (parent[x] !== x) { parent[x] = parent[parent[x]]; x = parent[x]; }
+    return x;
   }
-
-  // ── RING (die äußere Umlaufbahn)
-  ctx.beginPath();
-  ctx.arc(CX,CY,R,0,Math.PI*2);
-  ctx.strokeStyle='rgba(127,220,255,0.08)';
-  ctx.lineWidth=1;
-  ctx.stroke();
-
-  // ── INNERER RING
-  ctx.beginPath();
-  ctx.arc(CX,CY,R*0.6,0,Math.PI*2);
-  ctx.strokeStyle='rgba(127,220,255,0.05)';
-  ctx.setLineDash([4,8]);
-  ctx.stroke();
-  ctx.setLineDash([]);
-
-  // ── ALLE-ZU-ALLE LINKS
-  S.links.forEach(l=>{
-    const strength = l.strength;
-    if(strength<0.02) return;
-    ctx.beginPath();
-    ctx.moveTo(l.a.x, l.a.y);
-    // leichte Wölbung zur Mitte
-    const midX=(l.a.x+l.b.x)/2;
-    const midY=(l.a.y+l.b.y)/2;
-    const ctrlX=midX + (CX-midX)*0.35;
-    const ctrlY=midY + (CY-midY)*0.35;
-    ctx.quadraticCurveTo(ctrlX, ctrlY, l.b.x, l.b.y);
-    // Farb-Gradient zwischen den beiden Knoten
-    const grad=ctx.createLinearGradient(l.a.x,l.a.y,l.b.x,l.b.y);
-    grad.addColorStop(0, l.a.color + Math.round(strength*120).toString(16).padStart(2,'0'));
-    grad.addColorStop(0.5, 'rgba(200,240,255,'+(strength*0.4)+')');
-    grad.addColorStop(1, l.b.color + Math.round(strength*120).toString(16).padStart(2,'0'));
-    ctx.strokeStyle=grad;
-    ctx.lineWidth=0.6 + strength*2.2;
-    ctx.stroke();
-  });
-
-  // ── ZENTRUM: DIE WAAGE
-  drawScale();
-
-  // ── NC-KNOTEN
-  NC_NODES.forEach(n=>drawNode(n));
-
-  // ── WISPS (Partikel zwischen Knoten)
-  S.wisps.forEach(w=>{
-    const t=w.t;
-    const x=w.ax+(w.bx-w.ax)*t;
-    const y=w.ay+(w.by-w.ay)*t;
-    const a=1-Math.abs(t-0.5)*2;
-    ctx.beginPath();
-    ctx.arc(x,y,w.size*(0.5+a*0.5),0,Math.PI*2);
-    ctx.fillStyle=w.color;
-    ctx.globalAlpha=a*0.85;
-    ctx.shadowColor=w.color; ctx.shadowBlur=8;
-    ctx.fill();
-    ctx.shadowBlur=0; ctx.globalAlpha=1;
-  });
-
-  // ── SPARKS
-  S.sparks.forEach(s=>{
-    const a=1-s.life/s.maxLife;
-    ctx.globalAlpha=a;
-    ctx.fillStyle=s.color;
-    ctx.beginPath();
-    ctx.arc(s.x,s.y,s.size*(0.4+a*0.6),0,Math.PI*2);
-    ctx.fill();
-    ctx.globalAlpha=1;
-  });
+  function union(a,b) {
+    const ra = find(a), rb = find(b);
+    if (ra !== rb) parent[ra] = rb;
+  }
+  for (let r = 0; r < N; r++) {
+    for (let c = 0; c < N; c++) {
+      const i = r*N+c;
+      if (!grid[i].booked) continue;
+      if (c+1 < N && grid[i+1].booked) union(i, i+1);
+      if (r+1 < N && grid[i+N].booked) union(i, i+N);
+    }
+  }
+  const clusters = new Map();
+  for (let i = 0; i < TOTAL; i++) {
+    if (!grid[i].booked) continue;
+    const root = find(i);
+    if (!clusters.has(root)) clusters.set(root, []);
+    clusters.get(root).push(i);
+  }
+  return clusters;
 }
 
-// ─── WAAGE (Zentrum) ───────────────────────────────────────────
-function drawScale(){
-  const pulse=1+0.05*Math.sin(S.tick*0.04);
-  const beamLen=R*0.55*pulse;
-  const tiltAngle = S.tilt * 0.18; // rad
-  const bx=CX, by=CY;
-
-  // ── Äußerer Glow des Zentrums
-  const g=ctx.createRadialGradient(bx,by,0,bx,by,R*0.9);
-  g.addColorStop(0,'rgba(127,220,255,0.25)');
-  g.addColorStop(0.5,'rgba(168,136,255,0.08)');
-  g.addColorStop(1,'rgba(168,136,255,0)');
-  ctx.fillStyle=g;
-  ctx.beginPath(); ctx.arc(bx,by,R*0.9,0,Math.PI*2); ctx.fill();
-
-  // ── Zentraler Kern: kleines Sechseck (Symbol der 6 NC)
-  ctx.save();
-  ctx.translate(bx,by);
-  ctx.rotate(S.tick*0.004);
-  ctx.beginPath();
-  for(let i=0;i<6;i++){
-    const a=(i/6)*Math.PI*2;
-    const px=Math.cos(a)*10;
-    const py=Math.sin(a)*10;
-    if(i===0) ctx.moveTo(px,py);
-    else ctx.lineTo(px,py);
+// ─── ENTROPIE ────────────────────────────────────────────────
+function computeEntropy() {
+  const counts = {};
+  for (const g of grid) {
+    if (!g.booked) continue;
+    counts[g.value] = (counts[g.value] || 0) + 1;
   }
-  ctx.closePath();
-  ctx.strokeStyle='rgba(200,240,255,0.7)';
-  ctx.lineWidth=1.4;
-  ctx.shadowColor='#7fdcff'; ctx.shadowBlur=14;
-  ctx.stroke();
-  ctx.shadowBlur=0;
-  ctx.restore();
-
-  // ── Waagebalken (rotiert mit tilt)
-  ctx.save();
-  ctx.translate(bx,by);
-  ctx.rotate(tiltAngle);
-
-  // Der Balken
-  ctx.beginPath();
-  ctx.moveTo(-beamLen,0);
-  ctx.lineTo(beamLen,0);
-  ctx.strokeStyle='rgba(240,200,120,0.85)';
-  ctx.lineWidth=1.6;
-  ctx.shadowColor='#f0c878'; ctx.shadowBlur=12;
-  ctx.stroke();
-  ctx.shadowBlur=0;
-
-  // Schalen (links/rechts)
-  drawPan(-beamLen,0,S.loadL,'#7fdcff');
-  drawPan( beamLen,0,S.loadR,'#a888ff');
-
-  ctx.restore();
-
-  // ── Mittelpfeiler (senkrecht)
-  ctx.beginPath();
-  ctx.moveTo(bx,by-6);
-  ctx.lineTo(bx,by+R*0.35);
-  ctx.strokeStyle='rgba(200,240,255,0.28)';
-  ctx.lineWidth=1;
-  ctx.stroke();
-
-  // ── Waage-Fuß
-  ctx.beginPath();
-  ctx.moveTo(bx-14, by+R*0.35);
-  ctx.lineTo(bx+14, by+R*0.35);
-  ctx.strokeStyle='rgba(200,240,255,0.5)';
-  ctx.lineWidth=1.6;
-  ctx.stroke();
+  const total = Object.values(counts).reduce((a,b) => a+b, 0);
+  if (total === 0) return 0;
+  let H = 0;
+  for (const v of Object.values(counts)) {
+    const p = v / total;
+    if (p > 0) H -= p * Math.log2(p);
+  }
+  return H;
 }
 
-function drawPan(px,py,load,color){
-  // Ein Tropfen / eine Schale hängt an einem Faden vom Balken-Ende
-  const threadLen = 18;
-  const panR = 6 + load*8;
-
-  ctx.beginPath();
-  ctx.moveTo(px,py);
-  ctx.lineTo(px,py+threadLen);
-  ctx.strokeStyle='rgba(200,240,255,0.35)';
-  ctx.lineWidth=0.8;
-  ctx.stroke();
-
-  // Schale (Halbkreis)
-  ctx.beginPath();
-  ctx.arc(px, py+threadLen, panR, 0, Math.PI);
-  ctx.strokeStyle=color;
-  ctx.lineWidth=1.4;
-  ctx.shadowColor=color; ctx.shadowBlur=10;
-  ctx.stroke();
-  ctx.shadowBlur=0;
-
-  // kleine Füllung je nach Last
-  if(load>0.02){
-    ctx.beginPath();
-    ctx.arc(px, py+threadLen, panR*0.8, Math.PI*load, Math.PI);
-    ctx.strokeStyle=color+'88';
-    ctx.lineWidth=2;
-    ctx.stroke();
+// ─── WAAGE (rechts / links) ──────────────────────────────────
+function computeWaage() {
+  let left = 0, right = 0;
+  for (const g of grid) {
+    if (!g.booked) continue;
+    if (g.c < N/2) left += g.value;
+    else if (g.c > N/2) right += g.value;
+    else { left += g.value/2; right += g.value/2; }
   }
+  if (left + right === 0) return 0.5;
+  return right / (left + right);
 }
 
-// ─── KNOTEN (NC-Sektionen) ─────────────────────────────────────
-function drawNode(n){
-  const pulse = 1 + n.pulse*0.6;
-  const radius = 20 + n.load*14 + n.pulse*4;
-
-  // Glow
-  const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,radius*2.4);
-  g.addColorStop(0, n.color+'cc');
-  g.addColorStop(0.4, n.color+'44');
-  g.addColorStop(1, n.color+'00');
-  ctx.fillStyle=g;
-  ctx.beginPath(); ctx.arc(n.x,n.y,radius*2.4,0,Math.PI*2); ctx.fill();
-
-  // Kreis
-  ctx.beginPath();
-  ctx.arc(n.x,n.y,radius,0,Math.PI*2);
-  ctx.fillStyle='rgba(4,10,20,0.85)';
-  ctx.fill();
-  ctx.strokeStyle=n.color;
-  ctx.lineWidth=1.6;
-  ctx.shadowColor=n.color; ctx.shadowBlur=12;
-  ctx.stroke();
-  ctx.shadowBlur=0;
-
-  // Innerer Puls-Ring
-  if(n.pulse>0.05){
-    ctx.beginPath();
-    ctx.arc(n.x,n.y,radius*(1+n.pulse*0.8),0,Math.PI*2);
-    ctx.strokeStyle=n.color+'55';
-    ctx.lineWidth=1;
-    ctx.stroke();
+// ─── KRAFT (∑ m1·m2 / d²) ────────────────────────────────────
+function computeKraft() {
+  const booked = grid.filter(g => g.booked);
+  let F = 0;
+  for (let i = 0; i < booked.length; i++) {
+    for (let j = i+1; j < booked.length; j++) {
+      const a = booked[i], b = booked[j];
+      const d2 = (a.r-b.r)**2 + (a.c-b.c)**2;
+      if (d2 === 0) continue;
+      F += (a.value * b.value) / d2;
+    }
   }
-
-  // Kanji
-  ctx.fillStyle=n.color;
-  ctx.font=`bold ${Math.round(radius*0.85)}px "Yu Mincho","Hiragino Mincho ProN",serif`;
-  ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillText(n.kanji, n.x, n.y);
-
-  // Label unter dem Knoten
-  ctx.fillStyle='rgba(200,220,240,0.55)';
-  ctx.font='8.5px Consolas';
-  ctx.textAlign='center'; ctx.textBaseline='top';
-  ctx.fillText(n.name, n.x, n.y + radius + 4);
-
-  // Lastbalken
-  if(n.load>0.02){
-    const barW=radius*1.8;
-    const barX=n.x-barW/2;
-    const barY=n.y + radius + 16;
-    ctx.fillStyle='rgba(0,0,0,0.5)';
-    ctx.fillRect(barX, barY, barW, 2);
-    ctx.fillStyle=n.color;
-    ctx.fillRect(barX, barY, barW*n.load, 2);
-  }
+  return F;
 }
 
-// ─── ROOT ZWEIGE ───────────────────────────────────────────────
-function drawRootBranches(){
-  S.rootBranches.forEach(b=>{
-    if(b.growth<0.01) return;
-    // Wurzel wächst vom Zentrum nach außen
-    const ex=b.from.x + (b.to.x-b.from.x)*b.growth;
-    const ey=b.from.y + (b.to.y-b.from.y)*b.growth;
-    ctx.beginPath();
-    ctx.moveTo(b.from.x, b.from.y);
-    // leichte Krümmung
-    const ctrlX=b.from.x + (b.to.x-b.from.x)*0.5 + Math.sin(S.tick*0.02)*6;
-    const ctrlY=b.from.y + (b.to.y-b.from.y)*0.5 + Math.cos(S.tick*0.02)*6;
-    ctx.quadraticCurveTo(ctrlX, ctrlY, ex, ey);
-    ctx.strokeStyle=`rgba(240,200,120,${0.5*b.growth})`;
-    ctx.lineWidth=1+b.growth*1.6;
-    ctx.stroke();
+// ─── RECOMPUTE ALLES ─────────────────────────────────────────
+function recompute() {
+  const booked = grid.filter(g => g.booked);
+  S.service = booked.reduce((s,g) => s + g.value * (g.root?1.5:1) * (g.macht?1.3:1) * (g.mystery?1.4:1), 0);
+  S.score = S.service / (TOTAL * 9);
+  S.masse = booked.reduce((s,g) => s + g.value, 0);
+  S.kraft = computeKraft();
+  S.waage = computeWaage();
+  S.energie = S.masse * 0.5;
+  S.entropy = computeEntropy();
+  S.cluster = findClusters().size;
 
-    // Seitenzweige (kleine Härchen)
-    if(b.growth>0.3){
-      const midX=b.from.x+(b.to.x-b.from.x)*0.5;
-      const midY=b.from.y+(b.to.y-b.from.y)*0.5;
-      for(let k=0;k<3;k++){
-        const angle=Math.atan2(b.to.y-b.from.y,b.to.x-b.from.x)
-          + (k-1)*0.6;
-        const l=8*b.growth;
-        ctx.beginPath();
-        ctx.moveTo(midX,midY);
-        ctx.lineTo(midX+Math.cos(angle)*l, midY+Math.sin(angle)*l);
-        ctx.strokeStyle=`rgba(240,200,120,${0.35*b.growth})`;
-        ctx.lineWidth=0.7;
-        ctx.stroke();
+  // Root-Wert: Summe der root/gecore-ten Felder
+  S.rootVal = grid.filter(g => g.root || (g.core && S.root)).length;
+  // Macht-Wert: Summe der Macht-Felder × 10
+  S.machtVal = grid.filter(g => g.macht).length * 10 + S.rootVal * 5;
+  // Mystery-Wert
+  S.mysVal = grid.filter(g => g.mystery).length * 7;
+
+  // Mystery-Achsen Q/D/F
+  S.q = 3 * S.cluster + (booked.length % 7);
+  S.d = 9 * S.cluster + Math.floor(booked.length / 4);
+  S.f = 27 * S.cluster + Math.floor(booked.length / 2);
+  S.achse = S.cluster > 0 ? String.fromCharCode(64 + Math.min(6, S.cluster)) : '0';
+  S.tmp = Math.max(0, 128 - booked.length);
+
+  // Pfade 1 // 3 // 6
+  const hits = Math.floor(booked.length / 6);
+  S.lanes[1] = Math.min(9999, 3 * hits * 90 * 81 / 81 | 0);
+  S.lanes[3] = Math.min(9999, 3 * hits * 90 * 3 | 0);
+  S.lanes[6] = Math.min(9999, 3 * hits * 90 * 6 | 0);
+  // Normalisiert auf Pfad-Basis für Balken
+  // (hits*3*90 / 1000 ... wir nehmen einfach hits*9)
+
+  updateCellClasses();
+  updateUI();
+}
+
+// ─── UI UPDATE ───────────────────────────────────────────────
+function updateUI() {
+  const booked = grid.filter(g => g.booked).length;
+  document.getElementById('badgeBooked').textContent = `${booked}/81`;
+  document.getElementById('sRoot').textContent = S.root ? 'an' : 'aus';
+  document.getElementById('sMacht').textContent = S.machtVal;
+  document.getElementById('sService').textContent = Math.round(S.service);
+  document.getElementById('sCluster').textContent = S.cluster;
+  document.getElementById('sEntropy').textContent = S.entropy.toFixed(2);
+
+  document.getElementById('mBooked').textContent = booked;
+  document.getElementById('mService').textContent = Math.round(S.service);
+  document.getElementById('mScore').textContent = S.score.toFixed(3);
+  document.getElementById('mCluster').textContent = S.cluster;
+  document.getElementById('mMasse').textContent = S.masse;
+  document.getElementById('mKraft').textContent = S.kraft.toFixed(2);
+  document.getElementById('mWaage').textContent = S.waage.toFixed(2);
+  document.getElementById('mEnergie').textContent = S.energie.toFixed(1);
+  document.getElementById('mEntropy').textContent = S.entropy.toFixed(2);
+  document.getElementById('mMacht').textContent = S.machtVal;
+
+  document.getElementById('mvQ').textContent = S.q;
+  document.getElementById('mvD').textContent = S.d;
+  document.getElementById('mvF').textContent = S.f;
+  document.getElementById('mvRoot').textContent = S.rootVal;
+  document.getElementById('mvMacht').textContent = S.machtVal;
+  document.getElementById('mvMys').textContent = S.mysVal;
+  document.getElementById('mvAchse').textContent = S.achse;
+  document.getElementById('mvTmp').textContent = S.tmp;
+
+  // Pfade
+  const hits = Math.floor(booked / 6);
+  const raw = 3 * hits * 90;
+  document.getElementById('v1').textContent = raw * 81;
+  document.getElementById('v3').textContent = raw * 243;
+  document.getElementById('v6').textContent = raw * 729;
+  const maxRaw = 3 * Math.floor(81/6) * 90; // Max
+  document.getElementById('f1').style.width = Math.min(100, (raw/maxRaw)*100) + '%';
+  document.getElementById('f3').style.width = Math.min(100, (raw*3/maxRaw/3)*100 + (raw/maxRaw)*30) + '%';
+  document.getElementById('f6').style.width = Math.min(100, (raw*6/maxRaw/6)*100 + (raw/maxRaw)*60) + '%';
+  document.getElementById('lane1').classList.toggle('active', raw > 0);
+  document.getElementById('lane3').classList.toggle('active', raw > 0);
+  document.getElementById('lane6').classList.toggle('active', raw > 0);
+
+  document.getElementById('mm81').textContent = (raw * 81).toLocaleString();
+  document.getElementById('mm243').textContent = (raw * 243).toLocaleString();
+  document.getElementById('mm729').textContent = (raw * 729).toLocaleString();
+  document.getElementById('formula').textContent = `3 × ${hits} × 90 = ${raw}`;
+
+  document.getElementById('stTick').textContent = S.tick;
+  document.getElementById('stAchsen').textContent = `${Math.min(6, S.cluster)}/6`;
+  document.getElementById('stRoot').textContent = S.root ? 'an' : 'aus';
+  document.getElementById('stAuto').textContent = S.auto ? 'an' : 'aus';
+  document.getElementById('stVerb').textContent = S.bcConnected ? 'verbunden' : 'lokal';
+}
+
+// ─── LOG ─────────────────────────────────────────────────────
+function log(msg, cls) {
+  const box = document.getElementById('log');
+  const t = new Date().toLocaleTimeString('de-DE');
+  const div = document.createElement('div');
+  div.innerHTML = `<span class="time">[${t}]</span><span class="${cls||''}">${msg}</span>`;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+  while (box.children.length > 40) box.removeChild(box.firstChild);
+}
+
+// ─── ROOT MODUS ──────────────────────────────────────────────
+function toggleRoot(force) {
+  S.root = force !== undefined ? force : !S.root;
+  document.getElementById('btnRoot').classList.toggle('active', S.root);
+  document.getElementById('rootOverlay').classList.toggle('on', S.root);
+  document.getElementById('stRoot').textContent = S.root ? 'an' : 'aus';
+  // Alle Kernfiguren rooten
+  for (const g of grid) {
+    if (g.core) g.root = S.root;
+  }
+  if (S.root) {
+    log('🌱 ROOT erwacht — die 9×9 Matrix wird zur Wurzel.', 'root');
+    log('   Alle Kernfiguren (Ω ◉ ♚ ♛ ◈) sind jetzt ROOT-verankert.', 'root');
+  } else {
+    log('⚖️ ROOT schläft — zurück zur neutralen Matrix.', 'root');
+  }
+  recompute();
+}
+
+// ─── MACHT MODUS ─────────────────────────────────────────────
+function toggleMacht() {
+  S.macht = !S.macht;
+  document.getElementById('btnMacht').classList.toggle('active', S.macht);
+  if (S.macht) {
+    log('⚡ MACHT aktiviert — Zellen können Macht tragen.', 'macht');
+    // Ein paar zufällige Zellen mit Macht belegen
+    for (let i = 0; i < 12; i++) {
+      const idx = Math.floor(Math.random() * TOTAL);
+      if (!grid[idx].core && grid[idx].booked) grid[idx].macht = true;
+    }
+  } else {
+    log('⚡ MACHT deaktiviert.', 'macht');
+    for (const g of grid) g.macht = false;
+  }
+  recompute();
+}
+
+// ─── MYSTERY MODUS ───────────────────────────────────────────
+function toggleMystery() {
+  S.mystery = !S.mystery;
+  document.getElementById('btnMystery').classList.toggle('active', S.mystery);
+  if (S.mystery) {
+    log('🔮 MYSTERY-LANE aktiviert — die verborgenen Pfade öffnen sich.', 'mys');
+    for (let i = 0; i < 9; i++) {
+      const idx = Math.floor(Math.random() * TOTAL);
+      if (!grid[idx].core && grid[idx].booked) grid[idx].mystery = true;
+    }
+  } else {
+    log('🔮 MYSTERY-LANE geschlossen.', 'mys');
+    for (const g of grid) g.mystery = false;
+  }
+  recompute();
+}
+
+// ─── PFAD-AKTIVIERUNGEN (1 // 3 // 6) ────────────────────────
+function activatePath(n) {
+  const path = PATHS[n];
+  if (!path) return;
+  log(`🔷 PFAD ${n} · ${path.name} · Basis ${path.base} aktiviert.`, 'root');
+  // Färbe Grid passend ein
+  for (let i = 0; i < TOTAL; i++) {
+    const g = grid[i];
+    if (g.core) continue;
+    const on = ((g.r + g.c) % 3) === (n % 3);
+    if (on) {
+      g.booked = true;
+    }
+  }
+  recompute();
+  sendBC('nc:path', { n, name: path.name });
+}
+
+// ─── ALL → ALL ───────────────────────────────────────────────
+function allToAll() {
+  log('✦ ALL→ALL — jede Zelle spricht mit jeder.', 'root');
+  // Alle Nachbarn buchen (Cluster bilden)
+  for (let r = 0; r < N; r++) {
+    for (let c = 0; c < N; c++) {
+      const i = r*N+c;
+      if (Math.random() < 0.5) grid[i].booked = true;
+    }
+  }
+  // Zusätzlich Macht/Mystery vergeben
+  for (const g of grid) {
+    if (g.booked && !g.core) {
+      if (Math.random() < 0.2) g.macht = true;
+      if (Math.random() < 0.15) g.mystery = true;
+    }
+  }
+  S.machtVal += 25;
+  S.mysVal += 15;
+  recompute();
+  sendBC('nc:all2all', { nodes: TOTAL });
+}
+
+// ─── SHIFT (Impuls) ──────────────────────────────────────────
+function shift() {
+  // Zufälligen Bereich verschieben
+  const r0 = Math.floor(Math.random() * (N - 2));
+  const c0 = Math.floor(Math.random() * (N - 2));
+  for (let dr = 0; dr < 3; dr++) {
+    for (let dc = 0; dc < 3; dc++) {
+      const idx = (r0+dr)*N + (c0+dc);
+      if (!grid[idx].core) {
+        grid[idx].booked = !grid[idx].booked;
+        if (grid[idx].booked && Math.random() < 0.5) grid[idx].macht = true;
       }
     }
-  });
+  }
+  log(`⇄ SHIFT @ [${r0},${c0}] — 3×3 Block neu verteilt.`, 'ok');
+  recompute();
 }
 
-// ─── UPDATE ────────────────────────────────────────────────────
-function updateLinks(){
-  S.links.forEach(l=>{
-    // Aufbauen
-    l.strength += (l.targetStrength - l.strength)*0.08;
-    // Zerfall
-    l.targetStrength *= 0.94;
-    if(l.targetStrength<0.02) l.targetStrength=0;
-  });
-}
-function updateNodes(){
-  NC_NODES.forEach(n=>{
-    n.load += (n.targetLoad - n.load)*0.06;
-    n.pulse *= 0.92;
-    if(n.pulse<0.01) n.pulse=0;
-  });
-  // Waage-Last: linke Hälfte (ces,me,sec) vs rechte Hälfte (in,run,u)
-  const left = NC_NODES.filter(n=>Math.cos(n.angle)<0).reduce((s,n)=>s+n.load,0);
-  const right= NC_NODES.filter(n=>Math.cos(n.angle)>=0).reduce((s,n)=>s+n.load,0);
-  S.loadL=left/3;
-  S.loadR=right/3;
-  S.tilt = Math.max(-1,Math.min(1,(S.loadR-S.loadL)*1.4));
-  S.force = left+right;
-}
-function updateWisps(dt){
-  for(let i=S.wisps.length-1;i>=0;i--){
-    const w=S.wisps[i];
-    w.t += 0.018*(dt/16);
-    w.life++;
-    if(w.t>=1 || w.life>w.maxLife) S.wisps.splice(i,1);
-  }
-}
-function updateSparks(dt){
-  for(let i=S.sparks.length-1;i>=0;i--){
-    const s=S.sparks[i];
-    s.x += s.vx*(dt/16);
-    s.y += s.vy*(dt/16);
-    s.vx *= 0.95; s.vy *= 0.95;
-    s.life++;
-    if(s.life>s.maxLife) S.sparks.splice(i,1);
-  }
-}
-function updateRoot(dt){
-  S.rootBranches.forEach(b=>{
-    b.growth += (b.targetGrowth - b.growth)*0.04;
-  });
+// ─── RESET ───────────────────────────────────────────────────
+function reset() {
+  initGrid();
+  S.macht = false;
+  S.mystery = false;
+  S.machtVal = 0;
+  S.mysVal = 0;
+  document.getElementById('btnMacht').classList.remove('active');
+  document.getElementById('btnMystery').classList.remove('active');
+  log('⟲ RESET — 9×9 Matrix zurück auf Kernfiguren.', 'ok');
+  recompute();
 }
 
-// ─── LOOP ──────────────────────────────────────────────────────
-let lastT=0;
-function loop(now){
-  const dt=Math.min(48, now-lastT||16);
-  lastT=now;
+// ─── AUTO-TICK ───────────────────────────────────────────────
+function autoTick(now) {
+  const interval = Math.max(120, 900 - S.rate * 70);
+  if (now - S.lastAuto < interval) return;
+  S.lastAuto = now;
+  S.flowCount++;
+
+  // Zufällige Zelle togglen
+  const i = Math.floor(Math.random() * TOTAL);
+  if (!grid[i].core) {
+    grid[i].booked = !grid[i].booked;
+    if (grid[i].booked) {
+      if (S.macht && Math.random() < 0.3) grid[i].macht = true;
+      if (S.mystery && Math.random() < 0.2) grid[i].mystery = true;
+    } else {
+      grid[i].macht = false;
+      grid[i].mystery = false;
+    }
+  }
+  // Macht langsam wachsen lassen
+  if (S.macht && Math.random() < 0.15) S.machtVal += 1;
+  if (S.mystery && Math.random() < 0.1) S.mysVal += 1;
+
+  recompute();
+}
+
+// ─── LOOP ────────────────────────────────────────────────────
+function loop(now) {
   S.tick++;
+  if (S.auto) autoTick(now);
 
-  if(S.auto) autoTick(now);
-
-  updateLinks();
-  updateNodes();
-  updateWisps(dt);
-  updateSparks(dt);
-  updateRoot(dt);
-
-  // Flow-Zähler: alle 1s zurücksetzen
-  if(now - (S._flowReset||0) > 1000){
-    S._flowReset=now;
-    S._flowRate = S.flowCount;
+  // Flow-Zähler
+  if (now - S.flowReset > 1000) {
+    S.flowReset = now;
+    S.flow = S.flowCount;
     S.flowCount = 0;
   }
 
-  draw();
-  updateStats();
+  // Clock
+  if (S.tick % 30 === 0) updateClock();
+
   requestAnimationFrame(loop);
 }
 
-// ─── STATS ─────────────────────────────────────────────────────
-function updateStats(){
-  const bal = (1 - Math.abs(S.tilt));
-  document.getElementById('sBal').textContent=bal.toFixed(2);
-  document.getElementById('sL').textContent=S.loadL.toFixed(2);
-  document.getElementById('sR').textContent=S.loadR.toFixed(2);
-  document.getElementById('bTilt').textContent=(S.tilt*10).toFixed(1)+'°';
-  document.getElementById('bMid').textContent=(S.tilt*100).toFixed(0);
-  document.getElementById('bForce').textContent=S.force.toFixed(2);
-  document.getElementById('bFlow').textContent=(S._flowRate||0)+'/s';
+function updateClock() {
+  document.getElementById('clock').textContent = '⏱️ ' + new Date().toLocaleTimeString('de-DE');
 }
 
-// ─── LOG ───────────────────────────────────────────────────────
-function log(msg,cls){
-  const box=document.getElementById('logBox');
-  const entry=document.createElement('div');
-  const t=new Date().toLocaleTimeString('de-DE');
-  entry.innerHTML=`<span class="time">[${t}]</span><span class="${cls||''}">${msg}</span>`;
-  box.appendChild(entry);
-  box.scrollTop=box.scrollHeight;
-  while(box.children.length>30) box.removeChild(box.firstChild);
-}
+// ─── BUTTONS ─────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  initGrid();
+  renderGrid();
+  recompute();
 
-// ─── BUTTONS ───────────────────────────────────────────────────
-document.getElementById('btnRoot').addEventListener('click',toggleRoot);
-
-document.getElementById('btnAuto').addEventListener('click',(e)=>{
-  S.auto=!S.auto;
-  e.currentTarget.classList.toggle('active',S.auto);
-  e.currentTarget.textContent=(S.auto?'⏸ AUTO':'▶ AUTO');
-  log(`AUTO ${S.auto?'an':'aus'}`,'scale');
-});
-
-document.getElementById('btnShift').addEventListener('click',()=>{
-  // Manueller Impuls: von einem zufälligen zu einem anderen Knoten
-  const i=Math.floor(Math.random()*NC_NODES.length);
-  const j=(i+1+Math.floor(Math.random()*5))%NC_NODES.length;
-  pulseLink(NC_NODES[i],NC_NODES[j],0.9);
-  spawnWisp(NC_NODES[i],NC_NODES[j]);
-  NC_NODES[i].pulse=1;
-  NC_NODES[j].pulse=0.8;
-  spawnSpark(NC_NODES[i].x,NC_NODES[i].y,NC_NODES[i].color);
-  log(`⇄ ${NC_NODES[i].name} → ${NC_NODES[j].name}`,'node');
-});
-
-document.getElementById('btnAll2All').addEventListener('click',()=>{
-  // Jeder Knoten sendet zu jedem anderen
-  NC_NODES.forEach(a=>{
-    NC_NODES.forEach(b=>{
-      if(a!==b){
-        pulseLink(a,b,0.5+Math.random()*0.4);
-        if(Math.random()<0.4) spawnWisp(a,b);
-      }
-    });
-    a.pulse=1;
-    spawnSpark(a.x,a.y,a.color);
-  });
-  log('✦ ALL-TO-ALL — jede Sektion spricht mit jeder.','root');
-  sendToMaster('nc:all2all',{ts:Date.now(),nodes:NC_NODES.length});
-});
-
-document.getElementById('btnReset').addEventListener('click',()=>{
-  NC_NODES.forEach(n=>{n.load=0;n.targetLoad=0;n.pulse=0;});
-  S.links.forEach(l=>{l.strength=0;l.targetStrength=0;});
-  S.wisps=[];S.sparks=[];
-  log('⟲ Waage zur Ruhe gebracht.','scale');
-});
-
-document.getElementById('load').addEventListener('input',(e)=>{
-  S.rate=parseInt(e.target.value,10);
-});
-
-// ─── CLICK auf Canvas: Last an den nächsten Knoten ────────────
-cv.addEventListener('click',(e)=>{
-  const r=cv.getBoundingClientRect();
-  const x=e.clientX-r.left;
-  const y=e.clientY-r.top;
-
-  // Nächsten Knoten finden
-  let nearest=null, bestD=1e9;
-  NC_NODES.forEach(n=>{
-    const d=Math.hypot(x-n.x,y-n.y);
-    if(d<bestD){bestD=d;nearest=n;}
+  document.getElementById('btnRoot').addEventListener('click', () => toggleRoot());
+  document.getElementById('btnMacht').addEventListener('click', toggleMacht);
+  document.getElementById('btnMystery').addEventListener('click', toggleMystery);
+  document.getElementById('btnL1').addEventListener('click', () => activatePath(1));
+  document.getElementById('btnL3').addEventListener('click', () => activatePath(3));
+  document.getElementById('btnL6').addEventListener('click', () => activatePath(6));
+  document.getElementById('btnAll').addEventListener('click', allToAll);
+  document.getElementById('btnShift').addEventListener('click', shift);
+  document.getElementById('btnReset').addEventListener('click', reset);
+  document.getElementById('btnAuto').addEventListener('click', (e) => {
+    S.auto = !S.auto;
+    e.currentTarget.classList.toggle('active', S.auto);
+    e.currentTarget.textContent = S.auto ? '⏸ AUTO' : '▶ AUTO';
+    log(`AUTO ${S.auto ? 'an' : 'aus'}`, 'ok');
   });
 
-  if(nearest && bestD<80){
-    // An diesen Knoten senden
-    nearest.targetLoad=Math.min(1,nearest.targetLoad+0.2);
-    nearest.pulse=1;
-    spawnSpark(nearest.x,nearest.y,nearest.color);
-    // Und von diesem Knoten an alle anderen
-    NC_NODES.forEach(other=>{
-      if(other!==nearest){
-        pulseLink(nearest,other,0.4);
-        if(Math.random()<0.5) spawnWisp(nearest,other);
-      }
-    });
-    log(`⚖️ Last → ${nearest.name} → alle`,'node');
-  } else {
-    // Klick ins Zentrum: Waage kurz aus dem Gleichgewicht bringen
-    S.tilt += (Math.random()-0.5)*0.6;
-    distributeLoad(0.6);
-    spawnSpark(CX,CY,'#f0c878');
-    log('⚖️ Das Zentrum nimmt auf und verteilt.','scale');
-  }
+  document.getElementById('rate').addEventListener('input', (e) => {
+    S.rate = parseInt(e.target.value, 10);
+    document.getElementById('rateVal').textContent = S.rate;
+  });
+
+  // Keyboard
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT') return;
+    if (e.key === 'r' || e.key === 'R') toggleRoot();
+    if (e.key === 'm' || e.key === 'M') toggleMacht();
+    if (e.key === 'y' || e.key === 'Y') toggleMystery();
+    if (e.key === '1') activatePath(1);
+    if (e.key === '3') activatePath(3);
+    if (e.key === '6') activatePath(6);
+    if (e.key === 'a' || e.key === 'A') document.getElementById('btnAll').click();
+    if (e.key === 's' || e.key === 'S') shift();
+    if (e.key === ' ') { e.preventDefault(); document.getElementById('btnAuto').click(); }
+  });
+
+  // Init-Logs
+  log('⚡ NC · 9×9 Matrix geladen — 81 Felder, 6 Achsen (ces·in·me·run·sec·u).', 'root');
+  log('🔷 Pfade: 1 // ATOM · 3 // UNI · 6 // RUN — 3hit90 aktiv.', 'ok');
+  log('🌱 R = Root · M = Macht · Y = Mystery · 1/3/6 = Pfade · Leertaste = Auto', 'macht');
+
+  // Start-Loop
+  requestAnimationFrame(loop);
+
+  // BroadcastChannel-Ping
+  sendBC('nc:ping', {});
+  setTimeout(() => sendBC('nc:ping', {}), 1000);
 });
 
-// ─── KEYBOARD ─────────────────────────────────────────────────
-document.addEventListener('keydown',(e)=>{
-  if(e.target.tagName==='INPUT') return;
-  if(e.key===' '){e.preventDefault();document.getElementById('btnShift').click();}
-  if(e.key==='a'||e.key==='A') document.getElementById('btnAll2All').click();
-  if(e.key==='r'||e.key==='R') document.getElementById('btnRoot').click();
-  if(e.key==='p'||e.key==='P') document.getElementById('btnAuto').click();
-});
-
-// ─── CLOCK ────────────────────────────────────────────────────
-function clock(){
-  document.getElementById('sClock').textContent='⏱️ '+new Date().toLocaleTimeString('de-DE');
-}
-setInterval(clock,1000); clock();
-
-// ─── API ──────────────────────────────────────────────────────
-window.NC={
-  scale:{
-    center:()=>({x:CX,y:CY}),
-    load:()=>({L:S.loadL,R:S.loadR,tilt:S.tilt,force:S.force}),
-    distribute:(f)=>distributeLoad(f),
-    shift:(from,to)=>{
-      if(typeof from==='number' && typeof to==='number'){
-        pulseLink(NC_NODES[from],NC_NODES[to],0.9);
-      }
-    },
-  },
-  root:{
-    on:()=>{if(!S.root)toggleRoot();},
-    off:()=>{if(S.root)toggleRoot();},
-    toggle:toggleRoot,
-  },
-  nodes:()=>NC_NODES.map(n=>({
-    id:n.id, name:n.name, kanji:n.kanji,
-    load:n.load, angle:n.angle, x:n.x, y:n.y,
-  })),
-  all2all:()=>document.getElementById('btnAll2All').click(),
-  state:()=>({
-    tick:S.tick, auto:S.auto, root:S.root,
-    loadL:S.loadL, loadR:S.loadR, tilt:S.tilt, force:S.force,
-    flow:S._flowRate||0,
-    links:S.links.filter(l=>l.strength>0.1).length,
-    wisps:S.wisps.length,
-    sparks:S.sparks.length,
-  }),
-  me2:{
-    allow:()=>{localMaster.me2.allow=true;},
-    block:()=>{localMaster.me2.allow=false;},
-  },
-  master:{
-    connected:()=>isMasterConnected,
-    state:()=>({...localMaster}),
-  },
+// ─── PUBLIC API ──────────────────────────────────────────────
+window.NC = {
+  root: { on: () => toggleRoot(true), off: () => toggleRoot(false), toggle: toggleRoot },
+  macht: { on: () => { if (!S.macht) toggleMacht(); }, off: () => { if (S.macht) toggleMacht(); } },
+  mystery: { on: () => { if (!S.mystery) toggleMystery(); }, off: () => { if (S.mystery) toggleMystery(); } },
+  path: (n) => activatePath(n),
+  all2all: allToAll,
+  shift,
+  reset,
+  state: () => ({ ...S, booked: grid.filter(g=>g.booked).length }),
+  grid: () => grid.map(g => ({ ...g })),
+  service: () => S.service,
+  machtVal: () => S.machtVal,
+  rootVal: () => S.rootVal,
+  cluster: () => S.cluster,
+  entropie: () => S.entropy,
+  waage: () => S.waage,
 };
-window.SCALE=window.NC;
+window.NC9 = window.NC;
 
-// ─── INIT ─────────────────────────────────────────────────────
-resize();
-
-// Erster Impuls: alles zu allem, einmal
-setTimeout(()=>{
-  NC_NODES.forEach(a=>{
-    NC_NODES.forEach(b=>{
-      if(a!==b) pulseLink(a,b,0.3);
-    });
-  });
-  log('✦ Alle zu allen — das Netz ist bereit.','root');
-},600);
-
-// Erstes sanftes Kippen
-setTimeout(()=>distributeLoad(0.5), 1200);
-
-log('⚖️ NC · WAAGSCHALE bereit — Zentrum und Root zugleich.','root');
-log('6 Sektionen: ces · in · me · run · sec · u','node');
-log('Space = Shift · A = All→All · R = Root · P = Auto','scale');
-
-console.log('%c⚖️ NC · WAAGSCHALE geladen','color:#7fdcff;font-weight:bold;font-size:14px;');
-console.log('→ window.NC.all2all() · .root.toggle() · .nodes() · .state()');
-
-requestAnimationFrame(loop);
+console.log('%c⚡ NC · 9×9 · ROOT · MACHT · MYSTERY · 1//3//6 geladen',
+  'color:#7fdcff;font-weight:bold;font-size:14px;');
+console.log('→ window.NC.root.toggle() · .macht.on() · .mystery.on() · .path(1|3|6)');
+console.log('→ Tasten: R=Root · M=Macht · Y=Mystery · 1/3/6=Pfade · Space=Auto');
 </script>
 </body>
 </html>
