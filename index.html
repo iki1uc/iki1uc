@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>◈ G-PUNKT · 9×9 IN/OUT · 6×6 ENGINE · iki1uc</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  :root{
+    --bg:#03060c; --fg:#c8d8e8;
+    --cyan:#6cf; --gold:#f0d080; --violet:#b388ff;
+    --green:#8cf0d0; --red:#ff6666; --pink:#ff9ec4;
+    --in:#8cf0d0;   /* IN = grün */
+    --out:#ff9ec4;  /* OUT = pink */
+    --root:#f0d080; /* ROOT = gold */
+    --user:#6cf;    /* USER = cyan */
+    --line:rgba(120,220,150,0.08);
+    --panel:rgba(6,10,18,0.72);
+    --serif:'Yu Mincho','Hiragino Mincho ProN',serif;
+  }
+  html,body{min-height:100%;}
+  body{
+    background:#03060c;
+    background-image:
+      radial-gradient(ellipse at 50% 20%, #0c1a30 0%, #050a14 55%, #010205 100%);
+    color:var(--fg);
+    font-family:'Consolas','Courier New',monospace;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+
+  /* ── BG 9x9 IN/OUT Netz ─────────────────────── */
+  #bgNet{
+    position:fixed; inset:0; z-index:-1;
+    opacity:0.08; pointer-events:none;
+    display:grid;
+    grid-template-columns:repeat(9,1fr);
+    grid-template-rows:repeat(9,1fr);
+    gap:1px;
+  }
+  #bgNet div{
+    background:transparent;
+    border:1px solid rgba(120,220,150,0.05);
+    border-radius:2px;
+    transition:background .4s, box-shadow .4s;
+  }
+
+  /* ── LAYOUT ─────────────────────────────────── */
+  #hub{
+    display:flex; flex-direction:column;
+    min-height:100vh;
+    padding:14px 18px 18px;
+    max-width:1600px; margin:0 auto;
+    gap:14px;
+  }
+
+  /* ── HEADER ─────────────────────────────────── */
+  header#gate{
+    display:flex; flex-wrap:wrap;
+    justify-content:space-between; align-items:center;
+    padding:12px 20px;
+    background:var(--panel);
+    backdrop-filter:blur(12px);
+    border-radius:16px;
+    border:1px solid var(--line);
+  }
+  header#gate .brand{
+    font-size:22px; font-weight:300; letter-spacing:3px;
+    background:linear-gradient(135deg,#7ee0a0,#d8f0c0,#b388ff,#f0d080);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    font-family:var(--serif);
+    display:flex; align-items:center; gap:12px;
+  }
+  header#gate .brand small{
+    font-size:11px; -webkit-text-fill-color:#4a5a6a;
+    letter-spacing:1px; font-family:'Consolas',monospace;
+  }
+  header#gate .brand .gdot{
+    -webkit-text-fill-color:#f0d080;
+    font-size:26px; line-height:1;
+    text-shadow:0 0 20px rgba(240,208,128,0.7);
+  }
+  .gate-stats{
+    display:flex; gap:16px; font-size:10.5px;
+    color:#6a8a7a; flex-wrap:wrap; align-items:center;
+  }
+  .gate-stats b{font-weight:bold;}
+  .v-in{color:var(--in);} .v-out{color:var(--out);}
+  .v-root{color:var(--root);} .v-user{color:var(--user);}
+  .v-gold{color:var(--gold);} .v-violet{color:var(--violet);}
+  .led{
+    display:inline-block; width:8px; height:8px;
+    border-radius:50%; margin-right:4px;
+  }
+  .led.green{background:#8cf0d0;box-shadow:0 0 8px #8cf0d0;}
+  .led.pink{background:#ff9ec4;box-shadow:0 0 8px #ff9ec4;}
+  .led.gold{background:#f0d080;box-shadow:0 0 8px #f0d080;}
+  .led.cyan{background:#6cf;box-shadow:0 0 8px #6cf;}
+  .led.pulse{animation:pulse 1.6s infinite;}
+  @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+
+  /* ── MAIN GRID: 9×9 IN/OUT  |  G  |  6×6 ENGINE ── */
+  #triple{
+    display:grid;
+    grid-template-columns: 1fr 300px 1fr;
+    gap:14px;
+    align-items:start;
+  }
+  @media(max-width:1200px){
+    #triple{grid-template-columns:1fr; }
+  }
+
+  .box{
+    background:var(--panel);
+    backdrop-filter:blur(12px);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:14px;
+  }
+  .box h2{
+    font-size:12px; font-weight:400; letter-spacing:3px;
+    color:var(--gold); margin-bottom:10px;
+    text-transform:uppercase;
+    display:flex; justify-content:space-between; align-items:center;
+    font-family:var(--serif);
+  }
+  .box h2 .badge{
+    font-size:9px; color:#5a7a8a; font-weight:400;
+    letter-spacing:1px; font-family:'Consolas',monospace;
+  }
+
+  /* ── 9×9 IN/OUT SPEKTRUM ────────────────────── */
+  #spectrum{
+    display:grid;
+    grid-template-columns:repeat(9,1fr);
+    grid-template-rows:repeat(9,1fr);
+    gap:2px;
+    aspect-ratio:1;
+    background:#050a12;
+    padding:6px;
+    border-radius:10px;
+    border:1px solid rgba(120,220,150,0.15);
+    width:100%;
+    max-width:480px;
+    margin:0 auto;
+  }
+  .scell{
+    background:rgba(20,28,40,0.6);
+    border-radius:3px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:8px;
+    color:#3a4a5a;
+    cursor:pointer;
+    transition:all .2s cubic-bezier(.2,.9,.25,1);
+    position:relative;
+    user-select:none;
+  }
+  .scell:hover{transform:scale(1.08);z-index:2;}
+  .scell.in{
+    background:rgba(140,240,208,0.22);
+    color:#8cf0d0;
+    box-shadow:inset 0 0 10px rgba(140,240,208,0.35);
+  }
+  .scell.out{
+    background:rgba(255,158,196,0.15);
+    color:#ff9ec4;
+    box-shadow:inset 0 0 8px rgba(255,158,196,0.2);
+  }
+  .scell.core{
+    font-weight:bold; font-size:11px;
+    color:#f0d080;
+  }
+  .scell.core.in{
+    background:rgba(240,208,128,0.25);
+    color:#ffe9b0;
+    box-shadow:inset 0 0 12px rgba(240,208,128,0.5);
+  }
+  .scell .sval{
+    position:absolute; bottom:1px; right:2px;
+    font-size:6px; color:#3a5a4a;
+    font-family:'Consolas',monospace;
+  }
+  .scell.in .sval{color:#4a9a7a;}
+  .scell.out .sval{color:#9a5a7a;}
+
+  /* ── G-PUNKT (Mitte) ────────────────────────── */
+  #gWrap{
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    gap:12px;
+    padding:16px 8px;
+    position:relative;
+  }
+  #gOrb{
+    width:200px; height:200px;
+    position:relative;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #gOrb svg{position:absolute;inset:0;overflow:visible;}
+  #gCenter{
+    width:90px; height:90px;
+    border-radius:50%;
+    background:radial-gradient(circle at 40% 35%, #ffe9b0 0%, #f0d080 35%, #b388ff 70%, #1a0a2a 100%);
+    box-shadow:
+      0 0 40px rgba(240,208,128,0.6),
+      0 0 80px rgba(179,136,255,0.4),
+      inset 0 0 20px rgba(255,255,255,0.2);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--serif);
+    font-size:32px; color:#1a0a2a;
+    font-weight:bold;
+    text-shadow:0 0 12px rgba(255,255,255,0.5);
+    animation:gPulse 3s ease-in-out infinite;
+    z-index:3;
+    cursor:pointer;
+    user-select:none;
+  }
+  @keyframes gPulse{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.06);}
+  }
+  .g-label{
+    font-family:var(--serif);
+    font-size:13px; letter-spacing:8px;
+    color:var(--gold);
+    text-transform:uppercase;
+    text-align:center;
+  }
+  .g-sub{
+    font-size:9px; letter-spacing:3px;
+    color:#6a8a7a; text-align:center;
+    font-family:'Consolas',monospace;
+  }
+  .g-conn{
+    display:flex; gap:6px; flex-wrap:wrap;
+    justify-content:center; margin-top:4px;
+  }
+  .g-conn a, .g-conn button{
+    font-family:inherit; font-size:9px;
+    letter-spacing:1.5px; text-transform:uppercase;
+    padding:5px 10px; border-radius:5px;
+    background:rgba(20,28,40,0.7);
+    border:1px solid rgba(240,208,128,0.35);
+    color:var(--gold);
+    cursor:pointer; text-decoration:none;
+    transition:.2s;
+  }
+  .g-conn a:hover,.g-conn button:hover{
+    background:rgba(240,208,128,0.15);
+    color:#fff;
+    box-shadow:0 0 14px rgba(240,208,128,0.5);
+  }
+
+  /* ── 6×6 ENGINE (Root / User) ───────────────── */
+  #engine{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    grid-template-rows:repeat(6,1fr);
+    gap:2px;
+    aspect-ratio:1;
+    background:#050a12;
+    padding:6px;
+    border-radius:10px;
+    border:1px solid rgba(179,136,255,0.2);
+    width:100%;
+    max-width:480px;
+    margin:0 auto;
+  }
+  .ecell{
+    background:rgba(20,16,32,0.6);
+    border-radius:3px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:7.5px;
+    color:#4a4a6a;
+    cursor:pointer;
+    transition:all .25s;
+    position:relative;
+    user-select:none;
+    overflow:hidden;
+  }
+  .ecell.root{
+    background:rgba(240,208,128,0.2);
+    color:#ffe9b0;
+    box-shadow:inset 0 0 10px rgba(240,208,128,0.35);
+  }
+  .ecell.user{
+    background:rgba(108,204,255,0.18);
+    color:#c8e8ff;
+    box-shadow:inset 0 0 8px rgba(108,204,255,0.25);
+  }
+  .ecell.both{
+    background:linear-gradient(135deg,rgba(240,208,128,0.25),rgba(108,204,255,0.25));
+    color:#fff;
+    box-shadow:inset 0 0 12px rgba(240,208,128,0.4),0 0 8px rgba(108,204,255,0.3);
+  }
+  .ecell .etag{
+    position:absolute; bottom:0; left:2px;
+    font-size:6px; color:#5a7a8a;
+    font-family:'Consolas',monospace;
+  }
+  .ecell .edot{
+    font-size:14px;
+    font-weight:bold;
+  }
+
+  /* ── METRICS (unter den Grids) ───────────────── */
+  .metrics{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:5px;
+    margin-top:10px;
+  }
+  .metric{
+    display:flex; justify-content:space-between;
+    padding:5px 9px;
+    background:rgba(0,0,0,0.35);
+    border-radius:5px;
+    border-left:3px solid var(--green);
+    font-size:10px;
+  }
+  .metric.in{border-left-color:var(--in);}
+  .metric.out{border-left-color:var(--out);}
+  .metric.root{border-left-color:var(--root);}
+  .metric.user{border-left-color:var(--user);}
+  .metric.gold{border-left-color:var(--gold);}
+  .metric.violet{border-left-color:var(--violet);}
+  .metric .lbl{color:#8aa8a0;}
+  .metric .val{font-weight:bold;color:#d0e8e0;}
+  .metric .val.in{color:var(--in);}
+  .metric .val.out{color:var(--out);}
+  .metric .val.root{color:var(--root);}
+  .metric .val.user{color:var(--user);}
+  .metric .val.gold{color:var(--gold);}
+  .metric .val.violet{color:var(--violet);}
+
+  /* ── CONTROLS ───────────────────────────────── */
+  .ctrl{
+    display:flex; gap:6px; flex-wrap:wrap;
+    margin-top:10px;
+  }
+  .ctrl button{
+    flex:1; min-width:80px;
+    background:rgba(20,28,40,0.7);
+    border:1px solid rgba(120,220,150,0.22);
+    color:#c8e8d8;
+    padding:5px 8px;
+    border-radius:5px;
+    font-family:inherit; font-size:9px;
+    letter-spacing:1.2px; cursor:pointer;
+    text-transform:uppercase;
+    transition:.2s;
+  }
+  .ctrl button:hover{
+    border-color:#8cf0d0;
+    background:rgba(140,240,208,0.1);
+    color:#fff;
+  }
+  .ctrl button.gold{border-color:rgba(240,208,128,0.3);color:var(--gold);}
+  .ctrl button.gold:hover{background:rgba(240,208,128,0.12);border-color:var(--gold);color:#fff;}
+  .ctrl button.violet{border-color:rgba(179,136,255,0.3);color:var(--violet);}
+  .ctrl button.violet:hover{background:rgba(179,136,255,0.12);border-color:var(--violet);color:#fff;}
+  .ctrl button.pink{border-color:rgba(255,158,196,0.3);color:var(--out);}
+  .ctrl button.pink:hover{background:rgba(255,158,196,0.12);border-color:var(--out);color:#fff;}
+  .ctrl button.cyan{border-color:rgba(108,204,255,0.3);color:var(--user);}
+  .ctrl button.cyan:hover{background:rgba(108,204,255,0.12);border-color:var(--user);color:#fff;}
+  .ctrl button.red{border-color:rgba(255,102,102,0.3);color:var(--red);}
+  .ctrl button.red:hover{background:rgba(255,102,102,0.12);border-color:var(--red);color:#fff;}
+
+  /* ── LOG ─────────────────────────────────────── */
+  #log{
+    background:rgba(0,0,0,0.5);
+    border-radius:12px;
+    border:1px solid var(--line);
+    padding:8px 12px;
+    font-size:9.5px; line-height:1.6;
+    color:#8ab0c0;
+    max-height:130px; overflow-y:auto;
+  }
+  #log .entry{padding:1px 0;border-bottom:1px solid rgba(255,255,255,0.02);}
+  #log .time{color:#3a4a5a;margin-right:6px;}
+  #log .tag{color:#6cf;margin-right:4px;}
+  #log .ok{color:#8cf0d0;}
+  #log .warn{color:#f0d080;}
+  #log .err{color:#ff6666;}
+  #log .gold{color:#f0d080;font-weight:bold;}
+  #log .in{color:var(--in);}
+  #log .out{color:var(--out);}
+  #log .root{color:var(--root);}
+  #log .user{color:var(--user);}
+
+  /* ── FOOTER ──────────────────────────────────── */
+  footer{
+    text-align:center;
+    font-size:9px; color:#3a4a4a;
+    padding:8px 16px;
+    border-top:1px solid rgba(120,220,150,0.03);
+  }
+  footer .gold{color:#f0d080;}
+  footer a{color:var(--user);text-decoration:none;}
+  footer a:hover{text-decoration:underline;}
+
+  /* ── FL76 ────────────────────────────────────── */
+  #fl76{
+    position:fixed; bottom:14px; right:14px;
+    padding:6px 12px;
+    background:rgba(6,10,18,0.92);
+    border:1px solid rgba(140,240,208,0.3);
+    border-radius:6px;
+    font-size:10px; letter-spacing:1.5px;
+    color:#8cf0b0; z-index:12;
+    text-align:right; min-width:130px;
+  }
+  #fl76 .num{font-size:16px;font-weight:bold;color:#8cf0b0;}
+  #fl76.outside{border-color:rgba(255,102,102,0.5);}
+  #fl76.outside .num{color:#ff6666;}
+  #fl76.edge{border-color:rgba(240,208,128,0.5);}
+  #fl76.edge .num{color:#f0d080;}
+
+  @media (max-width:700px){
+    #hub{padding:8px;}
+    header#gate .brand{font-size:16px;}
+    header#gate .brand .gdot{font-size:20px;}
+    .scell{font-size:6.5px;}
+    .ecell{font-size:6px;}
+    #fl76{bottom:8px;right:8px;font-size:9px;padding:4px 8px;min-width:100px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- BG 9×9 IN/OUT Netz -->
+<div id="bgNet"></div>
+
+<div id="hub">
+
+  <!-- ── GATE (Header) ───────────────────────── -->
+  <header id="gate">
+    <div class="brand">
+      <span class="gdot">◈</span>
+      G-PUNKT · ENGINE · MIND
+      <small>9×9 IN/OUT · 6×6 ROOT/USER</small>
+    </div>
+    <div class="gate-stats">
+      <span><span class="led green pulse"></span> IN <b class="v-in" id="hIn">0</b></span>
+      <span><span class="led pink"></span> OUT <b class="v-out" id="hOut">0</b></span>
+      <span><span class="led gold"></span> ROOT <b class="v-root" id="hRoot">0</b></span>
+      <span><span class="led cyan"></span> USER <b class="v-user" id="hUser">0</b></span>
+      <span>G <b class="v-gold" id="hG">0.00</b></span>
+      <span id="hClock" style="color:#4a5a6a;">⏱️ --:--</span>
+    </div>
+  </header>
+
+  <!-- ── TRIPLE: 9×9 | G | 6×6 ──────────────── -->
+  <div id="triple">
+
+    <!-- 9×9 IN/OUT SPEKTRUM -->
+    <div class="box">
+      <h2>
+        ◉ 9×9 · NUTZUNGS-SPEKTRUM
+        <span class="badge" id="specBadge">0 / 81 · IN:0 · OUT:0</span>
+      </h2>
+      <div id="spectrum"></div>
+
+      <div class="metrics">
+        <div class="metric in"><span class="lbl">IN · Summe</span><span class="val in" id="mIn">0</span></div>
+        <div class="metric out"><span class="lbl">OUT · Summe</span><span class="val out" id="mOut">0</span></div>
+        <div class="metric gold"><span class="lbl">Spektrum-Score</span><span class="val gold" id="mSpec">0.00</span></div>
+        <div class="metric violet"><span class="lbl">Cluster</span><span class="val violet" id="mSpecCl">0</span></div>
+      </div>
+
+      <div class="ctrl">
+        <button id="btnIn">⬇ IN</button>
+        <button id="btnOut" class="pink">⬆ OUT</button>
+        <button id="btnInAll" class="gold">⚡ ALL IN</button>
+        <button id="btnOutAll" class="pink">⟲ ALL OUT</button>
+        <button id="btnSpecReset" class="red">⟲ RESET</button>
+      </div>
+    </div>
+
+    <!-- G-PUNKT MITTE -->
+    <div class="box" id="gWrap">
+      <h2 style="justify-content:center;">
+        G · PUNKT
+        <span class="badge" id="gBadge">idle</span>
+      </h2>
+      <div id="gOrb">
+        <svg viewBox="-100 -100 200 200" width="200" height="200">
+          <circle cx="0" cy="0" r="88" fill="none"
+            stroke="rgba(240,208,128,0.15)" stroke-width="0.8"/>
+          <circle cx="0" cy="0" r="72" fill="none"
+            stroke="rgba(108,204,255,0.12)" stroke-width="0.5" stroke-dasharray="3 6"/>
+          <circle cx="0" cy="0" r="56" fill="none"
+            stroke="rgba(255,158,196,0.12)" stroke-width="0.5" stroke-dasharray="2 4"/>
+          <!-- Orbit-Linien -->
+          <line x1="-88" y1="0" x2="88" y2="0"
+            stroke="rgba(240,208,128,0.12)" stroke-width="0.5"/>
+          <line x1="0" y1="-88" x2="0" y2="88"
+            stroke="rgba(240,208,128,0.12)" stroke-width="0.5"/>
+          <line x1="-62" y1="-62" x2="62" y2="62"
+            stroke="rgba(179,136,255,0.08)" stroke-width="0.5"/>
+          <line x1="62" y1="-62" x2="-62" y2="62"
+            stroke="rgba(179,136,255,0.08)" stroke-width="0.5"/>
+          <!-- 6 Root-Knoten -->
+          <g id="gNodes"></g>
+        </svg>
+        <div id="gCenter">◈</div>
+      </div>
+
+      <div class="g-label">G · PUNKT</div>
+      <div class="g-sub">9×9 spektrum · 6×6 engine · mind</div>
+
+      <div class="g-conn">
+        <a href="mind.html" target="_blank">🧠 mind.html</a>
+        <button id="btnRoot">🌱 ROOT</button>
+        <button id="btnUser" class="cyan">👤 USER</button>
+        <button id="btnG" class="gold">◈ G-START</button>
+      </div>
+
+      <div class="metrics" style="width:100%;">
+        <div class="metric root"><span class="lbl">Root-Kraft</span><span class="val root" id="mRootKraft">0</span></div>
+        <div class="metric user"><span class="lbl">User-Fluss</span><span class="val user" id="mUserFluss">0</span></div>
+        <div class="metric gold"><span class="lbl">G-Score</span><span class="val gold" id="mGScore">0.00</span></div>
+        <div class="metric violet"><span class="lbl">Kohärenz</span><span class="val violet" id="mKoh">0.00</span></div>
+      </div>
+    </div>
+
+    <!-- 6×6 ENGINE -->
+    <div class="box">
+      <h2>
+        ⚙ 6×6 · ENGINE · ROOT / USER
+        <span class="badge" id="engBadge">0 / 36 · R:0 · U:0</span>
+      </h2>
+      <div id="engine"></div>
+
+      <div class="metrics">
+        <div class="metric root"><span class="lbl">ROOT · Felder</span><span class="val root" id="mRootF">0</span></div>
+        <div class="metric user"><span class="lbl">USER · Felder</span><span class="val user" id="mUserF">0</span></div>
+        <div class="metric gold"><span class="lbl">Algorithmus-Index</span><span class="val gold" id="mAlgo">0</span></div>
+        <div class="metric violet"><span class="lbl">Engine-Kohärenz</span><span class="val violet" id="mEngKoh">0.00</span></div>
+      </div>
+
+      <div class="ctrl">
+        <button id="btnEngRoot" class="gold">🌱 ROOT</button>
+        <button id="btnEngUser" class="cyan">👤 USER</button>
+        <button id="btnEngAlgo" class="violet">⚙ ALGO</button>
+        <button id="btnEngFlip">⇄ FLIP</button>
+        <button id="btnEngRun">▶ RUN</button>
+        <button id="btnEngReset" class="red">⟲ RESET</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── LOG ─────────────────────────────────── -->
+  <div id="log">
+    <div class="entry"><span class="time">[init]</span><span class="tag">g-punkt</span><span class="gold">◈ G-PUNKT · 9×9 IN/OUT · 6×6 ROOT/USER · mind.html verbunden</span></div>
+  </div>
+
+  <footer>
+    <span class="gold">◈</span> G-PUNKT · ENGINE · MIND · iki1uc
+    <span class="gold">◈</span> 9×9 Spektrum · 6×6 Algorithmus · <a href="mind.html">mind.html</a>
+  </footer>
+
+</div>
+
+<!-- FL76 -->
+<div id="fl76">
+  <div>FL76</div>
+  <div class="num" id="fl76num">76</div>
+  <div style="font-size:8px;color:#4a5a5a;">ms · Kaiser</div>
+</div>
+
+<script>
+"use strict";
+// ═══════════════════════════════════════════════════════════════════
+// ◈ G-PUNKT · 9×9 IN/OUT · 6×6 ROOT/USER · ENGINE · MIND
+// Der Konvergenzpunkt: Nutzung (9×9) trifft Algorithmus (6×6).
+// ═══════════════════════════════════════════════════════════════════
+
+const N9 = 9;         // 9×9 Spektrum
+const N6 = 6;         // 6×6 Engine
+const T9 = N9 * N9;   // 81
+const T6 = N6 * N6;   // 36
+
+// ─── 9×9 SPEKTRUM (IN/OUT) ────────────────────────────────────
+// state[i] = 0 (neutral) | 1 (IN) | -1 (OUT)
+const SPEC = {
+  cells: new Array(T9).fill(0),
+  core: new Set([
+    0,           // Ω oben links
+    N9 - 1,      // ◉ oben rechts
+    (N9 - 1) * N9, // ♚ unten links
+    T9 - 1,      // ♛ unten rechts
+    4 * N9 + 4,  // ◈ Zentrum
+  ]),
+  values: new Array(T9).fill(1),
+};
+
+for (let i = 0; i < T9; i++) {
+  const r = Math.floor(i / N9), c = i % N9;
+  if (SPEC.core.has(i)) {
+    SPEC.values[i] = 9;
+    SPEC.cells[i] = 1; // Kern initial IN
+  } else {
+    SPEC.values[i] = ((r + c) % 9) + 1;
+  }
+}
+
+// ─── 6×6 ENGINE (ROOT / USER) ────────────────────────────────
+// state[i] = 0 (leer) | 1 (ROOT) | 2 (USER) | 3 (beide)
+const ENG = {
+  cells: new Array(T6).fill(0),
+  // Root-Diagonale vorbelegen
+  rootSeed: new Set([
+    0, 7, 14, 21, 28, 35,   // Diagonale
+    7, 14, 21, 28,          // Anti-Diagonale
+  ]),
+};
+for (const i of ENG.rootSeed) {
+  if (i < T6) ENG.cells[i] = 1;
+}
+
+// ─── STATE ────────────────────────────────────────────────────
+const S = {
+  tick: 0,
+  rootMode: false,
+  userMode: false,
+  lastAuto: 0,
+  rate: 4,
+  // Spektrum
+  inCount: 0, outCount: 0, inSum: 0, outSum: 0,
+  specClusters: 0, specScore: 0,
+  // Engine
+  rootFields: 0, userFields: 0, algoIndex: 0, engKoh: 0,
+  // G-Punkt
+  rootKraft: 0, userFluss: 0, gScore: 0, koh: 0,
+  // FL76
+  flRaw: 76, flSmooth: 76, lastFrameT: 0,
+};
+
+// ─── 9×9 SPEKTRUM: BUCHEN ────────────────────────────────────
+function specToggle(i, mode) {
+  if (mode === 'in') {
+    SPEC.cells[i] = SPEC.cells[i] === 1 ? 0 : 1;
+  } else if (mode === 'out') {
+    SPEC.cells[i] = SPEC.cells[i] === -1 ? 0 : -1;
+  } else {
+    // toggle: neutral → IN → OUT → neutral
+    if (SPEC.cells[i] === 0) SPEC.cells[i] = 1;
+    else if (SPEC.cells[i] === 1) SPEC.cells[i] = -1;
+    else SPEC.cells[i] = 0;
+  }
+  renderSpecCell(i);
+  measureSpec();
+  checkG();
+}
+
+function renderSpecCell(i) {
+  const el = document.querySelector(`.scell[data-i="${i}"]`);
+  if (!el) return;
+  const v = SPEC.cells[i];
+  el.classList.toggle('in', v === 1);
+  el.classList.toggle('out', v === -1);
+}
+
+// ─── 9×9 SPEKTRUM: MESSEN ────────────────────────────────────
+function measureSpec() {
+  let inC = 0, outC = 0, inS = 0, outS = 0;
+  for (let i = 0; i < T9; i++) {
+    const v = SPEC.values[i];
+    if (SPEC.cells[i] === 1) { inC++; inS += v; }
+    else if (SPEC.cells[i] === -1) { outC++; outS += v; }
+  }
+  S.inCount = inC; S.outCount = outC;
+  S.inSum = inS; S.outSum = outS;
+  S.specScore = (inS - outS) / (T9 * 9);
+
+  // Cluster (nur IN zählt für Zusammenhalt)
+  const parent = Array.from({length: T9}, (_, i) => i);
+  const find = x => parent[x] === x ? x : (parent[x] = find(parent[x]));
+  const union = (a,b) => { const ra=find(a), rb=find(b); if(ra!==rb) parent[ra]=rb; };
+  for (let r = 0; r < N9; r++) {
+    for (let c = 0; c < N9; c++) {
+      const i = r*N9 + c;
+      if (SPEC.cells[i] !== 1) continue;
+      if (c+1 < N9 && SPEC.cells[i+1] === 1) union(i, i+1);
+      if (r+1 < N9 && SPEC.cells[i+N9] === 1) union(i, i+N9);
+    }
+  }
+  const groups = new Set();
+  for (let i = 0; i < T9; i++) if (SPEC.cells[i] === 1) groups.add(find(i));
+  S.specClusters = groups.size;
+
+  updateSpecUI();
+  updateBG();
+}
+
+function updateSpecUI() {
+  document.getElementById('specBadge').textContent =
+    `${S.inCount + S.outCount} / 81 · IN:${S.inCount} · OUT:${S.outCount}`;
+  document.getElementById('hIn').textContent = S.inCount;
+  document.getElementById('hOut').textContent = S.outCount;
+  document.getElementById('mIn').textContent = S.inSum;
+  document.getElementById('mOut').textContent = S.outSum;
+  document.getElementById('mSpec').textContent = S.specScore.toFixed(3);
+  document.getElementById('mSpecCl').textContent = S.specClusters;
+}
+
+// ─── 6×6 ENGINE: TOGGLE ──────────────────────────────────────
+function engToggle(i, mode) {
+  if (mode === 'root') {
+    if (ENG.cells[i] === 1) ENG.cells[i] = 0;
+    else if (ENG.cells[i] === 3) ENG.cells[i] = 2;
+    else ENG.cells[i] = 1;
+  } else if (mode === 'user') {
+    if (ENG.cells[i] === 2) ENG.cells[i] = 0;
+    else if (ENG.cells[i] === 3) ENG.cells[i] = 1;
+    else ENG.cells[i] = 2;
+  } else {
+    // cycle
+    ENG.cells[i] = (ENG.cells[i] + 1) % 4;
+  }
+  renderEngCell(i);
+  measureEng();
+  checkG();
+}
+
+function renderEngCell(i) {
+  const el = document.querySelector(`.ecell[data-i="${i}"]`);
+  if (!el) return;
+  const v = ENG.cells[i];
+  el.classList.toggle('root', v === 1);
+  el.classList.toggle('user', v === 2);
+  el.classList.toggle('both', v === 3);
+  const tag = el.querySelector('.etag');
+  if (tag) {
+    tag.textContent = v === 1 ? 'R' : v === 2 ? 'U' : v === 3 ? 'RU' : '';
+  }
+  const dot = el.querySelector('.edot');
+  if (dot) {
+    dot.textContent = v === 1 ? '◆' : v === 2 ? '◇' : v === 3 ? '◈' : '·';
+  }
+}
+
+// ─── 6×6 ENGINE: MESSEN ──────────────────────────────────────
+function measureEng() {
+  let r = 0, u = 0;
+  for (let i = 0; i < T6; i++) {
+    const v = ENG.cells[i];
+    if (v === 1) r++;
+    else if (v === 2) u++;
+    else if (v === 3) { r++; u++; }
+  }
+  S.rootFields = r;
+  S.userFields = u;
+
+  // Algorithmus-Index: Verhältnis Root/User + Position
+  let algo = 0;
+  for (let i = 0; i < T6; i++) {
+    const r0 = Math.floor(i / N6), c0 = i % N6;
+    const v = ENG.cells[i];
+    if (v === 0) continue;
+    // Diagonalitäts-Gewicht
+    const diag = (r0 === c0 || r0 + c0 === N6 - 1) ? 1.5 : 1;
+    algo += v * diag * (1 + (r0 + c0) * 0.05);
+  }
+  S.algoIndex = algo;
+
+  // Kohärenz: Anteil gesetzter Felder gewichtet nach Zentrum
+  let set = 0;
+  for (let i = 0; i < T6; i++) if (ENG.cells[i] !== 0) set++;
+  S.engKoh = set / T6;
+
+  updateEngUI();
+}
+
+function updateEngUI() {
+  document.getElementById('engBadge').textContent =
+    `${S.rootFields + S.userFields} / 36 · R:${S.rootFields} · U:${S.userFields}`;
+  document.getElementById('hRoot').textContent = S.rootFields;
+  document.getElementById('hUser').textContent = S.userFields;
+  document.getElementById('mRootF').textContent = S.rootFields;
+  document.getElementById('mUserF').textContent = S.userFields;
+  document.getElementById('mAlgo').textContent = S.algoIndex.toFixed(1);
+  document.getElementById('mEngKoh').textContent = S.engKoh.toFixed(2);
+}
+
+// ─── G-PUNKT: PRÜFEN ────────────────────────────────────────
+function checkG() {
+  // Root-Kraft = Spektrum-IN + Engine-ROOT
+  S.rootKraft = S.inSum + S.rootFields * 3;
+  // User-Fluss = Spektrum-OUT + Engine-USER
+  S.userFluss = S.outSum + S.userFields * 3;
+
+  // G-Score = Kohärenz zwischen Spektrum und Engine
+  const specKoh = S.specScore;
+  const engKoh = S.engKoh;
+  const balance = S.inSum + S.outSum > 0
+    ? 1 - Math.abs(S.inSum - S.outSum) / (S.inSum + S.outSum)
+    : 0;
+  S.gScore = (Math.abs(specKoh) * 0.4 + engKoh * 0.3 + balance * 0.3);
+
+  // Kohärenz = Überschneidung Spektrum-IN mit Engine-ROOT
+  let match = 0, total = 0;
+  for (let i = 0; i < Math.min(T9, T6); i++) {
+    const inSpec = SPEC.cells[i] === 1;
+    const inEng = ENG.cells[i] === 1 || ENG.cells[i] === 3;
+    if (inSpec || inEng) {
+      total++;
+      if (inSpec && inEng) match++;
+    }
+  }
+  S.koh = total > 0 ? match / total : 0;
+
+  updateGUI();
+}
+
+function updateGUI() {
+  document.getElementById('mRootKraft').textContent = Math.round(S.rootKraft);
+  document.getElementById('mUserFluss').textContent = Math.round(S.userFluss);
+  document.getElementById('mGScore').textContent = S.gScore.toFixed(3);
+  document.getElementById('mKoh').textContent = S.koh.toFixed(3);
+  document.getElementById('hG').textContent = S.gScore.toFixed(2);
+
+  // Badge-Zustand
+  const badge = document.getElementById('gBadge');
+  if (S.gScore > 0.7) badge.textContent = 'RESONANZ';
+  else if (S.gScore > 0.4) badge.textContent = 'AKTIV';
+  else if (S.gScore > 0.1) badge.textContent = 'LADEN';
+  else badge.textContent = 'idle';
+
+  // G-Center-Glow dynamisch
+  const center = document.getElementById('gCenter');
+  if (center) {
+    const scale = 1 + S.gScore * 0.25;
+    const glow = 40 + S.gScore * 60;
+    center.style.boxShadow = `
+      0 0 ${glow}px rgba(240,208,128,${0.4 + S.gScore * 0.4}),
+      0 0 ${glow * 1.5}px rgba(179,136,255,${0.2 + S.gScore * 0.3}),
+      inset 0 0 20px rgba(255,255,255,0.2)
+    `;
+    center.style.transform = `scale(${scale})`;
+  }
+}
+
+// ─── G-PUNKT ORBIT-NODES (SVG) ───────────────────────────────
+function buildGNodes() {
+  const g = document.getElementById('gNodes');
+  if (!g) return;
+  g.innerHTML = '';
+  const axes = [
+    { id:'ces', kanji:'切', color:'#7fdcff' },
+    { id:'in',  kanji:'内', color:'#8cf0d0' },
+    { id:'me',  kanji:'我', color:'#f0d080' },
+    { id:'run', kanji:'走', color:'#a888ff' },
+    { id:'sec', kanji:'護', color:'#ff9ec4' },
+    { id:'u',   kanji:'宇', color:'#c8f0ff' },
+  ];
+  axes.forEach((a, i) => {
+    const angle = (i / axes.length) * Math.PI * 2 - Math.PI / 2;
+    const x = Math.cos(angle) * 88;
+    const y = Math.sin(angle) * 88;
+    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('cx', x);
+    circle.setAttribute('cy', y);
+    circle.setAttribute('r', 8);
+    circle.setAttribute('fill', 'rgba(6,10,18,0.9)');
+    circle.setAttribute('stroke', a.color);
+    circle.setAttribute('stroke-width', '1.5');
+    circle.setAttribute('opacity', '0.85');
+    g.appendChild(circle);
+
+    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    text.setAttribute('x', x);
+    text.setAttribute('y', y + 3.5);
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('fill', a.color);
+    text.setAttribute('font-size', '9');
+    text.setAttribute('font-family', 'Yu Mincho, serif');
+    text.textContent = a.kanji;
+    g.appendChild(text);
+  });
+}
+
+// ─── BUILD: 9×9 SPEKTRUM ────────────────────────────────────
+function buildSpectrum() {
+  const el = document.getElementById('spectrum');
+  el.innerHTML = '';
+  for (let r = 0; r < N9; r++) {
+    for (let c = 0; c < N9; c++) {
+      const i = r * N9 + c;
+      const cell = document.createElement('div');
+      cell.className = 'scell';
+      cell.dataset.i = i;
+      if (SPEC.core.has(i)) cell.classList.add('core');
+      const v = SPEC.values[i];
+      // Kernfiguren mit Glyph
+      let glyph = '';
+      if (i === 0) glyph = 'Ω';
+      else if (i === N9 - 1) glyph = '◉';
+      else if (i === (N9 - 1) * N9) glyph = '♚';
+      else if (i === T9 - 1) glyph = '♛';
+      else if (i === 4 * N9 + 4) glyph = '◈';
+      else glyph = String(v);
+      cell.innerHTML = `${glyph}<span class="sval">${v}</span>`;
+      cell.title = `Feld ${i} · Wert ${v}`;
+      cell.addEventListener('click', (e) => {
+        const mode = e.shiftKey ? 'out' : e.ctrlKey || e.metaKey ? null : 'in';
+        specToggle(i, mode);
+      });
+      el.appendChild(cell);
+    }
+  }
+  // Initial rendern
+  for (let i = 0; i < T9; i++) renderSpecCell(i);
+}
+
+// ─── BUILD: 6×6 ENGINE ──────────────────────────────────────
+function buildEngine() {
+  const el = document.getElementById('engine');
+  el.innerHTML = '';
+  for (let r = 0; r < N6; r++) {
+    for (let c = 0; c < N6; c++) {
+      const i = r * N6 + c;
+      const cell = document.createElement('div');
+      cell.className = 'ecell';
+      cell.dataset.i = i;
+      cell.innerHTML = `<span class="edot">·</span><span class="etag"></span>`;
+      cell.title = `Feld ${i} · r${r}·c${c}`;
+      cell.addEventListener('click', (e) => {
+        const mode = e.shiftKey ? 'user' : e.altKey ? null : 'root';
+        engToggle(i, mode);
+      });
+      el.appendChild(cell);
+    }
+  }
+  for (let i = 0; i < T6; i++) renderEngCell(i);
+}
+
+// ─── BG NET (9×9) ───────────────────────────────────────────
+function buildBG() {
+  const bg = document.getElementById('bgNet');
+  for (let i = 0; i < T9; i++) {
+    const c = document.createElement('div');
+    c.dataset.i = i;
+    bg.appendChild(c);
+  }
+}
+function updateBG() {
+  document.querySelectorAll('#bgNet div').forEach((cell, i) => {
+    const v = SPEC.cells[i];
+    if (v === 1) {
+      cell.style.background = `rgba(140,240,208,${0.15 + (SPEC.values[i]/9) * 0.15})`;
+    } else if (v === -1) {
+      cell.style.background = `rgba(255,158,196,${0.12 + (SPEC.values[i]/9) * 0.12})`;
+    } else {
+      cell.style.background = 'transparent';
+    }
+  });
+}
+
+// ─── BUTTONS ────────────────────────────────────────────────
+function bindButtons() {
+  // 9×9
+  document.getElementById('btnInAll').addEventListener('click', () => {
+    for (let i = 0; i < T9; i++) SPEC.cells[i] = 1;
+    buildSpectrum(); measureSpec(); checkG();
+    log('⚡ ALL IN — Spektrum voll geladen', 'spec', 'in');
+  });
+  document.getElementById('btnOutAll').addEventListener('click', () => {
+    for (let i = 0; i < T9; i++) SPEC.cells[i] = -1;
+    buildSpectrum(); measureSpec(); checkG();
+    log('⟲ ALL OUT — Spektrum entladen', 'spec', 'out');
+  });
+  document.getElementById('btnSpecReset').addEventListener('click', () => {
+    for (let i = 0; i < T9; i++) SPEC.cells[i] = SPEC.core.has(i) ? 1 : 0;
+    buildSpectrum(); measureSpec(); checkG();
+    log('⟲ Spektrum zurückgesetzt', 'spec', 'warn');
+  });
+
+  // 6×6
+  document.getElementById('btnEngRoot').addEventListener('click', () => {
+    for (let i = 0; i < T6; i++) {
+      const r = Math.floor(i/N6), c = i%N6;
+      if (r === c || r + c === N6 - 1) ENG.cells[i] = 1;
+    }
+    buildEngine(); measureEng(); checkG();
+    log('🌱 ENGINE ROOT — Diagonalen gesetzt', 'engine', 'root');
+  });
+  document.getElementById('btnEngUser').addEventListener('click', () => {
+    for (let i = 0; i < T6; i++) {
+      const r = Math.floor(i/N6), c = i%N6;
+      if (r < N6/2 && c < N6/2) ENG.cells[i] = 2;
+    }
+    buildEngine(); measureEng(); checkG();
+    log('👤 ENGINE USER — Quadrant links-oben', 'engine', 'user');
+  });
+  document.getElementById('btnEngAlgo').addEventListener('click', () => {
+    runEngineAlgo();
+  });
+  document.getElementById('btnEngFlip').addEventListener('click', () => {
+    for (let i = 0; i < T6; i++) {
+      if (ENG.cells[i] === 1) ENG.cells[i] = 2;
+      else if (ENG.cells[i] === 2) ENG.cells[i] = 1;
+      else if (ENG.cells[i] === 3) ENG.cells[i] = 0;
+    }
+    buildEngine(); measureEng(); checkG();
+    log('⇄ FLIP — ROOT ⇄ USER', 'engine', 'warn');
+  });
+  document.getElementById('btnEngRun').addEventListener('click', () => {
+    runEngineAlgo();
+  });
+  document.getElementById('btnEngReset').addEventListener('click', () => {
+    ENG.cells.fill(0);
+    for (const i of ENG.rootSeed) if (i < T6) ENG.cells[i] = 1;
+    buildEngine(); measureEng(); checkG();
+    log('⟲ ENGINE RESET', 'engine', 'warn');
+  });
+
+  // G-Punkt
+  document.getElementById('btnRoot').addEventListener('click', () => {
+    S.rootMode = !S.rootMode;
+    if (S.rootMode) {
+      // Alle 6×6 Root-Diagonalen + Spektrum-Kern
+      for (let i = 0; i < T6; i++) {
+        const r = Math.floor(i/N6), c = i%N6;
+        if (r === c || r + c === N6 - 1) ENG.cells[i] = 1;
+      }
+      for (const i of SPEC.core) SPEC.cells[i] = 1;
+      log('🌱 ROOT MODUS aktiviert', 'g', 'root');
+    } else {
+      log('⚖ ROOT MODUS deaktiviert', 'g', 'warn');
+    }
+    buildEngine(); buildSpectrum();
+    measureSpec(); measureEng(); checkG();
+  });
+  document.getElementById('btnUser').addEventListener('click', () => {
+    S.userMode = !S.userMode;
+    if (S.userMode) {
+      for (let i = 0; i < T6; i++) {
+        if (ENG.cells[i] === 0 && Math.random() < 0.4) ENG.cells[i] = 2;
+      }
+      // Spektrum zufällig OUT
+      for (let i = 0; i < T9; i++) {
+        if (SPEC.cells[i] === 0 && Math.random() < 0.15) SPEC.cells[i] = -1;
+      }
+      log('👤 USER MODUS aktiviert', 'g', 'user');
+    } else {
+      log('⚖ USER MODUS deaktiviert', 'g', 'warn');
+    }
+    buildEngine(); buildSpectrum();
+    measureSpec(); measureEng(); checkG();
+  });
+  document.getElementById('btnG').addEventListener('click', () => {
+    // G-START: 9×9 + 6×6 koppeln
+    const coupling = Math.min(T9, T6);
+    for (let i = 0; i < coupling; i++) {
+      if (SPEC.cells[i] === 1 && ENG.cells[i] === 0) ENG.cells[i] = 1;
+      else if (SPEC.cells[i] === -1 && ENG.cells[i] === 0) ENG.cells[i] = 2;
+    }
+    buildEngine(); measureSpec(); measureEng(); checkG();
+    log('◈ G-START — Spektrum → Engine gekoppelt', 'g', 'gold');
+  });
+}
+
+// ─── ENGINE ALGORITHMUS ────────────────────────────────────
+function runEngineAlgo() {
+  // Regel: Jede ROOT-Zelle mit ≥2 ROOT-Nachbarn wird zu ROOT
+  //       Jede USER-Zelle mit ≥2 USER-Nachbarn wird zu USER
+  //       Überschneidungen → BOTH
+  const newCells = ENG.cells.slice();
+  for (let r = 0; r < N6; r++) {
+    for (let c = 0; c < N6; c++) {
+      const i = r * N6 + c;
+      let rootN = 0, userN = 0;
+      for (let dr = -1; dr <= 1; dr++) {
+        for (let dc = -1; dc <= 1; dc++) {
+          if (dr === 0 && dc === 0) continue;
+          const nr = r + dr, nc = c + dc;
+          if (nr < 0 || nr >= N6 || nc < 0 || nc >= N6) continue;
+          const v = ENG.cells[nr * N6 + nc];
+          if (v === 1 || v === 3) rootN++;
+          if (v === 2 || v === 3) userN++;
+        }
+      }
+      const cur = ENG.cells[i];
+      if (cur === 0) {
+        if (rootN >= 3 && userN >= 3) newCells[i] = 3;
+        else if (rootN >= 2) newCells[i] = 1;
+        else if (userN >= 2) newCells[i] = 2;
+      } else if (cur === 1) {
+        if (userN >= 3) newCells[i] = 3;
+      } else if (cur === 2) {
+        if (rootN >= 3) newCells[i] = 3;
+      }
+    }
+  }
+  ENG.cells = newCells;
+  buildEngine(); measureEng(); checkG();
+  log(`⚙ ALGO · Schritt · R:${S.rootFields} U:${S.userFields} · Algo-IDX ${S.algoIndex.toFixed(1)}`, 'engine', 'violet');
+}
+
+// ─── AUTO-TICK ─────────────────────────────────────────────
+function autoTick(now) {
+  const interval = Math.max(180, 1000 - S.rate * 80);
+  if (now - S.lastAuto < interval) return;
+  S.lastAuto = now;
+
+  // Zufällig eine Engine-Zelle entwickeln
+  const i = Math.floor(Math.random() * T6);
+  const v = ENG.cells[i];
+  if (v === 0) ENG.cells[i] = Math.random() < 0.5 ? 1 : 2;
+  else if (v === 1 && Math.random() < 0.3) ENG.cells[i] = 3;
+  else if (v === 2 && Math.random() < 0.3) ENG.cells[i] = 3;
+  else if (v === 3 && Math.random() < 0.2) ENG.cells[i] = 0;
+
+  renderEngCell(i);
+  measureEng();
+  checkG();
+}
+
+// ─── FL76 ─────────────────────────────────────────────────
+function tickFl76(now) {
+  if (S.lastFrameT > 0) {
+    S.flRaw = now - S.lastFrameT;
+    S.flSmooth = S.flSmooth * 0.88 + S.flRaw * 0.12;
+  }
+  S.lastFrameT = now;
+  const fl = Math.round(S.flSmooth);
+  const mon = document.getElementById('fl76');
+  document.getElementById('fl76num').textContent = fl;
+  if (fl >= 60 && fl <= 90) mon.className = '';
+  else if (fl < 40 || fl > 120) mon.className = 'outside';
+  else mon.className = 'edge';
+  requestAnimationFrame(tickFl76);
+}
+
+// ─── LOOP ─────────────────────────────────────────────────
+function loop(now) {
+  S.tick++;
+  autoTick(now);
+  if (S.tick % 30 === 0) updateClock();
+  requestAnimationFrame(loop);
+}
+
+function updateClock() {
+  document.getElementById('hClock').textContent = '⏱️ ' + new Date().toLocaleTimeString('de-DE');
+}
+
+// ─── LOG ──────────────────────────────────────────────────
+function log(msg, tag = 'g', type = '') {
+  const box = document.getElementById('log');
+  const entry = document.createElement('div');
+  entry.className = 'entry';
+  const t = new Date().toLocaleTimeString('de-DE');
+  entry.innerHTML = `<span class="time">[${t}]</span><span class="tag">${tag}</span><span class="${type}">${msg}</span>`;
+  box.appendChild(entry);
+  box.scrollTop = box.scrollHeight;
+  while (box.children.length > 60) box.removeChild(box.firstChild);
+}
+
+// ─── KEYBOARD ─────────────────────────────────────────────
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT') return;
+  if (e.key === 'r' || e.key === 'R') document.getElementById('btnRoot').click();
+  if (e.key === 'u' || e.key === 'U') document.getElementById('btnUser').click();
+  if (e.key === 'g' || e.key === 'G') document.getElementById('btnG').click();
+  if (e.key === 'a' || e.key === 'A') document.getElementById('btnEngAlgo').click();
+  if (e.key === ' ') { e.preventDefault(); document.getElementById('btnEngRun').click(); }
+});
+
+// ─── INIT ─────────────────────────────────────────────────
+function init() {
+  buildBG();
+  buildSpectrum();
+  buildEngine();
+  buildGNodes();
+  measureSpec();
+  measureEng();
+  checkG();
+  bindButtons();
+  updateClock();
+
+  log('◈ G-PUNKT bereit — 9×9 Spektrum + 6×6 Engine', 'init', 'gold');
+  log('→ Klick = IN / Shift+Klick = OUT (Spektrum)', 'hint', 'ok');
+  log('→ Klick = ROOT / Shift+Klick = USER / Alt+Klick = cycle (Engine)', 'hint', 'ok');
+  log('→ Tasten: R=Root · U=User · G=G-Start · A=Algo · Space=Run', 'hint', 'user');
+
+  requestAnimationFrame(loop);
+  requestAnimationFrame(tickFl76);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+
+// ─── PUBLIC API ───────────────────────────────────────────
+window.G_PUNKT = {
+  spec: () => SPEC.cells.map((v,i) => ({ i, v, value: SPEC.values[i] })),
+  engine: () => ENG.cells.map((v,i) => ({ i, v })),
+  state: () => ({ ...S }),
+  inAll: () => document.getElementById('btnInAll').click(),
+  outAll: () => document.getElementById('btnOutAll').click(),
+  rootMode: () => document.getElementById('btnRoot').click(),
+  userMode: () => document.getElementById('btnUser').click(),
+  gStart: () => document.getElementById('btnG').click(),
+  algo: () => document.getElementById('btnEngAlgo').click(),
+};
+window.G = window.G_PUNKT;
+
+console.log('%c◈ G-PUNKT · 9×9 IN/OUT · 6×6 ENGINE · mind.html geladen',
+  'color:#f0d080;font-weight:bold;font-size:14px;');
+console.log('→ window.G.gStart() · .rootMode() · .userMode() · .algo() · .state()');
+console.log('→ Verbindet: mind.html (Toolator) ↔ 9×9 Spektrum ↔ 6×6 Engine');
+</script>
+</body>
+</html>
