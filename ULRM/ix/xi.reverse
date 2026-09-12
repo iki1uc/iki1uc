@@ -1,28 +1,98 @@
-{
-  "id": "ULRM-IX-XI-REVERSE",
-  "type": "io-cross-invert-reverse",
-  "status": "ready",
+/*  
+   ULRM‑IX‑XI‑REVERSE  
+   cross(invert(reverse(axis))) für x, y, q  
+   Narrativ: input → cross-invert → output  
+   Axiome: AXIOM‑X / AXIOM‑I / AXIOM‑Q  
+*/
 
-  "axis": {
-    "x": "cross(invert(reverse(x)))",
-    "y": "cross(invert(reverse(y)))",
-    "q": "cross(invert(reverse(q)))"
-  },
+const ULRM_IX_XI_REVERSE = {
 
-  "narrativ": {
-    "a": "input",
-    "b": "cross-invert",
-    "c": "output"
-  },
+    id: "ULRM-IX-XI-REVERSE",
+    type: "io-cross-invert-reverse",
+    status: "ready",
 
-  "axiome": {
-    "swap": true,
-    "replaceable": true,
-    "set": [
-      "AXIOM-X",
-      "AXIOM-I",
-      "AXIOM-Q"
-    ]
-  }
-}
+    /* ---------------------------------------------------------
+       ACHSEN – CROSS(INVERT(REVERSE()))
+       --------------------------------------------------------- */
+    axis: {
+        x: "cross(invert(reverse(x)))",
+        y: "cross(invert(reverse(y)))",
+        q: "cross(invert(reverse(q)))"
+    },
 
+    /* ---------------------------------------------------------
+       NARRATIV – INPUT → CROSS-INVERT → OUTPUT
+       --------------------------------------------------------- */
+    narrativ: {
+        a: "input",
+        b: "cross-invert",
+        c: "output"
+    },
+
+    /* ---------------------------------------------------------
+       AXIOME – SWAP / REPLACE / SET
+       --------------------------------------------------------- */
+    axiome: {
+        swap: true,
+        replaceable: true,
+        set: [
+            "AXIOM-X",
+            "AXIOM-I",
+            "AXIOM-Q"
+        ]
+    },
+
+    /* ---------------------------------------------------------
+       ENGINE – CROSS‑INVERT‑REVERSE‑LOGIK
+       --------------------------------------------------------- */
+    run(LAGE){
+
+        // Reverse
+        const reversed = {
+            x: -LAGE.x,
+            y: -LAGE.y,
+            q: -(LAGE.q ?? 0)
+        };
+
+        // Invert (Umkehrung der Vorzeichen erneut)
+        const inverted = {
+            x: reversed.x * -1,
+            y: reversed.y * -1,
+            q: reversed.q * -1
+        };
+
+        // Cross (Achsenkreuzung)
+        const crossed = {
+            x: inverted.y,
+            y: inverted.x,
+            q: inverted.q
+        };
+
+        // Narrativ‑Routing
+        const route = {
+            input: this.narrativ.a,
+            cross_invert: this.narrativ.b,
+            output: this.narrativ.c
+        };
+
+        // Axiom‑Status
+        const axiom = {
+            swap: this.axiome.swap,
+            replaceable: this.axiome.replaceable,
+            set: this.axiome.set
+        };
+
+        return {
+            id: this.id,
+            reversed,
+            inverted,
+            crossed,
+            route,
+            axiom,
+            status: "ULRM-IX-XI-REVERSE-ready"
+        };
+    }
+};
+
+/* Optionaler Export */
+export default ULRM_IX_XI_REVERSE;
