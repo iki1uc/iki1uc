@@ -1,84 +1,154 @@
-{
-  "id": "ULRM-BRIDGE",
-  "type": "multi",
-  "status": "ready",
+/*  
+   ULRM‑BRIDGE – ALLXALL Kernel  
+   verbindet alle Operatoren, IO‑Wege, Kernel‑Zustände und Meta‑Module  
+   mathematisch korrekt nach Zauber‑6‑Axiom  
+*/
 
-  "operators": {
-    "linear": [
-      "ULRM-A",   // left
-      "ULRM-D",   // right
-      "ULRM-W",   // forward
-      "ULRM-S",   // backward
-      "ULRM-Q",   // up
-      "ULRM-R"    // down
-    ],
+const ULRM_BRIDGE = {
 
-    "neutral": [
-      "ULRM-X",
-      "ULRM-XX",
-      "ULRM-XXX"
-    ],
+    id: "ULRM-BRIDGE",
+    type: "multi",
+    status: "ready",
 
-    "rotate": [
-      "ULRM-Y",
-      "ULRM-YY",
-      "ULRM-YYY"
-    ],
+    /* ---------------------------------------------------------
+       OPERATOR‑GRUPPEN
+       (linear, neutral, rotate, cycle, time, meta)
+       --------------------------------------------------------- */
 
-    "cycle": [
-      "ULRM-C",
-      "ULRM-PI",
-      "ULRM-PHI"
-    ],
+    operators: {
 
-    "time": [
-      "ULRM-FOR",
-      "ULRM-REW"
-    ],
+        linear: [
+            "ULRM-A",   // [left](ca://s?q=ULRM_A_HTML)
+            "ULRM-D",   // [right](ca://s?q=ULRM_D_HTML)
+            "ULRM-W",   // [forward](ca://s?q=ULRM_W_HTML)
+            "ULRM-S",   // [backward](ca://s?q=ULRM_S_HTML)
+            "ULRM-Q",   // [up](ca://s?q=ULRM_Q_HTML)
+            "ULRM-R"    // [down](ca://s?q=ULRM_R_HTML)
+        ],
 
-    "meta": [
-      "DIR",
-      "use",
-      "user",
-      "MIR",
-      "RAWATOR",
-      "UIme"
-    ]
-  },
+        neutral: [
+            "ULRM-X",    // [neutral](ca://s?q=ULRM_X_HTML)
+            "ULRM-XX",   // [neutral-strong](ca://s?q=ULRM_XX_HTML)
+            "ULRM-XXX"   // [neutral-core](ca://s?q=ULRM_XXX_HTML)
+        ],
 
-  "io": {
-    "reverse": [
-      "io/oi.reverse",
-      "io/xi.reverse"
-    ],
-    "cross": [
-      "ix/oi.reverse",
-      "ix/xi.reverse"
-    ],
-    "opposite": [
-      "oi/io.reverse",
-      "oi/ix.reverse"
-    ]
-  },
+        rotate: [
+            "ULRM-Y",    // [rotate](ca://s?q=ULRM_Y_HTML)
+            "ULRM-YY",   // [rotate-strong](ca://s?q=ULRM_YY_HTML)
+            "ULRM-YYY"   // [rotate-core](ca://s?q=ULRM_YYY_HTML)
+        ],
 
-  "kernel": {
-    "cache": "olsen.cache.ready",
-    "ram": "orakel.ram.ready",
-    "slide": "slide.sprung.ready",
-    "stage": "stage/all.on.ready",
-    "stand": "stand.all.ready",
-    "sys": [
-      "sys.all.9.all.sli.raid.ready",
-      "sys.work.ready"
-    ]
-  },
+        cycle: [
+            "ULRM-C",    // [cycle](ca://s?q=ULRM_C_HTML)
+            "ULRM-PI",   // [pi-cycle](ca://s?q=ULRM_PI_HTML)
+            "ULRM-PHI"   // [phi-cycle](ca://s?q=ULRM_PHI_HTML)
+        ],
 
-  "bridge": {
-    "mode": "multi",
-    "connect": "all-operators",
-    "sync": "ULRM-motion-core",
-    "route": "ULRM-map.json",
-    "ready": true
-  }
-}
+        time: [
+            "ULRM-FOR",  // [forward-time](ca://s?q=ULRM_FOR_HTML)
+            "ULRM-REW"   // [rewind-time](ca://s?q=ULRM_REW_HTML)
+        ],
 
+        meta: [
+            "DIR",       // [dir-routing](ca://s?q=DIR_CORE_HTML)
+            "use",
+            "user",
+            "MIR",       // [mirror](ca://s?q=MIR_CORE_HTML)
+            "RAWATOR",   // [motor](ca://s?q=RAWATOR_HTML)
+            "UIme"       // [ui-layer](ca://s?q=UIme_CORE_HTML)
+        ]
+    },
+
+    /* ---------------------------------------------------------
+       IO‑MAPPING (reverse, cross, opposite)
+       --------------------------------------------------------- */
+
+    io: {
+        reverse: [
+            "io/oi.reverse",
+            "io/xi.reverse"
+        ],
+        cross: [
+            "ix/oi.reverse",
+            "ix/xi.reverse"
+        ],
+        opposite: [
+            "oi/io.reverse",
+            "oi/ix.reverse"
+        ]
+    },
+
+    /* ---------------------------------------------------------
+       KERNEL‑ZUSTÄNDE (cache, ram, slide, stage, stand, sys)
+       --------------------------------------------------------- */
+
+    kernel: {
+        cache: "olsen.cache.ready",      // [OLSEN](ca://s?q=OLSEN_CORE_HTML)
+        ram: "orakel.ram.ready",         // [ORAKEL](ca://s?q=ORAKEL_RAM)
+        slide: "slide.sprung.ready",     // [SLI](ca://s?q=STAGE_SLI)
+        stage: "stage/all.on.ready",     // [STAGE](ca://s?q=STAGE_CORE_HTML)
+        stand: "stand.all.ready",
+        sys: [
+            "sys.all.9.all.sli.raid.ready",
+            "sys.work.ready"
+        ]
+    },
+
+    /* ---------------------------------------------------------
+       BRIDGE‑BLOCK (ALLXALL‑Connector)
+       --------------------------------------------------------- */
+
+    bridge: {
+        mode: "multi",
+        connect: "all-operators",
+        sync: "ULRM-motion-core",
+        route: "ULRM-map.json",
+        ready: true
+    },
+
+    /* ---------------------------------------------------------
+       MASTER‑FUNKTION
+       verbindet alles mathematisch korrekt
+       --------------------------------------------------------- */
+
+    run(LAGE) {
+
+        // Zauber‑6‑Axiom: 6 Achsen × 3 Zustände × 1 Neutral
+        const axiom = {
+            axes: 6,
+            states: 3,
+            neutral: 1,
+            total: 6 * 3 * 1
+        };
+
+        // Bewegung berechenbar, Lage austauschbar
+        const motion = {
+            x: LAGE.x,
+            y: LAGE.y,
+            z: LAGE.z,
+            r: LAGE.r ?? 0
+        };
+
+        // Motor (RAWATOR) – unendlichkeitsfähig
+        const motor = {
+            power: "raw",
+            spin: motion.r + 1,
+            drive: "neutral-vector"
+        };
+
+        // Bridge‑Output
+        return {
+            axiom,
+            motion,
+            motor,
+            operators: this.operators,
+            io: this.io,
+            kernel: this.kernel,
+            bridge: this.bridge,
+            status: "ULRM-BRIDGE-ALLXALL-ready"
+        };
+    }
+};
+
+/* Export (optional) */
+export default ULRM_BRIDGE;
