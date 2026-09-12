@@ -2,112 +2,46 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>X – Neutral / Triple-X</title>
+<title>X-SET – Neutralmatrix</title>
 <style>
 body { background:#000; color:#0f0; font-family:monospace; padding:20px; }
-pre  { background:#111; padding:20px; border:1px solid #333; color:#0f0; }
+pre  { background:#111; padding:20px; border:1px solid #333; color:#0f0; white-space:pre-wrap; }
 h2   { color:#6cf; }
 </style>
 </head>
 
 <body>
 
-<h2>X – Neutral / Triple-X</h2>
+<h2>X-SET – Neutralmatrix</h2>
 
 <pre>
-ID: ULRM-X
-ROLE: neutral
-MODE: RAW / RESPO
-STATUS: active
-
-DATA:
-  axis: none
-  step: 0
-  effect: "LAGE unverändert"
-  modi: "X"
-  rawator: "still"
-  pimp: "Betrachtung: Ruhe"
-
-ENGINE:
-  function ULRM_X(LAGE){
-      return {
-          x: LAGE.x,
-          y: LAGE.y,
-          z: LAGE.z,
-          modi: "X",
-          role: "neutral"
-      };
-  }
-
-RESULT:
-  LAGE bleibt neutral.
-</pre>
-
-
-<h2>XX – Doppelneutral</h2>
-
-<pre>
-ID: ULRM-XX
-ROLE: neutral-strong
-MODE: RAW / RESPO
-STATUS: active
-
-DATA:
-  axis: none
-  step: 0
-  effect: "LAGE stabilisiert"
-  modi: "XX"
-  rawator: "still+lock"
-  pimp: "Betrachtung: starke Ruhe"
-
-ENGINE:
-  function ULRM_XX(LAGE){
-      return {
-          x: LAGE.x,
-          y: LAGE.y,
-          z: LAGE.z,
-          lock: true,
-          modi: "XX",
-          role: "neutral-strong"
-      };
-  }
-
-RESULT:
-  LAGE bleibt neutral und wird zusätzlich stabilisiert.
-</pre>
-
-
-<h2>XXX – Triple-Neutral</h2>
-
-<pre>
-ID: ULRM-XXX
-ROLE: neutral-core
+ID: ULRM-X-SET
+ROLE: neutral-matrix
 MODE: RAW / RESPO / CORE
 STATUS: active
 
-DATA:
-  axis: none
-  step: 0
-  effect: "LAGE tief-neutralisiert"
-  modi: "XXX"
-  rawator: "still+lock+core"
-  pimp: "Betrachtung: Kernneutralität"
+NEUTRAL-AXIOM:
+  X   → neutral
+  XX  → neutral-strong
+  XXX → neutral-core
+
+DIMENSION:
+  Ebene: 0
+  Funktion: Ruhe, Stabilität, Kernneutralität
+  Bindung: ULRM → RAWATOR → STAGE → ADAPTIVE
 
 ENGINE:
-  function ULRM_XXX(LAGE){
+  function ULRM_X_SET(LAGE){
       return {
-          x: LAGE.x,
-          y: LAGE.y,
-          z: LAGE.z,
-          lock: true,
-          core: true,
-          modi: "XXX",
-          role: "neutral-core"
+          X:   { x:LAGE.x, y:LAGE.y, z:LAGE.z, modi:"X",   role:"neutral" },
+          XX:  { x:LAGE.x, y:LAGE.y, z:LAGE.z, lock:true, modi:"XX",  role:"neutral-strong" },
+          XXX: { x:LAGE.x, y:LAGE.y, z:LAGE.z, lock:true, core:true, modi:"XXX", role:"neutral-core" }
       };
   }
 
 RESULT:
-  LAGE wird vollständig neutralisiert (Triple-X).
+  X-SET stellt die komplette Neutralebene bereit:
+  einfache Ruhe, starke Ruhe und Kernneutralität.
 </pre>
 
 </body>
