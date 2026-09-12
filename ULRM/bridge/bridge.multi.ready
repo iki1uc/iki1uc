@@ -1,1 +1,84 @@
+{
+  "id": "ULRM-BRIDGE",
+  "type": "multi",
+  "status": "ready",
+
+  "operators": {
+    "linear": [
+      "ULRM-A",   // left
+      "ULRM-D",   // right
+      "ULRM-W",   // forward
+      "ULRM-S",   // backward
+      "ULRM-Q",   // up
+      "ULRM-R"    // down
+    ],
+
+    "neutral": [
+      "ULRM-X",
+      "ULRM-XX",
+      "ULRM-XXX"
+    ],
+
+    "rotate": [
+      "ULRM-Y",
+      "ULRM-YY",
+      "ULRM-YYY"
+    ],
+
+    "cycle": [
+      "ULRM-C",
+      "ULRM-PI",
+      "ULRM-PHI"
+    ],
+
+    "time": [
+      "ULRM-FOR",
+      "ULRM-REW"
+    ],
+
+    "meta": [
+      "DIR",
+      "use",
+      "user",
+      "MIR",
+      "RAWATOR",
+      "UIme"
+    ]
+  },
+
+  "io": {
+    "reverse": [
+      "io/oi.reverse",
+      "io/xi.reverse"
+    ],
+    "cross": [
+      "ix/oi.reverse",
+      "ix/xi.reverse"
+    ],
+    "opposite": [
+      "oi/io.reverse",
+      "oi/ix.reverse"
+    ]
+  },
+
+  "kernel": {
+    "cache": "olsen.cache.ready",
+    "ram": "orakel.ram.ready",
+    "slide": "slide.sprung.ready",
+    "stage": "stage/all.on.ready",
+    "stand": "stand.all.ready",
+    "sys": [
+      "sys.all.9.all.sli.raid.ready",
+      "sys.work.ready"
+    ]
+  },
+
+  "bridge": {
+    "mode": "multi",
+    "connect": "all-operators",
+    "sync": "ULRM-motion-core",
+    "route": "ULRM-map.json",
+    "ready": true
+  }
+}
 
