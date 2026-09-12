@@ -1,43 +1,115 @@
-{
-  "id": "ULRM-OI-IO-REVERSE",
-  "type": "io-mirror-io-reverse",
-  "status": "ready",
+/*  
+   ULRM‑OI‑IO‑REVERSE  
+   mirror(reverse(io(axis))) für x, y, q  
+   Narrativ: input → mirror-io → output  
+   Axiome: AXIOM‑IO / AXIOM‑O / AXIOM‑I  
+*/
 
-  "axis": {
-    "x": "mirror(reverse(io(x)))",
-    "y": "mirror(reverse(io(y)))",
-    "q": "mirror(reverse(io(q)))"
-  },
+const ULRM_OI_IO_REVERSE = {
 
-  "narrativ": {
-    "a": "input",
-    "b": "mirror-io",
-    "c": "output"
-  },
+    id: "ULRM-OI-IO-REVERSE",
+    type: "io-mirror-io-reverse",
+    status: "ready",
 
-  "axiome": {
-    "swap": true,
-    "replaceable": true,
-    "set": [
-      "AXIOM-IO",
-      "AXIOM-O",
-      "AXIOM-I"
-    ]
-  }
-}
+    /* ---------------------------------------------------------
+       ACHSEN – MIRROR(REVERSE(IO()))
+       --------------------------------------------------------- */
+    axis: {
+        x: "mirror(reverse(io(x)))",
+        y: "mirror(reverse(io(y)))",
+        q: "mirror(reverse(io(q)))"
+    },
+
+    /* ---------------------------------------------------------
+       NARRATIV – INPUT → MIRROR‑IO → OUTPUT
+       --------------------------------------------------------- */
+    narrativ: {
+        a: "input",
+        b: "mirror-io",
+        c: "output"
+    },
+
+    /* ---------------------------------------------------------
+       AXIOME – SWAP / REPLACE / SET
+       --------------------------------------------------------- */
+    axiome: {
+        swap: true,
+        replaceable: true,
+        set: [
+            "AXIOM-IO",
+            "AXIOM-O",
+            "AXIOM-I"
+        ]
+    },
+
+    /* ---------------------------------------------------------
+       ENGINE – MIRROR‑IO‑REVERSE‑LOGIK
+       --------------------------------------------------------- */
+    run(LAGE){
+
+        // IO‑Reverse
+        const ioValue = {
+            x: -(LAGE.x),
+            y: -(LAGE.y),
+            q: -(LAGE.q ?? 0)
+        };
+
+        // Mirror (Spiegelung)
+        const mirrored = {
+            x: ioValue.x * -1,
+            y: ioValue.y * -1,
+            q: ioValue.q * -1
+        };
+
+        // Narrativ‑Routing
+        const route = {
+            input: this.narrativ.a,
+            mirror_io: this.narrativ.b,
+            output: this.narrativ.c
+        };
+
+        // Axiom‑Status
+        const axiom = {
+            swap: this.axiome.swap,
+            replaceable: this.axiome.replaceable,
+            set: this.axiome.set
+        };
+
+        return {
+            id: this.id,
+            ioValue,
+            mirrored,
+            route,
+            axiom,
+            status: "ULRM-OI-IO-REVERSE-ready"
+        };
+    }
+};
+
+/* -------------------------------------------------------------
+   ULRM_A – Integration mit IO‑Reverse‑Kette
+   nutzt: io_reverse → invert_reverse → mirror_reverse
+   ------------------------------------------------------------- */
+
 function ULRM_A(LAGE){
+
+    // reverse
+    const rev = -(LAGE.y - 1);
+
+    // invert_reverse
+    const inv = rev * -1;
+
+    // mirror_reverse
+    const mir = inv * -1;
+
     return {
         x: LAGE.x,
-        y: io_reverse(
-               invert_reverse(
-                   mirror_reverse(
-                       LAGE.y - 1
-                   )
-               )
-           ),
+        y: mir,
         z: LAGE.z,
         modi: "A",
         role: "left"
     };
 }
 
+/* Optionaler Export */
+export { ULRM_OI_IO_REVERSE, ULRM_A };
