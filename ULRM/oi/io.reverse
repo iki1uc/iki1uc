@@ -25,4 +25,19 @@
     ]
   }
 }
+function ULRM_A(LAGE){
+    return {
+        x: LAGE.x,
+        y: io_reverse(
+               invert_reverse(
+                   mirror_reverse(
+                       LAGE.y - 1
+                   )
+               )
+           ),
+        z: LAGE.z,
+        modi: "A",
+        role: "left"
+    };
+}
 
