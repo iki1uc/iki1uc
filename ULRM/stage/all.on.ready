@@ -1,1 +1,52 @@
+{
+  "id": "ULRM-STAGE-ALL-READY",
+  "type": "stage-kernel",
+  "status": "ready",
+
+  "stage": {
+    "pipeline": [
+      "INIT",
+      "FS-SCAN",
+      "MARK-CHECK",
+      "FOLDER",
+      "NC-SYNC",
+      "SENSOR",
+      "READY",
+      "LIVE",
+      "HOLD"
+    ],
+    "current": "INIT",
+    "next": "FS-SCAN",
+    "atomic": true
+  },
+
+  "sync": {
+    "nc": false,
+    "sensor": false,
+    "cache": "olsen",
+    "ram": "orakel"
+  },
+
+  "memory": {
+    "root-baum": "await",
+    "fs-scan": "pending",
+    "nc-state": "idle",
+    "sensor-state": "active"
+  },
+
+  "control": {
+    "run": false,
+    "speed": "200ms",
+    "hold": false
+  },
+
+  "axiome": {
+    "replaceable": true,
+    "set": [
+      "AXIOM-STAGE",
+      "AXIOM-PIPE",
+      "AXIOM-READY"
+    ]
+  }
+}
 
