@@ -3,53 +3,88 @@
 <head>
 <meta charset="UTF-8">
 <title>ULRM-A · Links</title>
+
 <style>
-body{
-  background:#000;
-  color:#0f0;
-  font-family:monospace;
-  padding:20px;
-}
-pre{
-  background:#111;
-  padding:20px;
-  border:1px solid #333;
-  white-space:pre-wrap;
-}
-h2{
-  color:#6cf;
-}
+    body {
+        background: #000;
+        color: #0f0;
+        font-family: monospace;
+        padding: 30px;
+        line-height: 1.4;
+    }
+
+    h1 {
+        color: #6cf;
+        margin-bottom: 20px;
+        font-size: 26px;
+    }
+
+    .block {
+        background: #111;
+        border: 1px solid #333;
+        padding: 20px;
+        margin-bottom: 25px;
+        white-space: pre-wrap;
+    }
+
+    .label {
+        color: #6cf;
+        font-weight: bold;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    code {
+        color: #9f9;
+        background: #000;
+        padding: 4px 6px;
+        border: 1px solid #333;
+        display: block;
+        margin-top: 10px;
+        white-space: pre-wrap;
+    }
 </style>
 </head>
 
 <body>
 
-<h2>ULRM-A · Links</h2>
+<h1>ULRM-A · Links</h1>
 
-<pre>
-ID: ULRM-A
-ROLE: left
+<div class="block">
+    <span class="label">ID:</span>
+    ULRM-A
 
-DATA:
-  axis: y
-  step: -1
-  effect: "LAGE.y = LAGE.y - 1"
-  modi: "A"
+    <span class="label">ROLE:</span>
+    left
+</div>
 
-ENGINE:
-  function ULRM_A(LAGE){
-      return {
-          x: LAGE.x,
-          y: LAGE.y - 1,
-          z: LAGE.z,
-          modi: "A",
-          role: "left"
-      };
-  }
+<div class="block">
+    <span class="label">DATA:</span>
+    axis: y  
+    step: -1  
+    effect: "LAGE.y = LAGE.y - 1"  
+    modi: "A"
+</div>
 
-RESULT:
-  LAGE bewegt sich nach links (y - 1).
-</pre>
+<div class="block">
+    <span class="label">ENGINE:</span>
+    <code>
+function ULRM_A(LAGE){
+    return {
+        x: LAGE.x,
+        y: LAGE.y - 1,
+        z: LAGE.z,
+        modi: "A",
+        role: "left"
+    };
+}
+    </code>
+</div>
+
+<div class="block">
+    <span class="label">RESULT:</span>
+    LAGE bewegt sich nach links (y - 1).
+</div>
 
 </body>
 </html>
