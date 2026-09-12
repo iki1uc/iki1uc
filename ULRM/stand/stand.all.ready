@@ -1,1 +1,45 @@
+{
+  "id": "ULRM-STAND-ALL-READY",
+  "type": "stand-kernel",
+  "status": "ready",
+
+  "stand": {
+    "mode": "stable",
+    "layer": "system",
+    "atomic": true,
+    "drift": false,
+    "hold": true
+  },
+
+  "state": {
+    "stage": "INIT",
+    "nc": "idle",
+    "sensor": "active",
+    "cache": "olsen",
+    "ram": "orakel"
+  },
+
+  "sync": {
+    "stage": false,
+    "nc": false,
+    "sensor": true,
+    "cache": true,
+    "ram": true
+  },
+
+  "balance": {
+    "root": "await",
+    "monitor": "await",
+    "real": "await"
+  },
+
+  "axiome": {
+    "replaceable": true,
+    "set": [
+      "AXIOM-STAND",
+      "AXIOM-STABLE",
+      "AXIOM-HOLD"
+    ]
+  }
+}
 
