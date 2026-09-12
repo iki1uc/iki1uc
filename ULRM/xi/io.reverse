@@ -1,1 +1,40 @@
+{
+  "id": "ULRM-XI-IO-REVERSE",
+  "type": "io-invert-io-reverse",
+  "status": "ready",
+
+  "axis": {
+    "x": "invert(reverse(io(x)))",
+    "y": "invert(reverse(io(y)))",
+    "q": "invert(reverse(io(q)))"
+  },
+
+  "narrativ": {
+    "a": "input",
+    "b": "invert-io",
+    "c": "output"
+  },
+
+  "memory": {
+    "cache": "olsen",
+    "ram": "orakel",
+    "nc": "await",
+    "sensor": "active"
+  },
+
+  "sync": {
+    "nc": false,
+    "stage": false,
+    "sensor": true
+  },
+
+  "axiome": {
+    "replaceable": true,
+    "set": [
+      "AXIOM-XI",
+      "AXIOM-INVERT",
+      "AXIOM-IO"
+    ]
+  }
+}
 
