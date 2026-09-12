@@ -1,28 +1,81 @@
-{
-  "id": "ULRM-IO-XI-REVERSE",
-  "type": "io-reverse",
-  "status": "ready",
+/*  
+   ULRM‑IO‑XI‑REVERSE  
+   invertiert Achsen (x, y, q), nutzt Narrativ (input → cross → output)
+   und bindet AXIOM‑X / AXIOM‑I / AXIOM‑Q korrekt ein.
+*/
 
-  "axis": {
-    "x": "invert(x)",
-    "y": "invert(y)",
-    "q": "invert(q)"
-  },
+const ULRM_IO_XI_REVERSE = {
 
-  "narrativ": {
-    "a": "input",
-    "b": "cross",
-    "c": "output"
-  },
+    id: "ULRM-IO-XI-REVERSE",
+    type: "io-reverse",
+    status: "ready",
 
-  "axiome": {
-    "swap": true,
-    "replaceable": true,
-    "set": [
-      "AXIOM-X",
-      "AXIOM-I",
-      "AXIOM-Q"
-    ]
-  }
-}
+    /* ---------------------------------------------------------
+       ACHSEN – INVERT‑MAPPING
+       --------------------------------------------------------- */
+    axis: {
+        x: "invert(x)",
+        y: "invert(y)",
+        q: "invert(q)"
+    },
 
+    /* ---------------------------------------------------------
+       NARRATIV – INPUT → CROSS → OUTPUT
+       --------------------------------------------------------- */
+    narrativ: {
+        a: "input",
+        b: "cross",
+        c: "output"
+    },
+
+    /* ---------------------------------------------------------
+       AXIOME – SWAP / REPLACE / SET
+       --------------------------------------------------------- */
+    axiome: {
+        swap: true,
+        replaceable: true,
+        set: [
+            "AXIOM-X",
+            "AXIOM-I",
+            "AXIOM-Q"
+        ]
+    },
+
+    /* ---------------------------------------------------------
+       ENGINE – INVERT‑LOGIK
+       --------------------------------------------------------- */
+    run(LAGE){
+
+        // Achsen invertieren
+        const inverted = {
+            x: -LAGE.x,
+            y: -LAGE.y,
+            q: -(LAGE.q ?? 0)
+        };
+
+        // Narrativ‑Routing
+        const route = {
+            input: this.narrativ.a,
+            cross: this.narrativ.b,
+            output: this.narrativ.c
+        };
+
+        // Axiom‑Status
+        const axiom = {
+            swap: this.axiome.swap,
+            replaceable: this.axiome.replaceable,
+            set: this.axiome.set
+        };
+
+        return {
+            id: this.id,
+            inverted,
+            route,
+            axiom,
+            status: "ULRM-IO-XI-REVERSE-ready"
+        };
+    }
+};
+
+/* Optionaler Export */
+export default ULRM_IO_XI_REVERSE;
