@@ -1,1 +1,66 @@
+{
+  "id": "ULRM-SYS-ALL-9-SLI-RAID",
+  "type": "system-kernel",
+  "status": "ready",
+
+  "system": {
+    "mode": "sli-raid",
+    "atomic": true,
+    "layers": [
+      "root","monitor","real",
+      "index","stage","nc",
+      "sensor","worker","fs"
+    ],
+    "stage-count": 9,
+    "current-stage": "INIT",
+    "next-stage": "FS-SCAN"
+  },
+
+  "sync": {
+    "stage": false,
+    "nc": false,
+    "sensor": false,
+    "cache": "olsen",
+    "ram": "orakel",
+    "slide": "sprung",
+    "stand": "stable"
+  },
+
+  "raid": {
+    "channels": 9,
+    "mirror": true,
+    "cross": true,
+    "invert": true,
+    "hold": true
+  },
+
+  "memory": {
+    "root-baum": "await",
+    "monitor": "await",
+    "real": "await",
+    "fs-scan": "pending",
+    "nc-state": "idle",
+    "sensor-state": "active"
+  },
+
+  "io": {
+    "operators": [
+      "oi.reverse",
+      "xi.reverse",
+      "ix/oi.reverse",
+      "ix/xi.reverse",
+      "oi/io.reverse"
+    ],
+    "bridge": "multi.ready"
+  },
+
+  "axiome": {
+    "replaceable": true,
+    "set": [
+      "AXIOM-SYS",
+      "AXIOM-ALL",
+      "AXIOM-RAID"
+    ]
+  }
+}
 
