@@ -1,1 +1,34 @@
+{
+  "id": "ULRM-OLSEN-CACHE",
+  "type": "cache-kernel",
+  "status": "ready",
 
+  "cache": {
+    "mode": "atomic",
+    "layer": "NC-FS",
+    "stage": "pre-sync",
+    "hold": true
+  },
+
+  "memory": {
+    "root": "pending",
+    "monitor": "pending",
+    "real": "pending",
+    "fs-scan": "await"
+  },
+
+  "sync": {
+    "nc": false,
+    "stage": false,
+    "sensor": false
+  },
+
+  "axiome": {
+    "replaceable": true,
+    "set": [
+      "AXIOM-CACHE",
+      "AXIOM-HOLD",
+      "AXIOM-ATOM"
+    ]
+  }
+}
