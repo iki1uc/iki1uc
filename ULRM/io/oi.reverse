@@ -1,28 +1,81 @@
-{
-  "id": "ULRM-IO-OI-REVERSE",
-  "type": "io-reverse",
-  "status": "ready",
+/*  
+   ULRM‑IO‑OI‑REVERSE  
+   Achsen‑Umkehr, Narrativ‑Routing, Axiom‑Swap  
+   ALLXALL‑fähig, ULRM‑kompatibel  
+*/
 
-  "axis": {
-    "x": "reverse(x)",
-    "y": "reverse(y)",
-    "q": "reverse(q)"
-  },
+const ULRM_IO_OI_REVERSE = {
 
-  "narrativ": {
-    "a": "input",
-    "b": "mirror",
-    "c": "output"
-  },
+    id: "ULRM-IO-OI-REVERSE",
+    type: "io-reverse",
+    status: "ready",
 
-  "axiome": {
-    "swap": true,
-    "replaceable": true,
-    "set": [
-      "AXIOM-A",
-      "AXIOM-B",
-      "AXIOM-C"
-    ]
-  }
-}
+    /* ---------------------------------------------------------
+       ACHSEN – REVERSE‑MAPPING
+       --------------------------------------------------------- */
+    axis: {
+        x: "reverse(x)",
+        y: "reverse(y)",
+        q: "reverse(q)"
+    },
 
+    /* ---------------------------------------------------------
+       NARRATIV – INPUT → MIRROR → OUTPUT
+       --------------------------------------------------------- */
+    narrativ: {
+        a: "input",     // [input](ca://s?q=ULRM_input)
+        b: "mirror",    // [mirror](ca://s?q=MIR_CORE_HTML)
+        c: "output"     // [output](ca://s?q=ULRM_output)
+    },
+
+    /* ---------------------------------------------------------
+       AXIOME – SWAP / REPLACE / SET
+       --------------------------------------------------------- */
+    axiome: {
+        swap: true,
+        replaceable: true,
+        set: [
+            "AXIOM-A",   // [AXIOM-A](ca://s?q=AXIOM_A)
+            "AXIOM-B",   // [AXIOM-B](ca://s?q=AXIOM_B)
+            "AXIOM-C"    // [AXIOM-C](ca://s?q=AXIOM_C)
+        ]
+    },
+
+    /* ---------------------------------------------------------
+       ENGINE – REVERSE‑LOGIK
+       --------------------------------------------------------- */
+    run(LAGE){
+
+        // Reverse‑Achsen anwenden
+        const reversed = {
+            x: -LAGE.x,
+            y: -LAGE.y,
+            q: -(LAGE.q ?? 0)
+        };
+
+        // Narrativ‑Routing
+        const route = {
+            input: this.narrativ.a,
+            mirror: this.narrativ.b,
+            output: this.narrativ.c
+        };
+
+        // Axiom‑Status
+        const axiom = {
+            swap: this.axiome.swap,
+            replaceable: this.axiome.replaceable,
+            set: this.axiome.set
+        };
+
+        return {
+            id: this.id,
+            reversed,
+            route,
+            axiom,
+            status: "ULRM-IO-OI-REVERSE-ready"
+        };
+    }
+};
+
+/* Export optional */
+export default ULRM_IO_OI_REVERSE;
