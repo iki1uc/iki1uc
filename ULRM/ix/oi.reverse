@@ -1,1 +1,28 @@
+{
+  "id": "ULRM-IX-OI-REVERSE",
+  "type": "io-cross-mirror-reverse",
+  "status": "ready",
+
+  "axis": {
+    "x": "cross(mirror(reverse(x)))",
+    "y": "cross(mirror(reverse(y)))",
+    "q": "cross(mirror(reverse(q)))"
+  },
+
+  "narrativ": {
+    "a": "input",
+    "b": "cross-mirror",
+    "c": "output"
+  },
+
+  "axiome": {
+    "swap": true,
+    "replaceable": true,
+    "set": [
+      "AXIOM-O",
+      "AXIOM-I",
+      "AXIOM-X"
+    ]
+  }
+}
 
