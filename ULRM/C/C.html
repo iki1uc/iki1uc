@@ -3,54 +3,78 @@
 <head>
 <meta charset="UTF-8">
 <title>ULRM-C · Cycle</title>
+
 <style>
 body{
   background:#000;
   color:#0f0;
   font-family:monospace;
-  padding:20px;
+  padding:40px;
 }
-pre{
-  background:#111;
-  padding:20px;
-  border:1px solid #333;
-  white-space:pre-wrap;
+.section{
+  background:#0a0a0a;
+  border:1px solid #0f0;
+  padding:25px;
+  margin-bottom:30px;
+  box-shadow:0 0 10px #0f0;
 }
-h2{
+h1{
   color:#6cf;
+  text-shadow:0 0 5px #6cf;
+}
+.label{
+  color:#6cf;
+  font-weight:bold;
+}
+code{
+  background:#000;
+  border:1px solid #333;
+  padding:15px;
+  display:block;
+  margin-top:10px;
+  color:#9f9;
+  white-space:pre-wrap;
 }
 </style>
 </head>
 
 <body>
 
-<h2>ULRM-C · Cycle</h2>
+<h1>ULRM-C · Cycle</h1>
 
-<pre>
-ID: ULRM-C
-ROLE: cycle
+<div class="section">
+  <span class="label">ID:</span> ULRM-C<br>
+  <span class="label">ROLE:</span> cycle
+</div>
 
-DATA:
-  axis: c
-  step: +1
-  effect: "LAGE.c = LAGE.c + 1"
+<div class="section">
+  <span class="label">DATA:</span><br>
+  axis: c<br>
+  step: +1<br>
+  effect: "LAGE.c = LAGE.c + 1"<br>
   modi: "C"
+</div>
 
-ENGINE:
-  function ULRM_C(LAGE){
-      return {
-          x: LAGE.x,
-          y: LAGE.y,
-          z: LAGE.z,
-          c: (LAGE.c ?? 0) + 1,
-          modi: "C",
-          role: "cycle"
-      };
-  }
+<div class="section">
+  <span class="label">ENGINE:</span>
+  <code>
+function ULRM_C(LAGE){
+    return {
+        x: LAGE.x,
+        y: LAGE.y,
+        z: LAGE.z,
+        c: (LAGE.c ?? 0) + 1,
+        modi: "C",
+        role: "cycle"
+    };
+}
+  </code>
+</div>
 
-RESULT:
+<div class="section">
+  <span class="label">RESULT:</span><br>
   LAGE durchläuft einen Zyklus (c + 1).
-</pre>
+</div>
 
 </body>
 </html>
