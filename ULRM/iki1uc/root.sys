@@ -1,27 +1,182 @@
-{
-  "id": "ULRM-ROOT",
-  "type": "root",
-  "status": "ready",
+/*  
+   ULRM‑ROOT‑BRIDGE – ALLXALL Root Kernel  
+   verbindet Root → Bridge → Operators → IO → Kernel → Stage  
+   mathematisch korrekt nach Zauber‑6‑Axiom  
+*/
 
-  "sys": {
-    "entry": "sys/index.html",
-    "mode": "direct",
-    "load": true
-  },
+const ULRM_ROOT = {
 
-  "bridge": {
-    "multi": "ULRM/bridge/bridge.multi.ready",
-    "active": true
-  },
+    id: "ULRM-ROOT",
+    type: "root",
+    status: "ready",
 
-  "io": {
-    "reverse": true,
-    "cross": true
-  },
+    /* ---------------------------------------------------------
+       ROOT‑SYSTEM
+       --------------------------------------------------------- */
+    sys: {
+        entry: "sys/index.html",
+        mode: "direct",
+        load: true
+    },
 
-  "stage": {
-    "use": true,
-    "file": "stage/all.on.ready"
-  }
-}
+    /* ---------------------------------------------------------
+       BRIDGE‑CONNECTOR
+       --------------------------------------------------------- */
+    bridge: {
+        multi: "ULRM/bridge/bridge.multi.ready",
+        active: true
+    },
 
+    /* ---------------------------------------------------------
+       IO‑WEGE
+       --------------------------------------------------------- */
+    io: {
+        reverse: true,
+        cross: true
+    },
+
+    /* ---------------------------------------------------------
+       STAGE‑SYSTEM
+       --------------------------------------------------------- */
+    stage: {
+        use: true,
+        file: "stage/all.on.ready"
+    },
+
+    /* ---------------------------------------------------------
+       OPERATOR‑GRUPPEN (ALLXALL)
+       --------------------------------------------------------- */
+    operators: {
+
+        linear: [
+            "[ULRM-A](ca://s?q=ULRM_A_HTML)",
+            "[ULRM-D](ca://s?q=ULRM_D_HTML)",
+            "[ULRM-W](ca://s?q=ULRM_W_HTML)",
+            "[ULRM-S](ca://s?q=ULRM_S_HTML)",
+            "[ULRM-Q](ca://s?q=ULRM_Q_HTML)",
+            "[ULRM-R](ca://s?q=ULRM_R_HTML)"
+        ],
+
+        neutral: [
+            "[ULRM-X](ca://s?q=ULRM_X_HTML)",
+            "[ULRM-XX](ca://s?q=ULRM_XX_HTML)",
+            "[ULRM-XXX](ca://s?q=ULRM_XXX_HTML)"
+        ],
+
+        rotate: [
+            "[ULRM-Y](ca://s?q=ULRM_Y_HTML)",
+            "[ULRM-YY](ca://s?q=ULRM_YY_HTML)",
+            "[ULRM-YYY](ca://s?q=ULRM_YYY_HTML)"
+        ],
+
+        cycle: [
+            "[ULRM-C](ca://s?q=ULRM_C_HTML)",
+            "[ULRM-PI](ca://s?q=ULRM_PI_HTML)",
+            "[ULRM-PHI](ca://s?q=ULRM_PHI_HTML)"
+        ],
+
+        time: [
+            "[ULRM-FOR](ca://s?q=ULRM_FOR_HTML)",
+            "[ULRM-REW](ca://s?q=ULRM_REW_HTML)"
+        ],
+
+        meta: [
+            "[DIR](ca://s?q=DIR_CORE_HTML)",
+            "use",
+            "user",
+            "[MIR](ca://s?q=MIR_CORE_HTML)",
+            "[RAWATOR](ca://s?q=RAWATOR_HTML)",
+            "[UIme](ca://s?q=UIme_CORE_HTML)"
+        ]
+    },
+
+    /* ---------------------------------------------------------
+       KERNEL‑ZUSTÄNDE
+       --------------------------------------------------------- */
+    kernel: {
+        cache: "olsen.cache.ready",
+        ram: "orakel.ram.ready",
+        slide: "slide.sprung.ready",
+        stage: "stage/all.on.ready",
+        stand: "stand.all.ready",
+        sys: [
+            "sys.all.9.all.sli.raid.ready",
+            "sys.work.ready"
+        ]
+    },
+
+    /* ---------------------------------------------------------
+       ZAUBER‑6‑AXIOM
+       --------------------------------------------------------- */
+    axiom() {
+        return {
+            axes: 6,      // A D W S Q R
+            neutral: 3,   // X XX XXX
+            rotate: 3,    // Y YY YYY
+            cycle: 3,     // C PI PHI
+            time: 2,      // FOR REW
+            meta: 6,      // DIR use user MIR RAWATOR UIme
+            total: 6 + 3 + 3 + 3 + 2 + 6
+        };
+    },
+
+    /* ---------------------------------------------------------
+       ROOT‑RUN – verbindet alles
+       --------------------------------------------------------- */
+    run(LAGE) {
+
+        // Lage austauschbar, Bewegung berechenbar
+        const motion = {
+            x: LAGE.x,
+            y: LAGE.y,
+            z: LAGE.z,
+            r: LAGE.r ?? 0
+        };
+
+        // RAWATOR – Motor mit Unendlichkeits‑Formel
+        const motor = {
+            power: "raw",
+            spin: motion.r + 1,
+            drive: "neutral-vector"
+        };
+
+        // Bridge‑Sync
+        const bridgeSync = {
+            active: this.bridge.active,
+            multi: this.bridge.multi,
+            sync: "ULRM-motion-core"
+        };
+
+        // Stage‑Status
+        const stageStatus = {
+            use: this.stage.use,
+            file: this.stage.file
+        };
+
+        // IO‑Status
+        const ioStatus = {
+            reverse: this.io.reverse,
+            cross: this.io.cross
+        };
+
+        // Kernel‑Status
+        const kernelStatus = this.kernel;
+
+        // Output
+        return {
+            root: this.sys,
+            axiom: this.axiom(),
+            motion,
+            motor,
+            operators: this.operators,
+            io: ioStatus,
+            kernel: kernelStatus,
+            stage: stageStatus,
+            bridge: bridgeSync,
+            status: "ULRM-ROOT-BRIDGE-ALLXALL-ready"
+        };
+    }
+};
+
+/* Export optional */
+export default ULRM_ROOT;
