@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>STAGE · SCHACHBRETT · TOOLATOR</title>
+<style>
+body { background:#000; color:#0f0; font-family:monospace; padding:20px; }
+pre  { background:#111; padding:20px; border:1px solid #333; color:#0f0; white-space:pre-wrap; }
+h2   { color:#6cf; }
+</style>
+</head>
+
+<body>
+
+<h2>STAGE · SCHACHBRETT · TOOLATOR</h2>
+
+<pre>
+ID: STAGE-CORE
+ROLE: stage / board / toolator
+MODE: AUTO / RUN / DISPATCH
+STATUS: active
+
+LOG:
+  [22:52:52] STAGE · SCHACHBRETT · TOOLATOR geladen
+  [22:52:52] AUTO-START · Kette beginnt
+  [22:52:52] STAGE bereit
+  [22:52:52] Buchen · Messen · Verstehen
+  [22:52:52] MASTER_KERNEL → start()
+  [22:52:52] kit.js → fallback
+  [22:52:52] groub.js → fallback
+  [22:52:52] work.js → fallback
+  [22:52:52] ZaM.js → fallback
+  [22:52:53] ui.js → fallback
+  [22:52:53] economy.js → fallback
+  [22:52:53] AUTO-START abgeschlossen
+
+DIR:
+  [22:52:54] Richtung: H aktiviert
+  [22:52:56] Richtung: B aktiviert
+  [22:52:58] Richtung: T aktiviert
+  [22:53:00] Richtung: O aktiviert
+  [22:53:02] Richtung: D aktiviert
+  [22:53:04] Richtung: t aktiviert
+  [22:53:06] Richtung: sys aktiviert
+  [22:53:08] Richtung: S aktiviert
+
+CHESS:
+  [22:53:11] Alle Zellen freigegeben
+  [22:53:12] Alle Zellen freigegeben
+  [22:53:14] Alle Zellen gebucht
+  [22:53:16] Alle Zellen freigegeben
+  [22:53:18] NEUSTAND · Kernfiguren gebucht
+
+TOOLATOR:
+  [22:53:24] kit · RUN
+  [22:53:25] kit · STOP
+  [22:53:25] groub · RUN
+  [22:53:26] groub · STOP
+  [22:53:27] work · RUN
+  [22:53:27] work · STOP
+  [22:53:28] zam · RUN
+  [22:53:28] zam · STOP
+  [22:53:29] ui · RUN
+  [22:53:30] ui · STOP
+
+ENGINE:
+  function STAGE_CORE(log){
+      return {
+          stage: "active",
+          board: "chess",
+          toolator: "dispatch",
+          dir: "multi",
+          log: log,
+          modi: "STAGE",
+          role: "stage-core"
+      };
+  }
+
+RESULT:
+  STAGE-Core führt Auto-Start, DIR-Routing, Schachbrett-Status
+  und Toolator-Läufe systemgerecht aus.
+</pre>
+
+</body>
+</html>
