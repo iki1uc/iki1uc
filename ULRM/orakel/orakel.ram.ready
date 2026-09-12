@@ -1,1 +1,38 @@
+{
+  "id": "ULRM-ORAKEL-RAM",
+  "type": "ram-kernel",
+  "status": "ready",
+
+  "ram": {
+    "mode": "predictive",
+    "layer": "NC",
+    "stage": "pre-live",
+    "hold": true,
+    "atomic": true
+  },
+
+  "memory": {
+    "fs-scan": "cached",
+    "root-baum": "await",
+    "stage-state": "pending",
+    "nc-state": "idle",
+    "sensor-state": "active"
+  },
+
+  "sync": {
+    "nc": false,
+    "stage": false,
+    "sensor": false,
+    "cache": "olsen"
+  },
+
+  "axiome": {
+    "replaceable": true,
+    "set": [
+      "AXIOM-RAM",
+      "AXIOM-PREDICT",
+      "AXIOM-HOLD"
+    ]
+  }
+}
 
