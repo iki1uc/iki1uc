@@ -1,1 +1,28 @@
+{
+  "id": "ULRM-IO-OI-REVERSE",
+  "type": "io-reverse",
+  "status": "ready",
+
+  "axis": {
+    "x": "reverse(x)",
+    "y": "reverse(y)",
+    "q": "reverse(q)"
+  },
+
+  "narrativ": {
+    "a": "input",
+    "b": "mirror",
+    "c": "output"
+  },
+
+  "axiome": {
+    "swap": true,
+    "replaceable": true,
+    "set": [
+      "AXIOM-A",
+      "AXIOM-B",
+      "AXIOM-C"
+    ]
+  }
+}
 
