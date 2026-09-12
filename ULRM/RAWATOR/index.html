@@ -5,7 +5,7 @@
 <title>RAWATOR – Rohmotor / Neutralebene</title>
 <style>
 body { background:#000; color:#0f0; font-family:monospace; padding:20px; }
-pre  { background:#111; padding:20px; border:1px solid #333; color:#0f0; }
+pre  { background:#111; padding:20px; border:1px solid #333; color:#0f0; white-space:pre-wrap; }
 h2   { color:#6cf; }
 </style>
 </head>
@@ -24,6 +24,14 @@ DIMENSION:
   Ebene: 11
   Funktion: Rohantrieb, Neutralmotor, Basisenergie
   Bindung: Speist alle ULRM-Module
+  Axiom: vererbbar / erwerbbar / nutzbar / sys-gerecht
+
+CLOCK:
+  type: "clockwise"
+  tick: "neutral-spin"
+  cycle: 360°
+  effect: "richtige Laufrichtung für alle ULRM-Achsen"
+  anchor: "gravitation / magnet / zoog / echo / hall / rum / umrum / rundherum / richtigrum"
 
 DATA:
   power: "raw"
@@ -37,10 +45,26 @@ DATA:
 
 ENGINE:
   function RAWATOR(LAGE){
+      const tick = (LAGE.tick ?? 0) + 1;        // clock tick
+      const angle = (tick % 360) * (Math.PI/180); // clockwise rotation
+
       return {
-          x: LAGE.x,
-          y: LAGE.y,
-          z: LAGE.z,
+          x: Math.cos(angle),   // neutral-clock vector
+          y: Math.sin(angle),   // neutral-clock vector
+          z: LAGE.z,            // tiefe bleibt stabil
+          tick: tick,
+          angle: angle,
           raw: true,
           drive: "neutral-vector",
           modi: "RAW",
+          role: "motor"
+      };
+  }
+
+RESULT:
+  RAWATOR erzeugt eine neutrale, uhrgerechte Grundrotation (clockwise 360°),
+  die als Rohmotor alle ULRM-Module antreibt.
+</pre>
+
+</body>
+</html>
