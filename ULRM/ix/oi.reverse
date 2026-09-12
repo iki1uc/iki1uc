@@ -1,28 +1,98 @@
-{
-  "id": "ULRM-IX-OI-REVERSE",
-  "type": "io-cross-mirror-reverse",
-  "status": "ready",
+/*  
+   ULRM‑IX‑OI‑REVERSE  
+   cross(mirror(reverse(axis))) für x, y, q  
+   Narrativ: input → cross-mirror → output  
+   Axiome: AXIOM‑O / AXIOM‑I / AXIOM‑X  
+*/
 
-  "axis": {
-    "x": "cross(mirror(reverse(x)))",
-    "y": "cross(mirror(reverse(y)))",
-    "q": "cross(mirror(reverse(q)))"
-  },
+const ULRM_IX_OI_REVERSE = {
 
-  "narrativ": {
-    "a": "input",
-    "b": "cross-mirror",
-    "c": "output"
-  },
+    id: "ULRM-IX-OI-REVERSE",
+    type: "io-cross-mirror-reverse",
+    status: "ready",
 
-  "axiome": {
-    "swap": true,
-    "replaceable": true,
-    "set": [
-      "AXIOM-O",
-      "AXIOM-I",
-      "AXIOM-X"
-    ]
-  }
-}
+    /* ---------------------------------------------------------
+       ACHSEN – CROSS(MIRROR(REVERSE()))
+       --------------------------------------------------------- */
+    axis: {
+        x: "cross(mirror(reverse(x)))",
+        y: "cross(mirror(reverse(y)))",
+        q: "cross(mirror(reverse(q)))"
+    },
 
+    /* ---------------------------------------------------------
+       NARRATIV – INPUT → CROSS-MIRROR → OUTPUT
+       --------------------------------------------------------- */
+    narrativ: {
+        a: "input",
+        b: "cross-mirror",
+        c: "output"
+    },
+
+    /* ---------------------------------------------------------
+       AXIOME – SWAP / REPLACE / SET
+       --------------------------------------------------------- */
+    axiome: {
+        swap: true,
+        replaceable: true,
+        set: [
+            "AXIOM-O",
+            "AXIOM-I",
+            "AXIOM-X"
+        ]
+    },
+
+    /* ---------------------------------------------------------
+       ENGINE – CROSS‑MIRROR‑REVERSE‑LOGIK
+       --------------------------------------------------------- */
+    run(LAGE){
+
+        // Reverse
+        const reversed = {
+            x: -LAGE.x,
+            y: -LAGE.y,
+            q: -(LAGE.q ?? 0)
+        };
+
+        // Mirror (Spiegelung)
+        const mirrored = {
+            x: reversed.x * -1,
+            y: reversed.y * -1,
+            q: reversed.q * -1
+        };
+
+        // Cross (Achsenkreuzung)
+        const crossed = {
+            x: mirrored.y,
+            y: mirrored.x,
+            q: mirrored.q
+        };
+
+        // Narrativ‑Routing
+        const route = {
+            input: this.narrativ.a,
+            cross_mirror: this.narrativ.b,
+            output: this.narrativ.c
+        };
+
+        // Axiom‑Status
+        const axiom = {
+            swap: this.axiome.swap,
+            replaceable: this.axiome.replaceable,
+            set: this.axiome.set
+        };
+
+        return {
+            id: this.id,
+            reversed,
+            mirrored,
+            crossed,
+            route,
+            axiom,
+            status: "ULRM-IX-OI-REVERSE-ready"
+        };
+    }
+};
+
+/* Optionaler Export */
+export default ULRM_IX_OI_REVERSE;
