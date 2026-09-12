@@ -1,1 +1,53 @@
+{
+  "id": "ULRM-IO-ALLXALL-REVERSE",
+  "type": "io-master-reverse",
+  "status": "ready",
+
+  "operators": {
+    "oi": "mirror(reverse(x))",
+    "xi": "invert(reverse(x))",
+    "ix_oi": "cross(mirror(reverse(x)))",
+    "ix_xi": "cross(invert(reverse(x)))",
+    "oi_io": "mirror(reverse(io(x)))",
+    "xi_io": "invert(reverse(io(x)))"
+  },
+
+  "allxall": {
+    "mode": "sli-raid",
+    "atomic": true,
+    "compat": [
+      "oi ↔ xi",
+      "oi ↔ ix/oi",
+      "oi ↔ ix/xi",
+      "oi ↔ oi/io",
+      "oi ↔ xi/io",
+      "xi ↔ ix/oi",
+      "xi ↔ ix/xi",
+      "xi ↔ oi/io",
+      "xi ↔ xi/io",
+      "ix/oi ↔ ix/xi",
+      "ix/oi ↔ oi/io",
+      "ix/oi ↔ xi/io",
+      "ix/xi ↔ oi/io",
+      "ix/xi ↔ xi/io",
+      "oi/io ↔ xi/io"
+    ]
+  },
+
+  "sync": {
+    "nc": "live",
+    "stage": "8",
+    "sensor": "pulse",
+    "bridge": "multi.ready"
+  },
+
+  "axiome": {
+    "replaceable": true,
+    "set": [
+      "AXIOM-IO",
+      "AXIOM-REVERSE",
+      "AXIOM-ALLXALL"
+    ]
+  }
+}
 
