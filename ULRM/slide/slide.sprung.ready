@@ -1,1 +1,45 @@
+{
+  "id": "ULRM-SLIDE-SPRUNG",
+  "type": "jump-kernel",
+  "status": "ready",
+
+  "sprung": {
+    "mode": "vector",
+    "layer": "stage",
+    "stage-from": "pre-live",
+    "stage-to": "live",
+    "atomic": true,
+    "hold": false
+  },
+
+  "motion": {
+    "axis": ["x", "y", "q"],
+    "type": "jump",
+    "neutral": "X",
+    "rotate": "Y",
+    "cycle": "C"
+  },
+
+  "memory": {
+    "cache": "olsen",
+    "ram": "orakel",
+    "nc": "await",
+    "sensor": "ready"
+  },
+
+  "sync": {
+    "nc": false,
+    "stage": false,
+    "sensor": true
+  },
+
+  "axiome": {
+    "replaceable": true,
+    "set": [
+      "AXIOM-JUMP",
+      "AXIOM-VECTOR",
+      "AXIOM-SPRUNG"
+    ]
+  }
+}
 
