@@ -1,1 +1,27 @@
+{
+  "id": "ULRM-ROOT",
+  "type": "root",
+  "status": "ready",
+
+  "sys": {
+    "entry": "sys/index.html",
+    "mode": "direct",
+    "load": true
+  },
+
+  "bridge": {
+    "multi": "ULRM/bridge/bridge.multi.ready",
+    "active": true
+  },
+
+  "io": {
+    "reverse": true,
+    "cross": true
+  },
+
+  "stage": {
+    "use": true,
+    "file": "stage/all.on.ready"
+  }
+}
 
