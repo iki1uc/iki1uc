@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>◈ VESTA · HESTIA · PROMETHEUS · ein Feuer</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:#000;overflow:hidden;
+    font-family:'Consolas',monospace;color:#c8d8e8}
+  canvas{display:block;width:100%;height:100%}
+
+  #names{
+    position:fixed;top:50%;left:50%;
+    transform:translate(-50%,-50%);
+    text-align:center;pointer-events:none;
+    z-index:10;width:100%;
+  }
+  #names .nm{
+    font-size:42px;letter-spacing:18px;
+    font-weight:normal;
+    transition:color 1s, text-shadow 1s, opacity .8s;
+    text-transform:uppercase;
+    color:#f0d080;
+    text-shadow:0 0 30px rgba(240,208,128,.7);
+    font-family:'Yu Mincho','Hiragino Mincho ProN',serif;
+  }
+  #names .sub{
+    font-size:10px;letter-spacing:6px;
+    color:#5a7288;text-transform:uppercase;
+    margin-top:8px;
+    transition:color 1s, opacity .8s;
+  }
+
+  #hud{
+    position:fixed;top:16px;left:16px;font-size:9.5px;
+    letter-spacing:2px;color:#3a4a5a;pointer-events:none;
+    text-transform:uppercase;line-height:1.9
+  }
+  #hud b{color:#f0d080;font-weight:normal}
+  #hud .cy{color:#5cf0ff}
+  #hud .vi{color:#b388ff}
+  #hud .gr{color:#39ff88}
+
+  #zuender{
+    position:fixed;bottom:16px;left:50%;
+    transform:translateX(-50%);
+    font-size:9px;letter-spacing:3px;
+    color:#3a4a5a;text-transform:uppercase;
+    pointer-events:none
+  }
+  #zuender b{color:#f0d080;font-weight:normal}
+
+  #fps{
+    position:fixed;top:16px;right:16px;
+    font-size:9px;color:#2a3644;letter-spacing:1px;
+    pointer-events:none
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<div id="hud">
+  ◈ VESTA · GPU-RING<br>
+  QI <b class="cy" id="vQI">0.00</b> ·
+  IQQ <b class="vi" id="vIQQ">0.00</b><br>
+  PHASE <b class="gr" id="vPhase">0.00</b> ·
+  TICK <b id="vTick">0</b>
+</div>
+
+<div id="names">
+  <div class="nm" id="nmName">VESTA</div>
+  <div class="sub" id="nmSub">die hütung</div>
+</div>
+
+<div id="zuender">
+  <b id="zuenderName">feuer</b> · nie ausgehend · 300.000 vektoren
+</div>
+
+<div id="fps">0 fps</div>
+
+<script>
+"use strict";
+/* ═══════════════════════════════════════════════════════════════
+   VESTA · HESTIA · PROMETHEUS · OLYMPIA · AION · VIGIL
+   Ein Feuer. Sechs Namen. Wechselnde Deutung.
+   ═══════════════════════════════════════════════════════════════ */
+
+const cv = document.getElementById("c");
+const gl = cv.getContext("webgl", { antialias: false, alpha: false });
+if (!gl) document.body.innerHTML = "<div style='color:#f55;padding:20px'>Kein WebGL.</div>";
+
+const N = 300000;
+
+/* ─── Die 6 Namen ────────────────────────────────────── */
+const NAMEN = [
+  { key:"VESTA",      sub:"die hütung",        farbe:[1.00, 0.82, 0.27] },
+  { key:"HESTIA",     sub:"die wärme",         farbe:[1.00, 0.55, 0.35] },
+  { key:"PROMETHEUS", sub:"die gabe",          farbe:[0.70, 0.53, 1.00] },
+  { key:"OLYMPIA",    sub:"der ort",           farbe:[0.37, 0.78, 1.00] },
+  { key:"AION",       sub:"die zeit selbst",   farbe:[0.55, 0.95, 0.85] },
+  { key:"VIGIL",      sub:"die wache",         farbe:[0.80, 0.80, 0.85] }
+];
+
+/* ─── Vertex Shader ──────────────────────────────────── */
+const VERT = `
+  attribute float a_idx;
+  uniform float u_time;
+  uniform vec2  u_res;
+  uniform float u_total;
+  uniform float u_name;     // 0..5 · welcher Name grad
+  uniform float u_qi;
+  uniform float u_iqq;
+  uniform float u_phase;
+
+  const float PI2  = 6.2831853;
+  const float GOLD = 2.39996323;
+
+  void main() {
+    float i = a_idx;
+    float n = u_total;
+    float a = i * GOLD;
+    float t = u_time;
+
+    // ─── Namen verändern die Geometrie ──────────
+    // VESTA      : geschlossener Herdring · ruhig
+    // HESTIA     : wärmende Spirale · pulsierend
+    // PROMETHEUS : Flammen-Streuung · unruhig
+    // OLYMPIA    : 5 Ringe (olympisch) · getrennt
+    // AION       : endlose Spirale · steigend
+    // VIGIL      : konzentrische Kreise · wachsam
+
+    vec2 p;
+
+    if (u_name < 0.5) {
+      // VESTA · Herdring
+      float r = 0.70 + sin(i * 0.02 + t * 0.5) * 0.02;
+      p = vec2(cos(a) * r, sin(a) * r);
+    }
+    else if (u_name < 1.5) {
+      // HESTIA · Wärme-Spirale
+      float r = 0.30 + fract(i / n) * 0.55;
+      float ang = a + r * 6.0 + t * 0.4;
+      p = vec2(cos(ang) * r, sin(ang) * r);
+    }
+    else if (u_name < 2.5) {
+      // PROMETHEUS · Flammen-Streuung
+      float base = mod(i, 9.0) / 9.0;
+      float ang = a + t * 0.6;
+      float r = 0.5 + fract(i * 0.001) * 0.5;
+      float fl = sin(t * 3.0 + i * 0.1) * 0.08;
+      p = vec2(cos(ang) * (r + fl), sin(ang) * (r + fl) * 0.9);
+    }
+    else if (u_name < 3.5) {
+      // OLYMPIA · 5 Ringe
+      float ring = mod(floor(i / (n / 5.0)), 5.0);
+      float rr   = 0.25 + ring * 0.13;
+      float ang  = a + t * (0.15 + ring * 0.05);
+      p = vec2(cos(ang) * rr, sin(ang) * rr);
+    }
+    else if (u_name < 4.5) {
+      // AION · endlose Spirale
+      float sc = fract(i / n);
+      float ang = a + sc * PI2 * 4.0 + t * 0.2;
+      float r = 0.20 + sc * 0.70;
+      p = vec2(cos(ang) * r, sin(ang) * r);
+    }
+    else {
+      // VIGIL · konzentrische Kreise
+      float ring = mod(floor(i / (n / 9.0)), 9.0);
+      float rr   = 0.15 + ring * 0.07;
+      float ang  = a + t * 0.08 * (1.0 + ring * 0.1);
+      p = vec2(cos(ang) * rr, sin(ang) * rr);
+    }
+
+    // ─── QI · viele Zentren statt eins ────────────
+    float zentren = mix(1.0, 9.0, u_qi);
+    float zIdx    = mod(floor(i / (n / zentren)), zentren);
+    float zAng    = zIdx / zentren * PI2;
+    vec2 zPos     = vec2(cos(zAng), sin(zAng)) * 0.55 * u_qi;
+    p = p * (1.0 - u_qi * 0.35) + zPos;
+
+    // ─── IQQ · Streuung ─────────────────────────
+    p += vec2(
+      sin(i * 7.3 + t * 0.9),
+      cos(i * 5.9 + t * 1.1)
+    ) * u_iqq * 0.08;
+
+    // ─── PHASE · Atem ───────────────────────────
+    p *= 1.0 + sin(t * 0.7) * u_phase * 0.05;
+
+    // Aspect
+    if (u_res.x > u_res.y) p.x *= u_res.y / u_res.x;
+    else                   p.y *= u_res.x / u_res.y;
+
+    p *= 1.7;
+
+    float depth = 0.5 + sin(a) * 0.5;
+    gl_PointSize = 1.2 + depth * 1.8;
+    gl_Position  = vec4(p, 0.0, 1.0);
+  }
+`;
+
+/* ─── Fragment Shader ─────────────────────────────────── */
+const FRAG = `
+  precision mediump float;
+  uniform float u_name;
+  uniform vec3  u_farbe;
+  uniform float u_qi;
+  uniform float u_time;
+
+  void main() {
+    vec2 d = gl_PointCoord - 0.5;
+    if (dot(d, d) > 0.25) discard;
+    float alpha = smoothstep(0.25, 0.0, dot(d, d));
+
+    // Basis-Farbe (aus Namen-Liste)
+    vec3 col = u_farbe;
+
+    // Qi-Verschiebung: bei Selbstverwaltung → violett-Anteil
+    col = mix(col, vec3(0.70, 0.53, 1.00), u_qi * 0.3);
+
+    // Leichtes Flackern
+    col *= 0.85 + sin(u_time * 2.0 + gl_PointCoord.x * 10.0) * 0.05;
+
+    gl_FragColor = vec4(col * alpha, alpha);
+  }
+`;
+
+function sh(type, src) {
+  const s = gl.createShader(type);
+  gl.shaderSource(s, src);
+  gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS))
+    console.error(gl.getShaderInfoLog(s));
+  return s;
+}
+const prog = gl.createProgram();
+gl.attachShader(prog, sh(gl.VERTEX_SHADER, VERT));
+gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FRAG));
+gl.linkProgram(prog);
+gl.useProgram(prog);
+
+/* ─── Buffer ──────────────────────────────────────────── */
+const idx = new Float32Array(N);
+for (let i = 0; i < N; i++) idx[i] = i;
+const buf = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+gl.bufferData(gl.ARRAY_BUFFER, idx, gl.STATIC_DRAW);
+const loc = gl.getAttribLocation(prog, "a_idx");
+gl.enableVertexAttribArray(loc);
+gl.vertexAttribPointer(loc, 1, gl.FLOAT, false, 0, 0);
+
+/* ─── Uniforms ────────────────────────────────────────── */
+const U = {};
+["u_time","u_res","u_total","u_name","u_qi","u_iqq","u_phase","u_farbe"]
+  .forEach(k => U[k] = gl.getUniformLocation(prog, k));
+gl.uniform1f(U.u_total, N);
+
+function resize() {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  cv.width = window.innerWidth * dpr;
+  cv.height = window.innerHeight * dpr;
+  cv.style.width = window.innerWidth + "px";
+  cv.style.height = window.innerHeight + "px";
+  gl.viewport(0, 0, cv.width, cv.height);
+  gl.uniform2f(U.u_res, cv.width, cv.height);
+}
+resize();
+window.addEventListener("resize", resize);
+
+gl.enable(gl.BLEND);
+gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+gl.clearColor(0, 0, 0, 1);
+
+/* ─── Zustand ────────────────────────────────────────── */
+const S = {
+  tick: 0,
+  nameIdx: 0,
+  qi: 0,
+  iqq: 0.2,
+  phase: 0,
+  zielQi: 0,
+  zielIqq: 0.2,
+  letzterWechsel: 0,
+  wechselDauer: 7000   // 7 Sekunden pro Name
+};
+
+/* ─── Name + Stimmung umstellen ──────────────────────── */
+function setzeName(idx) {
+  S.nameIdx = idx % NAMEN.length;
+  const n = NAMEN[S.nameIdx];
+
+  const nmEl = document.getElementById("nmName");
+  const subEl = document.getElementById("nmSub");
+
+  nmEl.textContent = n.key;
+  subEl.textContent = n.sub;
+
+  // Farbe anpassen
+  const c = `rgb(${Math.round(n.farbe[0]*255)},${Math.round(n.farbe[1]*255)},${Math.round(n.farbe[2]*255)})`;
+  nmEl.style.color = c;
+  nmEl.style.textShadow = `0 0 30px ${c}`;
+  subEl.style.color = c;
+
+  // Ziel-Qi je nach Name
+  const ziele = [0, 0.3, 0.7, 0.5, 1.0, 0.15];
+  S.zielQi  = ziele[S.nameIdx] ?? 0;
+  S.zielIqq = 0.2 + Math.random() * 0.4;
+
+  document.getElementById("zuenderName").textContent = n.sub;
+}
+
+/* ─── Auto-Takt ──────────────────────────────────────── */
+function takte(now) {
+  if (now - S.letzterWechsel > S.wechselDauer) {
+    S.letzterWechsel = now;
+    setzeName(S.nameIdx + 1);
+  }
+  S.qi  += (S.zielQi  - S.qi)  * 0.01;
+  S.iqq += (S.zielIqq - S.iqq) * 0.01;
+  S.phase = (Math.sin(now * 0.0004) + 1) * 0.5;
+}
+
+/* ─── Loop ───────────────────────────────────────────── */
+let t0 = performance.now();
+let frames = 0, fpsT = t0;
+
+function loop(now) {
+  const t = (now - t0) * 0.001;
+  S.tick++;
+
+  takte(now);
+
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.uniform1f(U.u_time, t);
+  gl.uniform1f(U.u_name, S.nameIdx);
+  gl.uniform1f(U.u_qi, S.qi);
+  gl.uniform1f(U.u_iqq, S.iqq);
+  gl.uniform1f(U.u_phase, S.phase);
+
+  const f = NAMEN[S.nameIdx].farbe;
+  gl.uniform3f(U.u_farbe, f[0], f[1], f[2]);
+
+  gl.drawArrays(gl.POINTS, 0, N);
+
+  if (S.tick % 15 === 0) {
+    document.getElementById("vQI").textContent = S.qi.toFixed(3);
+    document.getElementById("vIQQ").textContent = S.iqq.toFixed(3);
+    document.getElementById("vPhase").textContent = S.phase.toFixed(3);
+    document.getElementById("vTick").textContent = S.tick;
+  }
+
+  frames++;
+  if (now - fpsT > 500) {
+    document.getElementById("fps").textContent =
+      Math.round(frames * 1000 / (now - fpsT)) + " fps";
+    frames = 0; fpsT = now;
+  }
+
+  requestAnimationFrame(loop);
+}
+
+/* ─── Init ───────────────────────────────────────────── */
+setzeName(0);
+S.letzterWechsel = performance.now();
+requestAnimationFrame(loop);
+
+/* ─── Public API ─────────────────────────────────────── */
+window.FEUER = {
+  name: (i) => setzeName(i),
+  naechster: () => setzeName(S.nameIdx + 1),
+  stopp: () => { S.wechselDauer = Infinity; },
+  weiter: () => { S.wechselDauer = 7000; S.letzterWechsel = performance.now(); },
+  alle: () => NAMEN.map(n => n.key),
+  state: () => ({ ...S, count: N, namen: NAMEN[S.nameIdx].key })
+};
+
+console.log("%c◈ VESTA · ein Feuer · sechs Namen", "color:#f0d080;font-weight:bold;font-size:14px");
+console.log("→ FEUER.naechster() · .name(2) · .alle() · .state()");
+</script>
+</body>
+</html>
