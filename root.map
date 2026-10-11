@@ -1,2 +1,7 @@
-ROOT: ROM → CACHE → RAW → pipeline4 → iki1uc
-
+function quadranisieren(zahl, position) {
+  if (position === 'hoch') {
+    return '8' + zahl; // 8xxx - Nord-Ost - hoch - 8 davor = Spitze Pyramide oben schmal = Polaris
+  } else {
+    return zahl + '8'; // xxx8 - Süd-West - runter = Cylinder unten breit = 1 Person Hafen Arbeiter Schulterblatt 23
+  }
+}
