@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>atom.PC — selber Schach — Ebene anders Nacht — 11-99 = Schachbrett</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#050508;color:#e8e8e8;font-family:ui-monospace,Menlo,monospace;min-height:100vh}
+body.nacht{background:#00060a;color:#a0c0d0}
+.top{padding:10px 16px;border-bottom:1px solid #222;background:#0a0a0f;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;position:sticky;top:0;z-index:10}
+.badge{background:#ffcc00;color:#000;padding:2px 8px;font-weight:900;font-size:11px;border-radius:4px}
+.ocean{position:relative;height:400px;background:radial-gradient(ellipse at 50% 30%, #1a1a2a 0%, #000 80%);display:grid;place-items:center;border-bottom:1px solid #222}
+.chess{width:360px;height:360px;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);border:2px solid #333;border-radius:12px;overflow:hidden;box-shadow:0 0 40px rgba(255,204,0,.25)}
+.sq{display:grid;place-items:center;cursor:pointer;position:relative}
+.sq.light{background:#1e1e1e}.sq.dark{background:#0e0e0e}
+.sq:hover{filter:brightness(1.6);outline:1px solid #ffcc00}
+.sq.sel{outline:2px solid #00d4ff!important}
+.sq.label{position:absolute;bottom:1px;right:2px;font-size:7px;opacity:.35}
+.sq.fig{font-size:22px}.sq.da{font-size:7px;font-weight:900}
+.wrap{max-width:1200px;margin:0 auto;padding:14px;display:grid;grid-template-columns:1.1fr.9fr;gap:14px}
+.card{background:#12121a;border:1px solid #222;border-radius:14px;padding:14px}
+.card h2{font-size:11px;letter-spacing:2px;text-transform:uppercase;opacity:.6;margin-bottom:10px;color:#ffcc00}
+.btn{width:100%;background:#ffcc00;color:#000;border:0;padding:10px;border-radius:10px;font-weight:900;cursor:pointer;margin-top:8px}
+.btn.sec{background:#1a1a1a;color:#fff;border:1px solid #333}
+.row{display:flex;gap:8px}.tok{display:inline-block;background:#1a1a1a;border:1px solid #333;padding:2px 8px;border-radius:999px;font-size:9px;margin:2px}
+.count{background:#ffcc00;color:#000;padding:4px 10px;border-radius:999px;font-weight:900;font-size:11px}
+</style>
+</head>
+<body id="body">
+<div class="top">
+  <div><span class="badge">atom.PC</span> <span style="font-size:11px;opacity:.7">selber Schach — 11 22 33 44 55 66 77 88 99 = Schach Figuren</span></div>
+  <div style="display:flex;gap:6px;align-items:center"><button class="btn sec" style="width:auto;padding:5px 10px;margin:0;font-size:11px" onclick="toggleNacht()">🌙 Ebene Nacht an/aus</button><span class="count" id="count">Tag Ebene — hell</span></div>
+</div>
+<div class="ocean" id="ocean"><div class="chess" id="chess"></div></div>
+<div class="wrap">
+  <div><div class="card"><h2>atom.PC — 11 22 33 44 55 66 77 88 99</h2>
+  <div style="font-size:12px;line-height:1.6">
+  11 BIOS ♜ — 22 ZAHNRAD ♞ — 33 SCSI ♝ — 44 GPU ♛ — 55 PC ♚ — 66 RAM ♝ — 77 CPU ♞ — 88 ROM ♜ — 99 SYS ♔<br><br>
+  9 Repos = 1 PC = Schachbrett — Rang )9( — 1MB=1024 — pipeline.js directV3 ANKER — Ebene anders Nacht
+  </div>
+  <div class="row"><button class="btn" onclick="chessMove()">♟ Schach Zug</button><button class="btn sec" onclick="goMATT()">→ MATT</button></div>
+  <div class="row"><button class="btn sec" onclick="goOzean()">→ ozean</button><button class="btn sec" onclick="goOP()">→ OP</button></div>
+  </div></div>
+  <div><div class="card"><h2>Log</h2><div id="log" style="font-size:11px;background:#0a0a0f;border:1px solid #222;padding:10px;border-radius:10px;min-height:140px;max-height:260px;overflow:auto">Start — 11-99 bereit — klick Figur → Ziel<br>Tasten: n=Nacht, Space=Zug, r=Reset</div><button class="btn sec" onclick="download()">⬇ Download index.html</button></div></div>
+</div>
+<script>
+// Fix: saubere Unicode Figuren
+const das=[{da:'11',name:'BIOS',icon:'♜',color:'#ffcc00'},{da:'22',name:'ZAHNRAD',icon:'♞',color:'#00d4ff'},{da:'33',name:'SCSI',icon:'♝',color:'#ff6a00'},{da:'44',name:'GPU',icon:'♛',color:'#ff00aa'},{da:'55',name:'PC',icon:'♚',color:'#ffcc00'},{da:'66',name:'RAM',icon:'♝',color:'#00ff88'},{da:'77',name:'CPU',icon:'♞',color:'#00d4ff'},{da:'88',name:'ROM',icon:'♜',color:'#aaa'},{da:'99',name:'SYS',icon:'♔',color:'#ffcc00'}];
+const chess=document.getElementById('chess'); let sel=null;
+function initBoard(){
+  chess.innerHTML='';
+  for(let y=0;y<8;y++){for(let x=0;x<8;x++){
+    const sq=document.createElement('div'); sq.className='sq '+((x+y)%2?'dark':'light'); sq.dataset.x=x; sq.dataset.y=y;
+    const lab=document.createElement('div'); lab.className='label'; lab.textContent=String.fromCharCode(97+x)+(8-y); sq.appendChild(lab);
+    if(y===7){const da=das[x]; if(da){const f=document.createElement('div'); f.className='fig'; f.style.color=da.color; f.textContent=da.icon; const d=document.createElement('div'); d.className='da'; d.textContent=da.da; sq.append(f,d); sq.dataset.da=da.da;}}
+    if(y===3&&x===4){const da=das[8]; const f=document.createElement('div'); f.className='fig'; f.style.color=da.color; f.textContent=da.icon; const d=document.createElement('div'); d.className='da'; d.textContent='99'; sq.append(f,d); sq.dataset.da='99';}
+    sq.onclick=()=>{
+      if(sel){const from=sel,to=sq; if(from!==to&&from.dataset.da){const da=das.find(d=>d.da===from.dataset.da); const fn=String.fromCharCode(97+parseInt(from.dataset.x))+(8-parseInt(from.dataset.y)); const tn=String.fromCharCode(97+parseInt(to.dataset.x))+(8-parseInt(to.dataset.y)); document.getElementById('log').innerHTML+=`<div>▶ ${da.da} ${fn} → ${tn} — atom.PC Move</div>`; to.innerHTML=''; to.appendChild(lab.cloneNode(true)); [...from.querySelectorAll('.fig,.da')].forEach(e=>to.appendChild(e.cloneNode(true))); to.dataset.da=from.dataset.da; from.innerHTML=`<div class="label">${String.fromCharCode(97+parseInt(from.dataset.x))}${8-parseInt(from.dataset.y)}</div>`; delete from.dataset.da;} document.querySelectorAll('.sq.sel').forEach(e=>e.classList.remove('sel')); sel=null;} else if(sq.dataset.da){sel=sq; sq.classList.add('sel');}
+    };
+    chess.appendChild(sq);
+  }}
+}
+initBoard();
+let nacht=localStorage.getItem('atomPC_nacht')==='1';
+function applyNacht(){document.getElementById('body').classList.toggle('nacht',nacht); document.getElementById('count').textContent=nacht?'Nacht Ebene — dunkel — 64+64=128':'Tag Ebene — hell — 11-99'; localStorage.setItem('atomPC_nacht',nacht?'1':'0');}
+applyNacht(); function toggleNacht(){nacht=!nacht; applyNacht();}
+function chessMove(){document.getElementById('log').innerHTML+=`<div>▶ ${['11→e4 BIOS','22→Nf3 ZAHNRAD','33→Bb5 SCSI TURBO','44→O-O GPU','55→Re1 PC','66→b5 RAM','77→Ba4 CPU','88→d6 ROM','99→c3 SYS'][Math.floor(Math.random()*9)]} — Ebene anders Nacht</div>`;}
+function goMATT(){window.open('https://iki1uc.github.io/MATT/','_blank')}function goOzean(){window.open('https://iki1uc.github.io/ozean/','_blank')}function goOP(){window.open('https://iki1uc.github.io/OP/','_blank')}
+function download(){const blob=new Blob([document.documentElement.outerHTML],{type:'text/html'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='index.html'; a.click();}
+document.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='n')toggleNacht(); if(e.key===' '){e.preventDefault(); chessMove();} if(e.key.toLowerCase()==='r'){initBoard();}});
+</script>
+</body>
+</html>
